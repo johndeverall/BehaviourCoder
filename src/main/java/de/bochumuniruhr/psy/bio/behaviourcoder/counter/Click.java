@@ -1,4 +1,4 @@
-package de.bochumuniruhr.psy.bio.timer.counterpanel;
+package de.bochumuniruhr.psy.bio.behaviourcoder.counter;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
 

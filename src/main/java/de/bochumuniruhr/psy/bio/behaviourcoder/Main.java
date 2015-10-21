@@ -23,6 +23,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.counter.CounterPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.details.DetailsPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidationError;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
@@ -30,7 +31,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.action.ActionTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.JavaFXVideoPanel;
-import de.bochumuniruhr.psy.bio.timer.counterpanel.CounterPanel;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 
