@@ -165,4 +165,10 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
+	}
 }

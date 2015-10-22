@@ -175,4 +175,10 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 		
 	}
 
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

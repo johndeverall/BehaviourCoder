@@ -295,6 +295,7 @@ public class Main implements VideoListener {
 				actionTimerPanel.populateTrial(trial);
 				counterPanel.populateTrial(trial);
 				infoPanel.populateTrial(trial);
+				videoPanel.populateTrial(trial);
 				writer.write(trial);
 				statusPanel.setMessage("Saved OK");
 				SoundMaker.playSave();
@@ -412,6 +413,12 @@ public class Main implements VideoListener {
 				.append("Developer message: " + developerMessage + separator)
 				.toString();
 		JOptionPane.showMessageDialog(frame, displayMessage);
+	}
+
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

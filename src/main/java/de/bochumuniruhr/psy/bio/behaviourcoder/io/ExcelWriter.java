@@ -84,6 +84,7 @@ public class ExcelWriter {
 				header.add("Close");
 				header.add("Far");
 				header.add("Location_Change");
+				header.add("Trial_Section_Start");
 				
 				// Setting Background colour for Cells
 
@@ -242,6 +243,9 @@ public class ExcelWriter {
 
 			Number locationChanges = new Number(25, nextEmptyRow, trial.getLocationChanges());
 			sheet.addCell(locationChanges);
+			
+			Number trialSectionStart = new Number(26, nextEmptyRow, trial.getTrialSectionStart());
+			sheet.addCell(trialSectionStart);
 			
 			workbook.write();
 			workbook.close();

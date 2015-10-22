@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +26,15 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 	private JTextField seekField;
 	private JLabel totalTime;
 	private List<MediaControlListener> mediaControlListeners;
+	private double videoLength;
+	private DecimalFormat decimalFormatter;
 
 	public MediaControlPanel() {
 
 		setLayout(new GridLayout(1, 4));
-
+		decimalFormatter = new DecimalFormat("0.00"); 
+		
+		
 		playButton = new JButton("Play");
 		playButton.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -125,6 +130,7 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 
 	@Override
 	public void onVideoLoaded(double videoLength) {
+		this.videoLength = videoLength;
 		totalTime.setText("" + videoLength);
 		enableControls();
 	}
@@ -188,6 +194,13 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 	public void onVideoError(String message) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		videoTime = videoTime / 1000;
+		String videoTimeString = decimalFormatter.format(videoTime);
+		totalTime.setText(videoTimeString + " of " + videoLength);
 	}
 
 }

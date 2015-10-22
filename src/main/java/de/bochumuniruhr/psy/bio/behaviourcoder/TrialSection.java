@@ -30,6 +30,7 @@ public class TrialSection {
 	private Double close;
 	private Double far;
 	private Integer locationChanges;
+	private double trialSectionStart;
 
 //	header.add("Rooster_ID");
 //	header.add("Trial_Type");
@@ -159,6 +160,10 @@ public class TrialSection {
 	public Integer getLocationChanges() {
 		return locationChanges;
 	}
+	
+	public Double getTrialSectionStart() { 
+		return trialSectionStart;
+	}
 
 	public void setDate(Date date) {
 		this.date = date;
@@ -262,6 +267,10 @@ public class TrialSection {
 
 	public void setLocationChanges(int locationChanges) {
 		this.locationChanges = locationChanges;
+	}
+
+	public void setTrialSectionStart(double trialSectionStart) {
+		this.trialSectionStart = trialSectionStart;
 	}
 
 }

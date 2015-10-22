@@ -11,4 +11,6 @@ public interface VideoListener {
 	public void onVideoStop();
 		
 	public void onVideoError(String message);
+	
+	public void onVideoTimeChange(double videoTime);
 }

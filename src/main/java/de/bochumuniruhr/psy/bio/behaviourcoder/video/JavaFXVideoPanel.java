@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import javafx.application.Application;
@@ -31,6 +32,8 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 	private Stage stage;
 	private ReadOnlyObjectProperty<Duration> totalDuration;
 	private List<VideoListener> videoListeners;
+	private boolean videoLoaded = false;
+	private double trialSectionStart;
 	
 	public JavaFXVideoPanel() { 
 		Platform.runLater(new Runnable() {
@@ -60,7 +63,7 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 				mediaPlayer.setOnError(new Runnable(){
 					@Override
 					public void run() {
-						videoErrorEvent(mediaPlayer.getError().getMessage());
+						fireVideoErrorEvent(mediaPlayer.getError().getMessage());
 					}
 					});
 				MediaView mediaView = new MediaView(mediaPlayer);
@@ -76,7 +79,7 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 				mediaPlayer.setOnReady(new Runnable() {
 					@Override
 					public void run() {
-						videoLoadedEvent();
+						fireVideoLoadedEvent();
 					} });
 			}});
 	}
@@ -85,15 +88,24 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 		this.videoListeners.add(videoListener);
 	}
 		
-	private void videoLoadedEvent() {
+	private void fireVideoLoadedEvent() {
+		this.videoLoaded = true;
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoLoaded(mediaPlayer.getTotalDuration().toSeconds());
 		}
 	}
 	
-	private void videoErrorEvent(String message) {
+	private void fireVideoErrorEvent(String message) {
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoError(message);
+		}
+	}
+	
+	private void fireVideoTimeChangeEvent() { 
+		if (videoLoaded) { 
+			for (VideoListener videoListener : videoListeners) { 
+				videoListener.onVideoTimeChange(mediaPlayer.getCurrentTime().toMillis());
+			}
 		}
 	}
 	
@@ -167,6 +179,7 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 
 	@Override
 	public void trialStopWatchUpdate(String trialTime) {
+		fireVideoTimeChangeEvent();
 	}
 
 	@Override
@@ -184,8 +197,11 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 
 	@Override
 	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
-		
+		this.trialSectionStart = mediaPlayer.getCurrentTime().toSeconds();
+	}
+
+	public void populateTrial(TrialSection trial) {
+		trial.setTrialSectionStart(trialSectionStart);
 	}
 
 }

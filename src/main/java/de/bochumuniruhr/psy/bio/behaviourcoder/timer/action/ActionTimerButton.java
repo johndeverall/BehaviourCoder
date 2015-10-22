@@ -260,4 +260,10 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 		
 	}
 
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

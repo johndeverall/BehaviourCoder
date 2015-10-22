@@ -202,5 +202,11 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

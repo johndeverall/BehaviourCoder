@@ -192,5 +192,11 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoTimeChange(double videoTime) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
