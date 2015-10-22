@@ -23,6 +23,7 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	private TimerMediator mediator;
 	private DecimalFormat decimalFormatter;
 	private boolean lastClicked;
+	private boolean videoLoaded = false;
 
 	// the timer that starts after a stop is the timer for the area we are
 	// currently in.
@@ -55,11 +56,6 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	public void updateText() {
 		Double timeInSeconds = ((double) closeStopWatch.getTime() + (double) farStopWatch.getTime()) / 1000.00;
 		super.setText(decimalFormatter.format(timeInSeconds));
-		//Double closeTimeInSeconds = ((double) closeStopWatch.getTime());
-		//Double farTimeInSeconds = ((double) farStopWatch.getTime());
-		
-		//super.setText("" + decimalFormatter.format(closeTimeInSeconds) + ":" + decimalFormatter.format(farTimeInSeconds));
-		
 	}
 
 	@Override
@@ -129,19 +125,10 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 				toStart.resume();
 			}
 		}
-
-		// and the far stopwatch is running
-
-		// stop the far stopwatch
-
-		// and start or resume the close stopwatch
-		// and the far stopwatch is not running
-		// do nothing
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (!allSuspended) {
+		if (!allSuspended && videoLoaded) {
 			if (currentArea != null) {
 				mediator.enable(this);
 				SoundMaker.playMouseClick();
@@ -226,6 +213,45 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	
 	public Double getFarTime() { 
 		return (double) farStopWatch.getTime() / 1000;
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		this.videoLoaded = true;
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

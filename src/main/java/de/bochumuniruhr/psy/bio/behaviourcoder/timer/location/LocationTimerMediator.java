@@ -8,8 +8,9 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerButton;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerMediator;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
-public class LocationTimerMediator implements TimerMediator {
+public class LocationTimerMediator implements TimerMediator, VideoListener {
 	
 	private ArrayList<TimerButton> buttons;
 	
@@ -18,6 +19,8 @@ public class LocationTimerMediator implements TimerMediator {
 	private int switches = 0;
 	
 	private StatusPanel statusBar;
+	
+	private boolean trialSectionStarted = false;
 
 	public LocationTimerMediator(StatusPanel statusBar) {
 		this.statusBar = statusBar;
@@ -41,6 +44,10 @@ public class LocationTimerMediator implements TimerMediator {
 	
 	@Override
 	public void enable(TimerButton buttonToEnable) { 
+		if (trialSectionStarted == false) { 
+			trialSectionStarted = true;
+			fireTrialStartEvent();
+		}
 		for (TimerButton timerButton : buttons) { 
 			if (timerButton.equals(buttonToEnable)) {
 				if (!timerButton.isLastClicked()) { 
@@ -63,6 +70,12 @@ public class LocationTimerMediator implements TimerMediator {
 			fireTrialSectionSuspendedEvent();
 		}
 		
+	}
+
+	private void fireTrialStartEvent() {
+		for (TrialSectionListener trialSectionListener : trialSectionListeners) { 
+			trialSectionListener.onTrialSectionStart();
+		}
 	}
 
 	private void fireTrialSectionResumeEvent() {
@@ -93,6 +106,7 @@ public class LocationTimerMediator implements TimerMediator {
 			button.setEnabled(true);
 		}
 		switches = 0;
+		trialSectionStarted = false;
 	}
 
 	public List<String> getTimes() {
@@ -143,6 +157,29 @@ public class LocationTimerMediator implements TimerMediator {
 		}
 		
 		return hasCountingTimer;
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		for (TimerButton button : buttons) { 
+			button.onVideoLoaded(videoLength);
+		}
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

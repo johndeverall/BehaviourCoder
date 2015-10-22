@@ -1,6 +1,9 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +12,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -19,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
@@ -31,8 +37,8 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.action.ActionTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.JavaFXVideoPanel;
-import javafx.application.Platform;
-import javafx.scene.Scene;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.MediaControlPanel;
+//import nz.co.thescene.emailing.SMTPMailer;
 
 public class Main {
 
@@ -43,26 +49,30 @@ public class Main {
 	private StatusPanel statusPanel;
 	private FileChooser fileChooser;
 	private GlobalKeyPressHandler globalKeyHandler;
-	private JavaFXVideoPanel jfxPanel;
+	private JavaFXVideoPanel videoPanel;
+	private JLabel mirrorLabel;
+	private InfoPanel infoPanel;
+	private MediaControlPanel mediaControlPanel;
+
 	private int DEFAULT_TIME_LIMIT = 120;
 
 	private JFrame frame;
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Main main = new Main();
-			} } );
+				Main app = new Main();
+			}
+		});
 	}
 
 	public Main() {
 		KeyboardFocusManager currentKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		globalKeyHandler = new GlobalKeyPressHandler(currentKeyboardFocusManager, this);
-		
 		setupUI();
 	}
-	
-	public void save() { 
+
+	public void save() {
 		File file = fileChooser.getSelectedFile();
 		if (file == null) {
 			showSaveDialog();
@@ -76,7 +86,7 @@ public class Main {
 	}
 
 	private void setupUIComponents() {
-		setLookAndFeel();
+		setNimbusLookAndFeel();
 
 		frame = configureJFrame();
 
@@ -84,40 +94,121 @@ public class Main {
 		frame.setJMenuBar(menuBar);
 
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setLayout(new GridBagLayout());
 
 		statusPanel = new StatusPanel(frame);
 		actionTimerPanel = new ActionTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
 		locationTimerPanel = new LocationTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
 		counterPanel = new CounterPanel(statusPanel);
+		videoPanel = new JavaFXVideoPanel();
+		mediaControlPanel = new MediaControlPanel();
+		mediaControlPanel.addMediaControlListener(videoPanel);
 		locationTimerPanel.addTrialSectionListener(actionTimerPanel);
 		locationTimerPanel.addTrialSectionListener(counterPanel);
+		locationTimerPanel.addTrialSectionListener(videoPanel);
+		locationTimerPanel.addTrialSectionListener(mediaControlPanel);
+		videoPanel.addVideoListener(mediaControlPanel);
+		videoPanel.addVideoListener(locationTimerPanel);
+		videoPanel.addVideoListener(counterPanel);
+		videoPanel.addVideoListener(actionTimerPanel);
+		infoPanel = new InfoPanel(DEFAULT_TIME_LIMIT);
+		infoPanel.addTrialSectionListener(locationTimerPanel);
+		locationTimerPanel.addTrialSectionListener(infoPanel);
 		globalKeyHandler.register(counterPanel);
 		detailsPanel = new DetailsPanel(statusPanel);
 		fileChooser = new FileChooser(statusPanel);
-		//jfxPanel = new JavaFXVideoPanel();
 
-		//mainPanel.add(jfxPanel, BorderLayout.PAGE_START);
-		mainPanel.add(locationTimerPanel, BorderLayout.CENTER);
-		mainPanel.add(counterPanel, BorderLayout.LINE_END);
-		mainPanel.add(detailsPanel, BorderLayout.PAGE_START);
-		mainPanel.add(statusPanel, BorderLayout.SOUTH);
-		mainPanel.add(actionTimerPanel, BorderLayout.LINE_START);
-		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		mirrorLabel = new JLabel("Mirror / Divider");
+		mirrorLabel.setFont(new Font("Arial", Font.BOLD, 15));
+		mirrorLabel.setHorizontalAlignment(JLabel.CENTER);
+		mirrorLabel.setBackground(Color.BLACK);
+		mirrorLabel.setOpaque(true);
+		mirrorLabel.setForeground(Color.WHITE);
+
+		GridBagConstraints infoPanelConstraints = new GridBagConstraints();
+		infoPanelConstraints.gridx = 0;
+		infoPanelConstraints.gridy = 0;
+		infoPanelConstraints.gridheight = 2;
+		infoPanelConstraints.gridwidth = 30;
+		infoPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		infoPanelConstraints.weightx = 1;
+		mainPanel.add(infoPanel, infoPanelConstraints);
+
+		GridBagConstraints detailsPanelConstraints = new GridBagConstraints();
+		detailsPanelConstraints.gridx = 0;
+		detailsPanelConstraints.gridy = 2;
+		detailsPanelConstraints.gridheight = 2;
+		detailsPanelConstraints.gridwidth = 30;
+		detailsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(detailsPanel, detailsPanelConstraints);
+
+		GridBagConstraints videoPanelConstraints = new GridBagConstraints();
+		videoPanelConstraints.gridx = 0;
+		videoPanelConstraints.gridy = 4;
+		videoPanelConstraints.gridheight = 11;
+		videoPanelConstraints.gridwidth = 30;
+		videoPanelConstraints.fill = GridBagConstraints.BOTH;
+		videoPanelConstraints.weightx = 1;
+		videoPanelConstraints.weighty = 1;
+		videoPanelConstraints.anchor = GridBagConstraints.CENTER;
+		mainPanel.add(videoPanel, videoPanelConstraints);
+
+		GridBagConstraints mediaControlPanelConstraints = new GridBagConstraints();
+		mediaControlPanelConstraints.gridx = 8;
+		mediaControlPanelConstraints.gridy = 15;
+		mediaControlPanelConstraints.gridheight = 3;
+		mediaControlPanelConstraints.gridwidth = 16;
+		mediaControlPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(mediaControlPanel, mediaControlPanelConstraints);
+
+		GridBagConstraints mirrorLabelConstraints = new GridBagConstraints();
+		mirrorLabelConstraints.gridx = 8;
+		mirrorLabelConstraints.gridy = 18;
+		mirrorLabelConstraints.gridwidth = 16;
+		mirrorLabelConstraints.gridheight = 1;
+		mirrorLabelConstraints.weightx = 1;
+		mirrorLabelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(mirrorLabel, mirrorLabelConstraints);
+
+		GridBagConstraints locationPanelConstraints = new GridBagConstraints();
+		locationPanelConstraints.gridx = 8;
+		locationPanelConstraints.gridy = 19;
+		locationPanelConstraints.gridheight = 12;
+		locationPanelConstraints.gridwidth = 16;
+		locationPanelConstraints.weightx = 1;
+		locationPanelConstraints.fill = GridBagConstraints.BOTH;
+		mainPanel.add(locationTimerPanel, locationPanelConstraints);
+
+		GridBagConstraints statusPanelConstraints = new GridBagConstraints();
+		statusPanelConstraints.gridx = 0;
+		statusPanelConstraints.gridy = 31;
+		statusPanelConstraints.gridheight = 1;
+		statusPanelConstraints.gridwidth = 30;
+		statusPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel.add(statusPanel, statusPanelConstraints);
+
+		GridBagConstraints counterPanelConstraints = new GridBagConstraints();
+		counterPanelConstraints.gridx = 23;
+		counterPanelConstraints.gridy = 19;
+		counterPanelConstraints.gridheight = 12;
+		counterPanelConstraints.gridwidth = 7;
+		counterPanelConstraints.anchor = GridBagConstraints.LINE_END;
+		counterPanelConstraints.fill = GridBagConstraints.VERTICAL;
+		mainPanel.add(counterPanel, counterPanelConstraints);
+
+		GridBagConstraints actionTimerPanelConstraints = new GridBagConstraints();
+		actionTimerPanelConstraints.gridx = 0;
+		actionTimerPanelConstraints.gridy = 19;
+		actionTimerPanelConstraints.gridheight = 12;
+		actionTimerPanelConstraints.gridwidth = 7;
+		actionTimerPanelConstraints.fill = GridBagConstraints.BOTH;
+		mainPanel.add(actionTimerPanel, actionTimerPanelConstraints); // 0, 17
+
+		mainPanel.validate();
+
+		frame.getContentPane().add(mainPanel);
 		frame.setVisible(true);
-		
-//		Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//					jfxPanel.start();
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//            }
-//        });
-		
+
 	}
 
 	private JMenuBar configureJMenuBar() {
@@ -133,6 +224,18 @@ public class Main {
 				counterPanel.resetAll();
 				detailsPanel.resetAll();
 				actionTimerPanel.resetAll();
+				infoPanel.resetAll();
+				videoPanel.resetAll();
+				mediaControlPanel.resetAll();
+			}
+		});
+
+		JMenuItem chooseVideo = new JMenuItem("Open video");
+		menu.add(chooseVideo);
+		chooseVideo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showLoadVideoDialog();
 			}
 		});
 
@@ -146,11 +249,9 @@ public class Main {
 
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
-
 		});
 		menu.add(exit);
 
@@ -169,6 +270,18 @@ public class Main {
 		}
 	}
 
+	private void showLoadVideoDialog() {
+		int returnVal = fileChooser.showOpenDialog(frame);
+
+		if (returnVal == FileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			openVideo(file);
+		} else {
+			statusPanel.setMessage("Open video cancelled.");
+		}
+
+	}
+
 	private void save(File file) {
 		ExcelWriter writer = new ExcelWriter(file);
 		try {
@@ -180,6 +293,7 @@ public class Main {
 				locationTimerPanel.populateTrial(trial);
 				actionTimerPanel.populateTrial(trial);
 				counterPanel.populateTrial(trial);
+				infoPanel.populateTrial(trial);
 				writer.write(trial);
 				statusPanel.setMessage("Saved OK");
 				SoundMaker.playSave();
@@ -188,24 +302,40 @@ public class Main {
 				SoundMaker.playValidationError();
 			}
 		} catch (FileNotFoundException ex) {
-			JOptionPane
-					.showMessageDialog(frame,
-							"Cannot save spreadsheet. Is it opened in another program?");
+			JOptionPane.showMessageDialog(frame, "Cannot save spreadsheet. Is it opened in another program?");
 		}
+//		if (file.canRead()) {
+//			emailResults(file);
+//		}
+	}
+
+//	private void emailResults(File file) {
+//		SMTPMailer mailer = new SMTPMailer("", "");
+//		try {
+//			mailer.send("johndeverall@gmail.com", "Rooster Spreadsheet Update",
+//					"Please find the latest spreadsheet attached.");
+//		} catch (InterruptedException | ExecutionException e) {
+//			e.printStackTrace();
+//		}
+//	}
+
+	private void openVideo(File file) {
+		videoPanel.openVideo(file, statusPanel);
 	}
 
 	private JFrame configureJFrame() {
 		JFrame frame = new JFrame("Behaviour Coder");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		int height = 300;
-		int width = 800;
-		frame.setSize(width, height);
+//		int height = 500;
+//		int width = 1000;
+//		frame.setSize(width, height);
+		
+		frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO
-					.read(ClassLoader.getSystemResource("FrameIcon.png"));
+			image = ImageIO.read(ClassLoader.getSystemResource("FrameIcon.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -214,10 +344,23 @@ public class Main {
 		return frame;
 	}
 
+	private void setNimbusLookAndFeel() {
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			setLookAndFeel();
+		}
+	}
+
 	private void setLookAndFeel() {
 		try {
-			UIManager.setLookAndFeel(UIManager
-					.getCrossPlatformLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

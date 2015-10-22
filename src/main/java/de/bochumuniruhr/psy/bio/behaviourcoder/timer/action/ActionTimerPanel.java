@@ -17,10 +17,10 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidatingTextField;
 import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidationError;
-import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerButton;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
 @SuppressWarnings("serial")
-public class ActionTimerPanel extends JPanel implements TrialSectionListener {
+public class ActionTimerPanel extends JPanel implements TrialSectionListener, VideoListener {
 
 	private ActionTimerMediator timerMediator;
 	private StatusPanel statusBar; 
@@ -43,41 +43,41 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener {
 		
 		setLayout(new GridLayout(4, 2));
 
-		JLabel label1 = new JLabel("Following: ");
-		label1.setFont(new Font("Arial", Font.BOLD, 20));
-		label1.setHorizontalAlignment(JLabel.RIGHT);
-		add(label1);
-		
 		followingTimer = new ActionTimerButton(timerMediator);
 		timerMediator.register(followingTimer);
 		add(followingTimer);
 		
-		JLabel label2 = new JLabel("Facing Away: ");
-		label2.setFont(new Font("Arial", Font.BOLD, 20));
-		label2.setHorizontalAlignment(JLabel.RIGHT);
-		add(label2);
+		JLabel label1 = new JLabel(" :Following");
+		label1.setFont(new Font("Arial", Font.BOLD, 20));
+		label1.setHorizontalAlignment(JLabel.LEFT);
+		add(label1);
 		
 		facingAwayTimer = new ActionTimerButton(timerMediator);
 		timerMediator.register(facingAwayTimer);
 		add(facingAwayTimer);
-		
-		JLabel label3 = new JLabel("Grooming Mark: ");
-		label3.setFont(new Font("Arial", Font.BOLD, 20));
-		label3.setHorizontalAlignment(JLabel.RIGHT);
-		add(label3);
+
+		JLabel label2 = new JLabel(" :Facing Away");
+		label2.setFont(new Font("Arial", Font.BOLD, 20));
+		label2.setHorizontalAlignment(JLabel.LEFT);
+		add(label2);
 		
 		groomingMarkTimer = new ActionTimerButton(timerMediator);
 		timerMediator.register(groomingMarkTimer);
 		add(groomingMarkTimer);
-		
-		JLabel label4 = new JLabel("Grooming Other: ");
-		label4.setFont(new Font("Arial", Font.BOLD, 20));
-		label3.setHorizontalAlignment(JLabel.RIGHT);
-		add(label4);
-		
+
+		JLabel label3 = new JLabel(" :Grooming Mark");
+		label3.setFont(new Font("Arial", Font.BOLD, 20));
+		label3.setHorizontalAlignment(JLabel.LEFT);
+		add(label3);
+
 		groomingOtherTimer = new ActionTimerButton(timerMediator);
 		timerMediator.register(groomingOtherTimer);
 		add(groomingOtherTimer);
+		
+		JLabel label4 = new JLabel(" :Grooming Other");
+		label4.setFont(new Font("Arial", Font.BOLD, 20));
+		label3.setHorizontalAlignment(JLabel.LEFT);
+		add(label4);
 		
 		setupClockRedrawRate();
 		
@@ -113,7 +113,6 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener {
 		trial.setGroomMarkFar(groomingMarkTimer.getFarTime());
 		trial.setOtherClose(groomingOtherTimer.getCloseTime());
 		trial.setOtherFar(groomingOtherTimer.getFarTime());
-	
 	}
 
 	public Collection<? extends ValidationError> validateTrialData() {
@@ -146,6 +145,46 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener {
 	@Override
 	public void onTrialSectionResume() { 
 		timerMediator.resume();
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		followingTimer.onVideoLoaded(videoLength);
+		facingAwayTimer.onVideoLoaded(videoLength);
+		groomingMarkTimer.onVideoLoaded(videoLength);
+		groomingOtherTimer.onVideoLoaded(videoLength);
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

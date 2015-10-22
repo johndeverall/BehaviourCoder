@@ -9,4 +9,10 @@ public interface TrialSectionListener {
 	public void onTrialSectionResume();
 	
 	public void timeIsUp(); 
+	
+	public void trialStopWatchUpdate(String trialTime);
+	
+	public void onTimeLimitChange(Integer seconds);
+
+	public void onTrialSectionStart();
 }

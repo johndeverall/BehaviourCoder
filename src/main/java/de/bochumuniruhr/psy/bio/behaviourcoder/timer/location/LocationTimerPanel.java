@@ -1,7 +1,5 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.timer.location;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,29 +8,24 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidatingTextField;
 import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidationError;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
 @SuppressWarnings("serial")
-public class LocationTimerPanel extends JPanel {
+public class LocationTimerPanel extends JPanel implements TrialSectionListener, VideoListener {
 
 	private LocationTimerMediator timerMediator;
 	private StatusPanel statusBar; 
-	private JLabel totalTime;
-	private ValidatingTextField timeLimit;
-	private JLabel mirrorOrDividerText;
-	private JLabel transitions;
 	private DecimalFormat decimalFormatter;
 	private boolean trialOver;
-	private final int DEFAULT_TIME_LIMIT;
-	private final int LABEL_FONT_SIZE = 30;
+	private double timeLimit;
 	private List<TrialSectionListener> trialSectionListeners;
 	private LocationTimerButton closeTimer;
 	private LocationTimerButton farTimer;
@@ -41,7 +34,7 @@ public class LocationTimerPanel extends JPanel {
 		
 		trialSectionListeners = new ArrayList<TrialSectionListener>();
 		
-		this.DEFAULT_TIME_LIMIT = defaultTimeLimit;
+		this.timeLimit = (double)defaultTimeLimit;
 		
 		this.statusBar = statusBar;
 		
@@ -53,30 +46,6 @@ public class LocationTimerPanel extends JPanel {
 		
 		setLayout(new GridLayout(0, 1));
 
-		totalTime = new JLabel("0");
-		totalTime.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
-		totalTime.setHorizontalAlignment(JLabel.CENTER);
-		add(totalTime);
-		
-		timeLimit = new ValidatingTextField("" + DEFAULT_TIME_LIMIT, "You must enter a time limit");
-		timeLimit.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
-		timeLimit.setHorizontalAlignment(JLabel.CENTER);
-		add(timeLimit);
-		
-		transitions = new JLabel("0");
-		transitions.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
-		transitions.setHorizontalAlignment(JLabel.CENTER);
-		add(transitions);
-		
-		mirrorOrDividerText = new JLabel("Mirror / Divider");
-		Font font = new Font("Arial", Font.BOLD, 15);
-		mirrorOrDividerText.setFont(font);
-		mirrorOrDividerText.setHorizontalAlignment(JLabel.CENTER);
-		mirrorOrDividerText.setBackground(Color.BLACK);
-		mirrorOrDividerText.setOpaque(true);
-		mirrorOrDividerText.setForeground(Color.WHITE);
-		add(mirrorOrDividerText);
-		
 		closeTimer = new LocationTimerButton("CLOSE", timerMediator);
 		timerMediator.register(closeTimer);
 		add(closeTimer);
@@ -84,7 +53,6 @@ public class LocationTimerPanel extends JPanel {
 		farTimer = new LocationTimerButton("FAR", timerMediator);
 		timerMediator.register(farTimer);
 		add(farTimer);
-		
 		
 		setupClockRedrawRate();
 		
@@ -109,28 +77,25 @@ public class LocationTimerPanel extends JPanel {
 		trialOver = false;
 		timerMediator.resetAll();
 		statusBar.setMessage("Stopped");
-		timeLimit.setText("" + DEFAULT_TIME_LIMIT);
 	}
 
 	public void reDraw() {
 		timerMediator.reDraw();
 		double totalTime = timerMediator.getTotalTime();
-		this.totalTime.setText(decimalFormatter.format(totalTime));
-		String timeLimitString = null;
-		if (timeLimit.getText().equals("")) { 
-			timeLimit.setText("0");
-			timeLimitString = "0";
-		} else { 
-			timeLimitString = timeLimit.getText();
-		}
+		fireTrialStopWatchUpdateEvent(totalTime);
 		
-		stopIfTimeLimitReached(totalTime, timeLimitString);
+		stopIfTimeLimitReached(totalTime);
 		
-		transitions.setText("" + timerMediator.getTransitionCount());
+		//transitions.setText("" + timerMediator.getTransitionCount());
 	}
 
-	private void stopIfTimeLimitReached(double totalTime, String timeLimitString) {
-		double timeLimit = Double.parseDouble(timeLimitString);
+	private void fireTrialStopWatchUpdateEvent(double totalTime) {
+		for (TrialSectionListener trialSectionListener : trialSectionListeners) { 
+			trialSectionListener.trialStopWatchUpdate(decimalFormatter.format(totalTime));
+		}
+	}
+
+	private void stopIfTimeLimitReached(double totalTime) {
 		if ((totalTime > timeLimit) && (trialOver == false)) { 
 			this.trialOver = true;
 			timerMediator.suspendAll();
@@ -149,7 +114,6 @@ public class LocationTimerPanel extends JPanel {
 	public void populateTrial(TrialSection trial) {
 		trial.setClose(Double.parseDouble(closeTimer.getText()));
 		trial.setFar(Double.parseDouble(farTimer.getText()));
-		trial.setLocationChanges(timerMediator.getTransitionCount());
 	}
 
 	public Collection<? extends ValidationError> validateTrialData() {
@@ -166,6 +130,71 @@ public class LocationTimerPanel extends JPanel {
 	public void addTrialSectionListener(TrialSectionListener trialSectionListener) {
 		this.trialSectionListeners.add(trialSectionListener);
 		this.timerMediator.addTrialSectionListener(trialSectionListener);
+	}
+
+	@Override
+	public void onAreaChange(Area name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionSuspend() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionResume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void timeIsUp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		this.timeLimit = seconds;
+		statusBar.setMessage("Time limit set to " + seconds + " seconds.");
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		timerMediator.onVideoLoaded(videoLength);
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

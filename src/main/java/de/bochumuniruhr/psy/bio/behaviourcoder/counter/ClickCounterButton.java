@@ -16,15 +16,17 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
 @SuppressWarnings("serial")
-public class ClickCounterButton extends JButton implements GlobalKeyListener, TrialSectionListener {
+public class ClickCounterButton extends JButton implements GlobalKeyListener, TrialSectionListener, VideoListener {
 
 	private Stack<Click> clicks;
 	private char incrementKey;
 	private char decrementKey;
 	private Area currentArea;
 	private boolean suspended = true;
+	private boolean videoLoaded = false;
 	
 	public ClickCounterButton(String startLabel, final char incrementKey, final char decrementKey) { 
 		this.incrementKey = incrementKey;
@@ -33,7 +35,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 		addMouseListener(new MouseAdapter() { 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (!suspended) { 
+				if (!suspended && videoLoaded) { 
 					if (e.getButton() ==  MouseEvent.BUTTON1) { 
 						increment();
 					} else if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON2) { 
@@ -70,7 +72,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 	}
 	
 	public void keyPressed(char key) { 
-		if (!suspended) { 
+		if (!suspended && videoLoaded) { 
 			if (key == incrementKey) { 
 				increment();
 			} else if (key == decrementKey) { 
@@ -115,5 +117,46 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 			}
 		}
 		return farClicks;
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		this.videoLoaded = true;
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 }

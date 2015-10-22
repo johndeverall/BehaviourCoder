@@ -22,6 +22,7 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	private DecimalFormat decimalFormatter;
 	private boolean lastClicked;
 	private String buttonName;
+	private boolean videoLoaded = false;
 	
 	public LocationTimerButton(String buttonName, TimerMediator mediator) { 
 		this.mediator = mediator;
@@ -60,9 +61,11 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		mediator.enable(this);
-		SoundMaker.playMouseClick();
-		lastClicked = true;
+		if (videoLoaded) { 
+			mediator.enable(this);
+			SoundMaker.playMouseClick();
+			lastClicked = true;
+		}
 	}
 	
 	public void reset() { 
@@ -113,6 +116,47 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 
 	@Override
 	public void timeIsUp() {
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		this.videoLoaded = true;
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

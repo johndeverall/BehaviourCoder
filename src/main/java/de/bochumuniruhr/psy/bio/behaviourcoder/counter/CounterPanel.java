@@ -12,9 +12,10 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
 @SuppressWarnings("serial")
-public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSectionListener {
+public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSectionListener, VideoListener {
 	
 	private ClickCounterButton pecks;
 	private ClickCounterButton hackles;
@@ -122,6 +123,50 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 
 	@Override
 	public void timeIsUp() {
+	}
+
+	@Override
+	public void trialStopWatchUpdate(String trialTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTimeLimitChange(Integer seconds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		pecks.onVideoLoaded(videoLength);
+		hackles.onVideoLoaded(videoLength);
+		attacks.onVideoLoaded(videoLength);
+		crouches.onVideoLoaded(videoLength);		
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrialSectionStart() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

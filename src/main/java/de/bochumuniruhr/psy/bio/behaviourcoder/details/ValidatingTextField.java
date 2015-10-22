@@ -41,13 +41,19 @@ public class ValidatingTextField extends JTextField {
 					setText(defaultText);
 				}
 			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (getText().equals(defaultText)) { 
+					setText("");
+				}
+			}
 		});
 		
 		addKeyListener(new KeyAdapter() { 
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (getText().equals("") || getText() == null) { 
+				if (getText() == null) { 
 					setText(defaultText);
 				} else { 
 					setBackground(Color.WHITE);

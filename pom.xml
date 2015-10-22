@@ -26,11 +26,16 @@
 			<artifactId>jdatepicker</artifactId>
 			<version>1.3.2</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.media</groupId>
 			<artifactId>jmf</artifactId>
 			<version>2.1.1e</version>
-		</dependency>
+		</dependency> -->
+		<!--<dependency>
+			<groupId>nz.co.thescene</groupId>
+			<artifactId>thescene-emailing</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>-->
 	</dependencies>
 
 	<build>
