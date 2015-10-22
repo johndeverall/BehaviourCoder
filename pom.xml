@@ -54,7 +54,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.bochumuniruhr.psy.bio.timer.Main</mainClass>
+							<mainClass>de.bochumuniruhr.psy.bio.behaviourcoder.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

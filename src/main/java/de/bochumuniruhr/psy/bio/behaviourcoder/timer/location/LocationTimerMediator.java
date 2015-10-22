@@ -181,5 +181,11 @@ public class LocationTimerMediator implements TimerMediator, VideoListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

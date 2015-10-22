@@ -184,4 +184,10 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 
 	}
 
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

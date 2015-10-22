@@ -196,5 +196,11 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

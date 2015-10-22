@@ -158,5 +158,11 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

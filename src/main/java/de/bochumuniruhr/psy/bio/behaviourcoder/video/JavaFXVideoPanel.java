@@ -57,6 +57,12 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 				
 				StackPane root = new StackPane();
 				mediaPlayer = new MediaPlayer(new Media(file.toURI().toString()));
+				mediaPlayer.setOnError(new Runnable(){
+					@Override
+					public void run() {
+						videoErrorEvent(mediaPlayer.getError().getMessage());
+					}
+					});
 				MediaView mediaView = new MediaView(mediaPlayer);
 				mediaView.setPreserveRatio(true);
 				mediaView.fitWidthProperty();
@@ -82,6 +88,12 @@ public class JavaFXVideoPanel extends JFXPanel implements TrialSectionListener, 
 	private void videoLoadedEvent() {
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoLoaded(mediaPlayer.getTotalDuration().toSeconds());
+		}
+	}
+	
+	private void videoErrorEvent(String message) {
+		for (VideoListener videoListener : videoListeners) { 
+			videoListener.onVideoError(message);
 		}
 	}
 	

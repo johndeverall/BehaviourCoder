@@ -254,4 +254,10 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 		
 	}
 
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

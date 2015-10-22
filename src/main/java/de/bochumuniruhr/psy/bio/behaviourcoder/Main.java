@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -39,8 +38,9 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.JavaFXVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.MediaControlPanel;
 //import nz.co.thescene.emailing.SMTPMailer;
+import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
-public class Main {
+public class Main implements VideoListener {
 
 	private LocationTimerPanel locationTimerPanel;
 	private ActionTimerPanel actionTimerPanel;
@@ -111,6 +111,7 @@ public class Main {
 		videoPanel.addVideoListener(locationTimerPanel);
 		videoPanel.addVideoListener(counterPanel);
 		videoPanel.addVideoListener(actionTimerPanel);
+		videoPanel.addVideoListener(this);
 		infoPanel = new InfoPanel(DEFAULT_TIME_LIMIT);
 		infoPanel.addTrialSectionListener(locationTimerPanel);
 		locationTimerPanel.addTrialSectionListener(infoPanel);
@@ -374,6 +375,43 @@ public class Main {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoPositionChange(double videoPosition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onVideoError(String developerMessage) {
+		String separator = System.getProperty("line.separator");
+		String displayMessage = new StringBuilder()
+				.append("The video file you tried opening could not be loaded." + separator)
+				.append("It should be an MP4 with H.264/AVC video encoding and AAC audio encoding." + separator)
+				.append("See http://docs.oracle.com/javafx/2/api/javafx/scene/media/package-summary.html#SupportedMediaTypes for details." + separator)
+				.append(separator)
+				.append("Developer message: " + developerMessage + separator)
+				.toString();
+		JOptionPane.showMessageDialog(frame, displayMessage);
 	}
 
 }

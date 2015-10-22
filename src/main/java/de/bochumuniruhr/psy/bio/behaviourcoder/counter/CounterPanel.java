@@ -169,4 +169,10 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 		
 	}
 
+	@Override
+	public void onVideoError(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
