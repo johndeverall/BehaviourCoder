@@ -24,13 +24,7 @@ public class GlobalKeyPressHandler {
 				if (KeyEvent.KEY_PRESSED == e.getID()
 						&& e.getKeyCode() == 83 && e.isControlDown()) {
 					main.save();
-				} else if (KeyEvent.KEY_PRESSED == e.getID() 
-						&& 
-						(
-								e.getKeyChar() == 's'
-								||
-								e.getKeyChar() == 'c'
-						)) { 
+				} else if (KeyEvent.KEY_PRESSED == e.getID()) { 
 					fireKeyEvent(e.getKeyChar());
 				} 
 				

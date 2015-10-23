@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
@@ -20,7 +21,7 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidationError;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
 @SuppressWarnings("serial")
-public class ActionTimerPanel extends JPanel implements TrialSectionListener, VideoListener {
+public class ActionTimerPanel extends JPanel implements TrialSectionListener, VideoListener, GlobalKeyListener {
 
 	private ActionTimerMediator timerMediator;
 	private StatusPanel statusBar; 
@@ -43,7 +44,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		
 		setLayout(new GridLayout(4, 2));
 
-		followingTimer = new ActionTimerButton(timerMediator);
+		followingTimer = new ActionTimerButton(timerMediator, 'q');
 		timerMediator.register(followingTimer);
 		add(followingTimer);
 		
@@ -52,7 +53,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		label1.setHorizontalAlignment(JLabel.LEFT);
 		add(label1);
 		
-		facingAwayTimer = new ActionTimerButton(timerMediator);
+		facingAwayTimer = new ActionTimerButton(timerMediator, 'w');
 		timerMediator.register(facingAwayTimer);
 		add(facingAwayTimer);
 
@@ -61,7 +62,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		label2.setHorizontalAlignment(JLabel.LEFT);
 		add(label2);
 		
-		groomingMarkTimer = new ActionTimerButton(timerMediator);
+		groomingMarkTimer = new ActionTimerButton(timerMediator, 'e');
 		timerMediator.register(groomingMarkTimer);
 		add(groomingMarkTimer);
 
@@ -70,7 +71,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		label3.setHorizontalAlignment(JLabel.LEFT);
 		add(label3);
 
-		groomingOtherTimer = new ActionTimerButton(timerMediator);
+		groomingOtherTimer = new ActionTimerButton(timerMediator, 'r');
 		timerMediator.register(groomingOtherTimer);
 		add(groomingOtherTimer);
 		
@@ -197,6 +198,11 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void keyPressed(char key) {
+		this.timerMediator.keyPressed(key);
 	}
 	
 }

@@ -6,11 +6,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerMediator;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerButton;
 
-public class ActionTimerMediator implements TimerMediator {
+public class ActionTimerMediator implements TimerMediator, GlobalKeyListener {
 	
 	private ArrayList<TimerButton> buttons;
 	
@@ -103,6 +104,13 @@ public class ActionTimerMediator implements TimerMediator {
 	public void resume() {
 		for (TimerButton button : buttons) { 
 			button.onTrialSectionResume();
+		}
+	}
+
+	@Override
+	public void keyPressed(char key) {
+		for (TimerButton button : buttons) { 
+			button.keyPressed(key);
 		}
 	}
 

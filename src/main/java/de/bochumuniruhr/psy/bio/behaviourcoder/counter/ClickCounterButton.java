@@ -72,6 +72,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 		onTrialSectionSuspend();
 	}
 	
+	@Override
 	public void keyPressed(char key) { 
 		if (!suspended && videoLoaded) { 
 			if (key == incrementKey) { 
@@ -98,6 +99,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 
 	@Override
 	public void timeIsUp() {
+		onTrialSectionSuspend();
 	}
 
 	public Integer getCloseClicks() {

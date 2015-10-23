@@ -10,13 +10,14 @@ import javax.swing.JButton;
 import org.apache.commons.lang3.time.StopWatch;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerButton;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.TimerMediator;
 
 @SuppressWarnings("serial")
-public class ActionTimerButton extends JButton implements ActionListener, TimerButton, TrialSectionListener {
+public class ActionTimerButton extends JButton implements ActionListener, TimerButton, TrialSectionListener, GlobalKeyListener {
 
 	private StopWatch closeStopWatch;
 	private StopWatch farStopWatch;
@@ -30,9 +31,11 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	private Area currentArea;
 	private boolean suspended = false;
 	private boolean allSuspended = false;
+	private char activationKey;
 
-	public ActionTimerButton(TimerMediator mediator) {
+	public ActionTimerButton(TimerMediator mediator, char activationKey) {
 		this.mediator = mediator;
+		this.activationKey = activationKey;
 		closeStopWatch = new StopWatch();
 		farStopWatch = new StopWatch();
 		addActionListener(this);
@@ -128,13 +131,17 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		toggleButton();
+	}
+	
+	public void toggleButton() { 
 		if (!allSuspended && videoLoaded) {
 			if (currentArea != null) {
 				mediator.enable(this);
 				SoundMaker.playMouseClick();
 				lastClicked = true;
 			}
-		}
+		}		
 	}
 
 	@Override
@@ -199,6 +206,13 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 		if (suspended) {
 			this.suspended = false;
 			startResumeOrSuspend();
+		}
+	}
+	
+	@Override
+	public void keyPressed(char key) { 
+		if (key == activationKey) { 
+			toggleButton();
 		}
 	}
 

@@ -34,28 +34,28 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 		JLabel label1 = new JLabel("Peck: ");
 		label1.setFont(new Font("Arial", Font.BOLD, 20));
 		label1.setHorizontalAlignment(JLabel.RIGHT);
-		pecks = new ClickCounterButton("0", 's', 'c');
+		pecks = new ClickCounterButton("0", 'p', ';');
 		pecks.setBackground(Color.YELLOW);		
 		
 		// social calls
 		JLabel label2 = new JLabel("<html>Hackles: </html>");
 		label2.setFont(new Font("Arial", Font.BOLD, 20));
 		label2.setHorizontalAlignment(JLabel.RIGHT);
-		hackles = new ClickCounterButton("0", 's', 'c');
+		hackles = new ClickCounterButton("0", 'o', 'l');
 		hackles.setBackground(Color.GREEN);
 		
 		// alarm calls
 		JLabel label3 = new JLabel("<html>Attack: </html>");
 		label3.setFont(new Font("Arial", Font.BOLD, 20));
 		label3.setHorizontalAlignment(JLabel.RIGHT);
-		attacks = new ClickCounterButton("0", 's', 'c');
+		attacks = new ClickCounterButton("0", 'i', 'k');
 		attacks.setBackground(Color.RED);
 		
 		// head bobs
 		JLabel label4 = new JLabel("<html>Crouch: </html>");
 		label4.setFont(new Font("Arial", Font.BOLD, 20));
 		label4.setHorizontalAlignment(JLabel.RIGHT);
-		crouches = new ClickCounterButton("0", 's', 'c');
+		crouches = new ClickCounterButton("0", 'u', 'j');
 		crouches.setBackground(Color.CYAN);
 		
 		// add everything
@@ -123,6 +123,10 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 
 	@Override
 	public void timeIsUp() {
+		pecks.timeIsUp();
+		hackles.timeIsUp();
+		attacks.timeIsUp();
+		crouches.timeIsUp();
 	}
 
 	@Override

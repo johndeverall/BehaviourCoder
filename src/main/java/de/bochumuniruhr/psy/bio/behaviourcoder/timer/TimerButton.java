@@ -1,10 +1,11 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.timer;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 
-public interface TimerButton extends TrialSectionListener, VideoListener {
+public interface TimerButton extends TrialSectionListener, VideoListener, GlobalKeyListener {
 
 	public boolean isLastClicked();
 

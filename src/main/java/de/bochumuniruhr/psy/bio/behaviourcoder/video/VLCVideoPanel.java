@@ -23,7 +23,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.media.Media;
 
 public class VLCVideoPanel extends JPanel implements TrialSectionListener, MediaControlListener {
 

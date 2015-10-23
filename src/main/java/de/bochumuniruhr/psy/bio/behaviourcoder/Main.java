@@ -42,7 +42,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.timer.action.ActionTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.VLCVideoPanel;
-//import nz.co.thescene.emailing.SMTPMailer;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -57,7 +56,6 @@ public class Main implements VideoListener {
 	private StatusPanel statusPanel;
 	private FileChooser fileChooser;
 	private GlobalKeyPressHandler globalKeyHandler;
-	//private JavaFXVideoPanel videoPanel;
 	private JLabel mirrorLabel;
 	private InfoPanel infoPanel;
 	private MediaControlPanel mediaControlPanel;
@@ -70,20 +68,8 @@ public class Main implements VideoListener {
 	private JFrame frame;
 
 	public static void main(String[] args) {
-
 		//boolean found = new NativeDiscovery(new CustomNativeDiscoveryStrategy()).discover();
 		final boolean found = new NativeDiscovery().discover();
-
-		
-//		 String vlcHome = "c:/thescene/BehaviourCoder/target/classes"; // Dir with vlc.dll and vlccore.dll
-//	        NativeLibrary.addSearchPath(
-//	            RuntimeUtil.getLibVlcLibraryName(), vlcHome
-//	        );
-//	        Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-//	        
-		//System.out.println(LibVlc.INSTANCE.libvlc_get_version());
-		//NativeLibrary.addSearchPath("", "c:/thescene/BehaviourCoder/target/classes");
-		//new NativeDiscovery().discover();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Main app = new Main(found);
@@ -132,7 +118,6 @@ public class Main implements VideoListener {
 		actionTimerPanel = new ActionTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
 		locationTimerPanel = new LocationTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
 		counterPanel = new CounterPanel(statusPanel);
-		//videoPanel = new JavaFXVideoPanel();
 		vlcVideoPanel = new VLCVideoPanel();
 		mediaControlPanel = new MediaControlPanel();
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
@@ -149,6 +134,7 @@ public class Main implements VideoListener {
 		infoPanel.addTrialSectionListener(locationTimerPanel);
 		locationTimerPanel.addTrialSectionListener(infoPanel);
 		globalKeyHandler.register(counterPanel);
+		globalKeyHandler.register(actionTimerPanel);
 		detailsPanel = new DetailsPanel(statusPanel);
 		fileChooser = new FileChooser(statusPanel);
 
@@ -185,7 +171,6 @@ public class Main implements VideoListener {
 		videoPanelConstraints.weightx = 1;
 		videoPanelConstraints.weighty = 1;
 		videoPanelConstraints.anchor = GridBagConstraints.CENTER;
-		//mainPanel.add(videoPanel, videoPanelConstraints);
 		mainPanel.add(vlcVideoPanel, videoPanelConstraints);
 
 		GridBagConstraints mediaControlPanelConstraints = new GridBagConstraints();
@@ -260,7 +245,6 @@ public class Main implements VideoListener {
 				detailsPanel.resetAll();
 				actionTimerPanel.resetAll();
 				infoPanel.resetAll();
-				//videoPanel.resetAll();
 				vlcVideoPanel.resetAll();
 				mediaControlPanel.resetAll();
 			}

@@ -172,5 +172,11 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void keyPressed(char key) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
