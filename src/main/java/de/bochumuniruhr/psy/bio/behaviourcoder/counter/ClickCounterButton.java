@@ -34,7 +34,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 		
 		addMouseListener(new MouseAdapter() { 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				if (!suspended && videoLoaded) { 
 					if (e.getButton() ==  MouseEvent.BUTTON1) { 
 						increment();
