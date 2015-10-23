@@ -234,6 +234,29 @@ public class Main implements VideoListener {
 	private JMenuBar configureJMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
+		JMenu programMenu = configureProgramMenu();
+		menuBar.add(programMenu);
+		
+		JMenu helpMenu = configureHelpMenu();
+		menuBar.add(helpMenu);
+		
+		return menuBar;
+	}
+
+	private JMenu configureHelpMenu() {
+		JMenu menu = new JMenu("Help");
+		
+		JMenuItem help = new JMenuItem("Version");
+		help.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "Version: 0.2");
+			}});
+		menu.add(help);
+		return menu;
+	}
+
+	private JMenu configureProgramMenu() {
 		JMenu menu = new JMenu("Program");
 
 		JMenuItem reset = new JMenuItem("Reset");
@@ -282,9 +305,7 @@ public class Main implements VideoListener {
 			}
 		});
 		menu.add(exit);
-
-		menuBar.add(menu);
-		return menuBar;
+		return menu;
 	}
 
 	private void showSaveDialog() {
