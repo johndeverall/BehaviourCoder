@@ -46,6 +46,7 @@ public class ActionTimerMediator implements TimerMediator {
 			button.reset();
 			button.setEnabled(true);
 		}
+		this.suspendAll();
 	}
 
 	public List<String> getTimes() {

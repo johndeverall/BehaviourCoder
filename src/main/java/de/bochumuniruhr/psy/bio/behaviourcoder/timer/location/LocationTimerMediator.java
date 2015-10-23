@@ -167,7 +167,7 @@ public class LocationTimerMediator implements TimerMediator, VideoListener {
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class LocationTimerMediator implements TimerMediator, VideoListener {
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

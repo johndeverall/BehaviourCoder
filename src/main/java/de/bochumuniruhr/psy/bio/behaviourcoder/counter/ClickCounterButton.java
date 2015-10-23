@@ -69,6 +69,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 	public void reset() { 
 		clicks.clear();
 		setText("" + clicks.size());
+		onTrialSectionSuspend();
 	}
 	
 	public void keyPressed(char key) { 
@@ -137,38 +138,32 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
-		// TODO Auto-generated method stub
+	public void onVideoPositionChange(long videoPosition) {
 		
 	}
 
 	@Override
 	public void onVideoStart() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onVideoStop() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
-		// TODO Auto-generated method stub
+	public void onVideoPercentThroughChange(int videoTime) {
 		
 	}
 }

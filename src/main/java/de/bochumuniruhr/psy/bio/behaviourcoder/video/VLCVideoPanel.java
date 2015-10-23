@@ -3,6 +3,7 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.video;
 import javafx.embed.swing.JFXPanel;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.Scene;
+import jxl.common.Logger;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 
@@ -20,23 +21,34 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSectionListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
+import uk.co.caprica.vlcj.player.MediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.media.Media;
 
 public class VLCVideoPanel extends JPanel implements TrialSectionListener, MediaControlListener {
 
-//	private MediaPlayer mediaPlayer;
-//	private Stage stage;
-//	private ReadOnlyObjectProperty<Duration> totalDuration;
 	private List<VideoListener> videoListeners;
 	private boolean videoLoaded = false;
-	private double trialSectionStart;
+	private long trialSectionStart;
 	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
+	private Logger logger = Logger.getLogger(this.getClass());
 	
 	public VLCVideoPanel() { 
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		setLayout(new BorderLayout());
 		add(mediaPlayerComponent, BorderLayout.CENTER);
 		videoListeners = new ArrayList<VideoListener>();
+		mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+			
+			@Override
+			public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
+				int iPos = (int)(newPosition * 100);
+				fireVideoPercentThroughChangeEvent(iPos);
+				fireVideoPositionChangeEvent(mediaPlayer.getTime());
+			}
+			
+			
+		});
 	}
 
 	public void openVideo(final File file, StatusPanel statusBar) {
@@ -69,11 +81,15 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 		}
 	}
 	
-	private void fireVideoTimeChangeEvent() { 
-		if (videoLoaded) { 
-			for (VideoListener videoListener : videoListeners) { 
-				videoListener.onVideoTimeChange(mediaPlayerComponent.getMediaPlayer().getTime());
-			}
+	private void fireVideoPercentThroughChangeEvent(int iPos) { 
+		for (VideoListener videoListener : videoListeners) { 
+			videoListener.onVideoPercentThroughChange(iPos);
+		}
+	}
+	
+	private void fireVideoPositionChangeEvent(long videoPositionChange) { 
+		for (VideoListener videoListener : videoListeners) { 
+			videoListener.onVideoPositionChange(videoPositionChange);
 		}
 	}
 	
@@ -85,17 +101,17 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 		mediaPlayerComponent.getMediaPlayer().play();
 	}
 	
-	public void seek(final double positionInSeconds) { 
-		mediaPlayerComponent.getMediaPlayer().setPosition((float) positionInSeconds);
+	public void skip(final long intervalInMiliseconds) { 
+		mediaPlayerComponent.getMediaPlayer().skip(intervalInMiliseconds);
 	}
 	
 	public void reset() { 
-		seek(0);
+		skip(0);
 		mediaPlayerComponent.getMediaPlayer().stop();
 	}
 	
 	public void resetAll() {
-		seek(0);
+		skip(0);
 		mediaPlayerComponent.getMediaPlayer().stop();
 	}
 
@@ -115,23 +131,22 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 	}
 
 	@Override
-	public void onPlay() {
-		play();
+	public void onPlay(boolean play) {
+		if (play) { 
+			play();
+		} else { 
+			pause();
+		}
 	}
 	
 	@Override
-	public void onPause() {
-		pause();
-	}
-
-	@Override
-	public void onSeek(final double positionInSeconds) {
-		seek(positionInSeconds);
+	public void onSkip(final long intervalInMiliseconds) {
+		skip(intervalInMiliseconds);
 	}
 
 	@Override
 	public void trialStopWatchUpdate(String trialTime) {
-		fireVideoTimeChangeEvent();
+		//fireVideoTimeChangeEvent();
 	}
 
 	@Override

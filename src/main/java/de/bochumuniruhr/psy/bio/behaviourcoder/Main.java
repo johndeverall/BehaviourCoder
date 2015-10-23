@@ -29,7 +29,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
 
-import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
@@ -41,7 +40,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.action.ActionTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.video.JavaFXVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.video.VLCVideoPanel;
 //import nz.co.thescene.emailing.SMTPMailer;
@@ -191,10 +189,10 @@ public class Main implements VideoListener {
 		mainPanel.add(vlcVideoPanel, videoPanelConstraints);
 
 		GridBagConstraints mediaControlPanelConstraints = new GridBagConstraints();
-		mediaControlPanelConstraints.gridx = 8;
+		mediaControlPanelConstraints.gridx = 0;
 		mediaControlPanelConstraints.gridy = 15;
 		mediaControlPanelConstraints.gridheight = 3;
-		mediaControlPanelConstraints.gridwidth = 16;
+		mediaControlPanelConstraints.gridwidth = 30;
 		mediaControlPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
 		mainPanel.add(mediaControlPanel, mediaControlPanelConstraints);
 
@@ -277,13 +275,13 @@ public class Main implements VideoListener {
 			}
 		});
 		
-		JMenuItem findVlcLibrary = new JMenuItem("Find VLC Library");
-		findVlcLibrary.addActionListener(new ActionListener() { 
-			public void actionPerformed(ActionEvent e) { 
-				showFindVlcLibraryDialog();
-			}
-		});
-		menu.add(findVlcLibrary);
+//		JMenuItem findVlcLibrary = new JMenuItem("Find VLC Library");
+//		findVlcLibrary.addActionListener(new ActionListener() { 
+//			public void actionPerformed(ActionEvent e) { 
+//				showFindVlcLibraryDialog();
+//			}
+//		});
+//		menu.add(findVlcLibrary);
 
 		JMenuItem save = new JMenuItem("Save");
 		save.addActionListener(new ActionListener() {
@@ -450,7 +448,7 @@ public class Main implements VideoListener {
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -481,7 +479,7 @@ public class Main implements VideoListener {
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

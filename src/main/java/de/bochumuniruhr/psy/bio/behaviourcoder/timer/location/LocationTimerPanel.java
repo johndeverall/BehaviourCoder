@@ -174,7 +174,7 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -204,7 +204,7 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

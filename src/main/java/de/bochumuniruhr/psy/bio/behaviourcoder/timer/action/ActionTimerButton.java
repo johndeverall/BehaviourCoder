@@ -22,14 +22,14 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	private StopWatch farStopWatch;
 	private TimerMediator mediator;
 	private DecimalFormat decimalFormatter;
-	private boolean lastClicked;
+	private boolean lastClicked = false;
 	private boolean videoLoaded = false;
 
 	// the timer that starts after a stop is the timer for the area we are
 	// currently in.
 	private Area currentArea;
 	private boolean suspended = false;
-	private boolean allSuspended;
+	private boolean allSuspended = false;
 
 	public ActionTimerButton(TimerMediator mediator) {
 		this.mediator = mediator;
@@ -141,6 +141,10 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	public void reset() {
 		closeStopWatch.reset();
 		farStopWatch.reset();
+		lastClicked = false;
+		videoLoaded = true;
+		suspended = false;
+		allSuspended = false;
 	}
 
 	@Override
@@ -233,7 +237,7 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 	}
 
 	@Override
@@ -261,7 +265,7 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

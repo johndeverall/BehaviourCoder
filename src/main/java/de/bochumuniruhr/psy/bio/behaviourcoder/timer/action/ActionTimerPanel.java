@@ -166,7 +166,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

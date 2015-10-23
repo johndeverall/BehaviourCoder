@@ -70,6 +70,8 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	
 	public void reset() { 
 		stopWatch.reset();
+		lastClicked = false;
+		videoLoaded = true;
 	}
 	
 	public boolean isStopped() { 
@@ -136,7 +138,7 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -166,7 +168,7 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

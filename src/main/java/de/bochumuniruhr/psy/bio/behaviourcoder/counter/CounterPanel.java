@@ -146,7 +146,7 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 	}
 
 	@Override
-	public void onVideoPositionChange(double videoPosition) {
+	public void onVideoPositionChange(long videoPosition) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -176,7 +176,7 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 	}
 
 	@Override
-	public void onVideoTimeChange(double videoTime) {
+	public void onVideoPercentThroughChange(int videoTime) {
 		// TODO Auto-generated method stub
 		
 	}

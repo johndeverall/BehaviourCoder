@@ -4,7 +4,7 @@ public interface VideoListener {
 	
 	public void onVideoLoaded(double videoLength);
 	
-	public void onVideoPositionChange(double videoPosition);
+	public void onVideoPositionChange(long videoPosition);
 
 	public void onVideoStart();
 	
@@ -12,5 +12,5 @@ public interface VideoListener {
 		
 	public void onVideoError(String message);
 	
-	public void onVideoTimeChange(double videoTime);
+	public void onVideoPercentThroughChange(int videoTime);
 }
