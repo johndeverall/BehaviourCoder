@@ -164,6 +164,7 @@ public class ActionTimerPanel extends JPanel implements TrialSectionListener, Vi
 		facingAwayTimer.onVideoLoaded(videoLength);
 		groomingMarkTimer.onVideoLoaded(videoLength);
 		groomingOtherTimer.onVideoLoaded(videoLength);
+		
 	}
 
 	@Override

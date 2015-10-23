@@ -146,7 +146,7 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSect
 		pecks.onVideoLoaded(videoLength);
 		hackles.onVideoLoaded(videoLength);
 		attacks.onVideoLoaded(videoLength);
-		crouches.onVideoLoaded(videoLength);		
+		crouches.onVideoLoaded(videoLength);
 	}
 
 	@Override

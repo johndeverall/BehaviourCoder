@@ -137,6 +137,7 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Tr
 	@Override
 	public void onVideoLoaded(double videoLength) {
 		this.videoLoaded = true;
+		reset();
 	}
 
 	@Override

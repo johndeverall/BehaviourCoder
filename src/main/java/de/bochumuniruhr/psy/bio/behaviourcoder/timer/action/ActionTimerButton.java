@@ -248,6 +248,7 @@ public class ActionTimerButton extends JButton implements ActionListener, TimerB
 	@Override
 	public void onVideoLoaded(double videoLength) {
 		this.videoLoaded = true;
+		reset();
 	}
 
 	@Override

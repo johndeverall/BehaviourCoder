@@ -135,6 +135,7 @@ public class LocationTimerButton extends JButton implements ActionListener, Time
 	@Override
 	public void onVideoLoaded(double videoLength) {
 		this.videoLoaded = true;
+		reset();
 	}
 
 	@Override
