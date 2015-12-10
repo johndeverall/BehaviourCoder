@@ -31,18 +31,21 @@ import org.apache.log4j.Logger;
 
 import com.sun.jna.NativeLibrary;
 
-import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.SoundMaker;
-import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.counter.CounterPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.details.DetailsPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.details.ValidationError;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyPressHandler;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.InfoPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.counter.CounterPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.DetailsPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.action.ActionTimerPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.location.LocationTimerPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
-import de.bochumuniruhr.psy.bio.behaviourcoder.timer.action.ActionTimerPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.timer.location.LocationTimerPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.video.MediaControlPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.video.VLCVideoPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.video.VideoListener;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
@@ -68,6 +71,8 @@ public class Main implements VideoListener {
 	private JFrame frame;
 
 	public static void main(String[] args) {
+		System.setProperty("jna.library.path", "C:\\Program Files\\VideoLAN\\VLC\\");
+		
 		//boolean found = new NativeDiscovery(new CustomNativeDiscoveryStrategy()).discover();
 		final boolean found = new NativeDiscovery().discover();
 		SwingUtilities.invokeLater(new Runnable() {

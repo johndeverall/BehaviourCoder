@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.bochumuniruhr.psy.bio.behaviourcoder.TrialSection;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import jxl.Workbook;
 import jxl.format.Colour;
 import jxl.read.biff.BiffException;

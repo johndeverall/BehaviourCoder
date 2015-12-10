@@ -2,7 +2,7 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.io;
 
 import javax.swing.JFileChooser;
 
-import de.bochumuniruhr.psy.bio.behaviourcoder.advisory.StatusPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 
 public class FileChooser extends JFileChooser {
 
