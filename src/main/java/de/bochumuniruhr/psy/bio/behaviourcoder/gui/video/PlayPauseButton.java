@@ -2,10 +2,7 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.gui.video;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
-
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 
 @SuppressWarnings("serial")
 public class PlayPauseButton extends JButton {

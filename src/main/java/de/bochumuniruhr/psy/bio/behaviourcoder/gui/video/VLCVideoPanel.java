@@ -1,28 +1,26 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.video;
 
-import jxl.common.Logger;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JPanel;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 public class VLCVideoPanel extends JPanel implements TrialListener, MediaControlListener {
 
+	private static final long serialVersionUID = 1607305948565939133L;
+	
 	private List<VideoListener> videoListeners;
 	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
-	private Logger logger = Logger.getLogger(this.getClass());
+	//private Logger logger = Logger.getLogger(this.getClass());
 	private Trial trial;
 	
 	public VLCVideoPanel(Trial trial) { 
@@ -49,7 +47,6 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 		try {
 			video = file.getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.setVisible(true);
@@ -64,12 +61,6 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	private void fireVideoLoadedEvent() {
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoLoaded(mediaPlayerComponent.getMediaPlayer().getLength());
-		}
-	}
-	
-	private void fireVideoErrorEvent(String message) {
-		for (VideoListener videoListener : videoListeners) { 
-			videoListener.onVideoError(message);
 		}
 	}
 	
@@ -135,7 +126,6 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	public void onSkip(final long intervalInMiliseconds) {
 		skip(intervalInMiliseconds);
 	}
-
 
 	@Override
 	public void onAreaChange(Area name) {}

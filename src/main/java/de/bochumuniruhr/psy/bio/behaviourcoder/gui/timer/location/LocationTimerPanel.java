@@ -1,7 +1,6 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.location;
 
 import java.awt.GridLayout;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,27 +12,19 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
-public class LocationTimerPanel extends JPanel implements TrialSectionListener, TrialListener {
+public class LocationTimerPanel extends JPanel implements TrialListener {
 
 	private StatusPanel statusBar; 
-	private DecimalFormat decimalFormatter;
-	private List<TrialSectionListener> trialSectionListeners;
 	private List<LocationTimerButton> buttons;
 	private Trial trial;
 	
 	public LocationTimerPanel(Trial trial, StatusPanel statusBar) { 
-		
-		trialSectionListeners = new ArrayList<TrialSectionListener>();
 		buttons = new ArrayList<LocationTimerButton>();
 		
 		this.statusBar = statusBar;
 		this.trial = trial;
-		
-		decimalFormatter = new DecimalFormat("0.00");
 		
 		setLayout(new GridLayout(0, 1));
 		
@@ -74,15 +65,6 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		for (LocationTimerButton button : buttons){
 			button.updateText();
 		}
-		double totalTime = trial.getCurrentTime() / 1000.00;
-		fireTrialStopWatchUpdateEvent(totalTime);
-		
-	}
-
-	private void fireTrialStopWatchUpdateEvent(double totalTime) {
-		for (TrialSectionListener trialSectionListener : trialSectionListeners) { 
-			trialSectionListener.trialStopWatchUpdate(decimalFormatter.format(totalTime));
-		}
 	}
 
 	public Collection<? extends ValidationError> validateTrialData() {
@@ -96,33 +78,8 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		return validationErrors;
 	}
 
-	public void addTrialSectionListener(TrialSectionListener trialSectionListener) {
-		this.trialSectionListeners.add(trialSectionListener);
-	}
-
 	@Override
 	public void onAreaChange(Area name) {}
-
-	@Override
-	public void onTrialSectionSuspend() {}
-
-	@Override
-	public void onTrialSectionResume() {}
-
-	@Override
-	public void timeIsUp() {}
-
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {}
-
-	@Override
-	public void onTimeLimitChange(Integer seconds) {
-		//this.timeLimit = seconds;
-		statusBar.setMessage("Time limit set to " + seconds + " seconds.");
-	}
-
-	@Override
-	public void onTrialSectionStart() {}
 
 	@Override
 	public void onStop() {
@@ -132,12 +89,18 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 	}
 
 	@Override
-	public void onPause() {}
+	public void onPause() {
+		statusBar.setMessage("Trial suspended");
+	}
 
 	@Override
-	public void onResume() {}
+	public void onResume() {
+		statusBar.setMessage("Trial in progress");
+	}
 
 	@Override
-	public void onStart() {}
+	public void onStart() {
+		statusBar.setMessage("Trial in progress");
+	}
 
 }

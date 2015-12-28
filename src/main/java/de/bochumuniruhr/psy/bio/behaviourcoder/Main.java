@@ -154,7 +154,7 @@ public class Main implements VideoListener {
 		vlcVideoPanel.addVideoListener(trial);
 		vlcVideoPanel.addVideoListener(counterPanel);
 		vlcVideoPanel.addVideoListener(this);
-		infoPanel = new InfoPanel(trial);
+		infoPanel = new InfoPanel(trial, statusPanel);
 		trial.addListener(infoPanel);
 		globalKeyHandler.register(counterPanel);
 		globalKeyHandler.register(actionTimerPanel);
@@ -316,58 +316,6 @@ public class Main implements VideoListener {
 			//	validationErrors.add(new ValidationError("All timers must be stopped to save. "));
 			//}
 			if (validationMessages.isEmpty()) {
-				/*
-				trial.setDate(this.trial.getDetails().getDate());
-				trial.setTrialType(this.trial.getDetails().getDetail("Trial Type"));
-				trial.setRoosterId(this.trial.getDetails().getDetail("Rooster ID"));
-				trial.setSessionNumber(this.trial.getDetails().getDetail("Session Number"));
-				trial.setTrialNumber(this.trial.getDetails().getDetail("Trial Number"));
-				trial.setSectionNumber(this.trial.getDetails().getDetail("Section Number"));
-				trial.setMirror(this.trial.getDetails().getDetail("Mirror?"));
-				
-				trial.setClose(this.trial.getAreaTime(this.trial.getAreas().get(0))/1000.0);
-				trial.setFar(this.trial.getAreaTime(this.trial.getAreas().get(1))/1000.0);
-				
-				//Actions
-				trial.setFollowingClose(this.trial.getTimedBehaviours().get(0)
-						.getDuration(this.trial.getAreas().get(0)));
-				trial.setFollowingFar(this.trial.getTimedBehaviours().get(0)
-						.getDuration(this.trial.getAreas().get(1)));
-				trial.setFacingAwayClose(this.trial.getTimedBehaviours().get(1)
-						.getDuration(this.trial.getAreas().get(0)));
-				trial.setFacingAwayFar(this.trial.getTimedBehaviours().get(1)
-						.getDuration(this.trial.getAreas().get(1)));
-				trial.setGroomMarkClose(this.trial.getTimedBehaviours().get(2)
-						.getDuration(this.trial.getAreas().get(0)));
-				trial.setGroomMarkFar(this.trial.getTimedBehaviours().get(2)
-						.getDuration(this.trial.getAreas().get(1)));
-				trial.setOtherClose(this.trial.getTimedBehaviours().get(3)
-						.getDuration(this.trial.getAreas().get(0)));
-				trial.setOtherFar(this.trial.getTimedBehaviours().get(3)
-						.getDuration(this.trial.getAreas().get(1)));
-				
-				//Counts
-				trial.setPecksClose(this.trial.getInstantBehaviours().get(0)
-						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
-				trial.setPecksFar(this.trial.getInstantBehaviours().get(0)
-						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
-				trial.setHacklesClose(this.trial.getInstantBehaviours().get(1)
-						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
-				trial.setHacklesFar(this.trial.getInstantBehaviours().get(1)
-						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
-				trial.setAttacksClose(this.trial.getInstantBehaviours().get(2)
-						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
-				trial.setAttacksFar(this.trial.getInstantBehaviours().get(2)
-						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
-				trial.setCrouchesClose(this.trial.getInstantBehaviours().get(2)
-						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
-				trial.setCrouchesFar(this.trial.getInstantBehaviours().get(2)
-						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
-				
-				trial.setLocationChanges(this.trial.getNumberOfAreaChanges());
-				trial.setTrialSectionStart(this.trial.getDetails().getVideoTimeOffset());
-				*/
-				
 				writer.write(trial);
 				statusPanel.setMessage("Saved OK");
 				SoundMaker.playSave();

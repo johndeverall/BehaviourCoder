@@ -2,33 +2,21 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.gui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidatingTextField;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
 public class InfoPanel extends JPanel implements TrialListener {
@@ -40,7 +28,7 @@ public class InfoPanel extends JPanel implements TrialListener {
 	private Trial trial;
 	private DecimalFormat decimalFormatter;
 	
-	public InfoPanel(Trial trialSession) { 
+	public InfoPanel(Trial trialSession, final StatusPanel statusBar) { 
 		trial = trialSession;
 		decimalFormatter = new DecimalFormat("0.00");
 		this.setLayout(new GridLayout(1, 3));
@@ -67,6 +55,7 @@ public class InfoPanel extends JPanel implements TrialListener {
 				} catch (ParseException e1) {
 				}
 				trial.getDetails().setDuration((long) timeLimit.getValue());
+				statusBar.setMessage("Time limit set to " + (long) timeLimit.getValue() + " seconds.");
 			}
 		});
 		timeLimit.setValue(trial.getDetails().getDuration());

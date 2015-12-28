@@ -7,19 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-
-import org.apache.log4j.Logger;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
 public class MediaControlPanel extends JPanel implements TrialListener, VideoListener {
@@ -31,7 +26,7 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	private JLabel currentPosition;
 	private List<MediaControlListener> mediaControlListeners;
 	private JSlider seeker = new JSlider();
-	private Logger logger = Logger.getLogger(this.getClass());
+	//private Logger logger = Logger.getLogger(this.getClass());
 	private Trial trial;
 	
 	public MediaControlPanel(Trial trial) {
