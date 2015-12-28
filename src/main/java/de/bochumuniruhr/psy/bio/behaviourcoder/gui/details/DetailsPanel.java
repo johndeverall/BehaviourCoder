@@ -1,16 +1,18 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.details;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -18,61 +20,58 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
 @SuppressWarnings("serial")
 public class DetailsPanel extends JPanel {
 	
-	private ValidatingTextField roosterId;
 	private JDatePickerImpl datePicker;
-	private ValidatingTextField trialType;
+	private List<ValidatingTextField> fields;
 	private StatusPanel statusBar;
-	private ValidatingTextField sessionNumber;
-	private ValidatingTextField trialNumber;
-	private ValidatingTextField sectionNumber;
-	private ValidatingTextField mirror;
 	
-	public DetailsPanel(StatusPanel statusBar) { 
-		
+	public DetailsPanel(StatusPanel statusBar, Trial trial) { 
+		final TrialDetails details = trial.getDetails();
 		this.statusBar = statusBar;
-		setLayout(new GridLayout(1, 7));
+		setLayout(new GridLayout(1, details.getDetailNames().size() * 2 + 2));
 
+		JLabel label = new JLabel("Date:");
+		label.setToolTipText("Date of the trial");
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setFont(new Font("Arial", Font.BOLD, 20));
+		add (label);
 		datePicker = new JDatePickerImpl(new JDatePanelImpl(new UtilDateModel()));
+		datePicker.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				details.setDate((Date) ((JDatePanelImpl) e.getSource()).getModel().getValue());		
+			}
+		});
 		add(datePicker);
+		fields = new ArrayList<ValidatingTextField>();
 		
-		trialType = new ValidatingTextField("Trial Type", "Invalid trial type. ", "BM", "NM", "BS", "NS", "WM", "WS");
-		add(trialType);
-		
-		roosterId = new ValidatingTextField("Rooster ID", "Invalid rooster id. ", "554", "570", "547", "538", "546", "551", "559", "548", "544", "578", "579", "542", "567");
-		add(roosterId);
-		
-		sessionNumber = new ValidatingTextField("Session #", "Session cannot be empty. ");
-		add(sessionNumber);
-		
-		trialNumber = new ValidatingTextField("Trial #", "Trial Number cannot be empty. ");
-		add(trialNumber);
-		
-		sectionNumber = new ValidatingTextField("Section #", "Section cannot be empty. ");
-		add(sectionNumber);
-		
-		mirror = new ValidatingTextField("Mirror?", "Mirror must be a 1 or a 0. ", "0", "1");
-		add(mirror);
-	}
-
-	public void populateTrial(TrialSection trial) {
-		trial.setDate((Date)datePicker.getModel().getValue());
-		trial.setTrialType(trialType.getText());
-		trial.setRoosterId(roosterId.getText());
-		trial.setSessionNumber(sessionNumber.getText());
-		trial.setTrialNumber(trialNumber.getText());
-		trial.setSectionNumber(sectionNumber.getText());
-		trial.setMirror(mirror.getText());
+		for (String detail : details.getDetailNames()){
+			label = new JLabel(detail + ":");
+			String tooltip = "Valid values:";
+			if (details.getConstraint(detail).holdsForAny()){
+				tooltip = "Cannot be blank";
+			} else {
+				for (String value : details.getConstraint(detail).getWhitelist()){
+					tooltip += " " + value;
+				}
+			}
+			label.setToolTipText(tooltip);
+			label.setHorizontalAlignment(JLabel.CENTER);
+			label.setFont(new Font("Arial", Font.BOLD, 20));
+			add(label);
+			ValidatingTextField field = new ValidatingTextField(details, detail);
+			field.setToolTipText(tooltip);
+			add(field);
+			fields.add(field);
+		}
 	}
 	
 	public List<ValidationError> validateTrialData() { 
 		List<ValidationError> errors = new ArrayList<ValidationError>();
 		
-		errors.addAll(trialType.validateTextField());
-		errors.addAll(roosterId.validateTextField());
-		errors.addAll(sessionNumber.validateTextField());
-		errors.addAll(trialNumber.validateTextField());
-		errors.addAll(sectionNumber.validateTextField());
-		errors.addAll(mirror.validateTextField());
+		for (ValidatingTextField field : fields){
+			errors.addAll(field.validateTextField());
+		}
 		
 		if (datePicker.getModel().getValue() == null) { 
 			datePicker.setBackground(Color.PINK);
@@ -87,19 +86,9 @@ public class DetailsPanel extends JPanel {
 	}
 
 	public void resetAll() {
-		
-		trialType.reset();
-		
-		roosterId.reset();
-		
-		sessionNumber.reset();
-		
-		trialNumber.reset();
-		
-		sectionNumber.reset();
-		
-		mirror.reset();
-		
+		for (ValidatingTextField field : fields){
+			field.reset();
+		}		
 		datePicker.getModel().setValue(null);
 	}
 

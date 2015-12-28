@@ -11,10 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,11 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import org.apache.log4j.Logger;
-
-import com.sun.jna.NativeLibrary;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyPressHandler;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.InfoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
@@ -45,10 +41,14 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 public class Main implements VideoListener {
 
@@ -65,6 +65,8 @@ public class Main implements VideoListener {
 	private VLCVideoPanel vlcVideoPanel;
 	private boolean foundVlc;
 	private Logger logger = Logger.getLogger(this.getClass());
+	
+	private Trial trial;
 
 	private int DEFAULT_TIME_LIMIT = 120;
 
@@ -77,7 +79,7 @@ public class Main implements VideoListener {
 		final boolean found = new NativeDiscovery().discover();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Main app = new Main(found);
+				new Main(found);
 			}
 		});
 	}
@@ -86,6 +88,14 @@ public class Main implements VideoListener {
 		this.foundVlc = true;
 		KeyboardFocusManager currentKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		globalKeyHandler = new GlobalKeyPressHandler(currentKeyboardFocusManager, this);
+		
+		trial = new Trial(DEFAULT_TIME_LIMIT, Arrays.asList(new Area("Close"), new Area("Far")),
+				Arrays.asList("Trial Type", "Rooster ID", "Session Number", "Trial Number", "Section Number", "Mirror?"),
+				Arrays.asList(new Constraint("BM", "NM", "BS", "NS", "WM", "WS"),
+						new Constraint("554", "570", "547", "538", "546", "551", "559", "548", "544", "578", "579", "542", "567"),
+						new Constraint(), new Constraint(), new Constraint(),
+						new Constraint("0", "1")));
+		setupBehaviours();
 		setupUI();
 	}
 
@@ -96,6 +106,18 @@ public class Main implements VideoListener {
 		} else {
 			save(file);
 		}
+	}
+	
+	private void setupBehaviours(){
+		trial.addInstantBehaviour(new InstantBehaviour("Peck", Color.YELLOW, trial));
+		trial.addInstantBehaviour(new InstantBehaviour("Hackles", Color.GREEN, trial));
+		trial.addInstantBehaviour(new InstantBehaviour("Attack", Color.RED, trial));
+		trial.addInstantBehaviour(new InstantBehaviour("Crouch", Color.CYAN, trial));
+		
+		trial.addTimedBehaviour(new TimedBehaviour("Following", null, trial));
+		trial.addTimedBehaviour(new TimedBehaviour("Facing Away", null, trial));
+		trial.addTimedBehaviour(new TimedBehaviour("Grooming Mark", null, trial));
+		trial.addTimedBehaviour(new TimedBehaviour("Grooming Other", null, trial));
 	}
 
 	private void setupUI() {
@@ -120,27 +142,25 @@ public class Main implements VideoListener {
 		mainPanel.setLayout(new GridBagLayout());
 
 		statusPanel = new StatusPanel(frame);
-		actionTimerPanel = new ActionTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
-		locationTimerPanel = new LocationTimerPanel(statusPanel, DEFAULT_TIME_LIMIT);
-		counterPanel = new CounterPanel(statusPanel);
+		actionTimerPanel = new ActionTimerPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
+		locationTimerPanel = new LocationTimerPanel(trial, statusPanel);
+		trial.addListener(locationTimerPanel);
+		counterPanel = new CounterPanel(trial,
+				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
 		vlcVideoPanel = new VLCVideoPanel();
-		mediaControlPanel = new MediaControlPanel();
+		mediaControlPanel = new MediaControlPanel(trial);
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
-		locationTimerPanel.addTrialSectionListener(actionTimerPanel);
-		locationTimerPanel.addTrialSectionListener(counterPanel);
-		locationTimerPanel.addTrialSectionListener(vlcVideoPanel);
-		locationTimerPanel.addTrialSectionListener(mediaControlPanel);
+		trial.addListener(vlcVideoPanel);
+		trial.addListener(mediaControlPanel);
 		vlcVideoPanel.addVideoListener(mediaControlPanel);
-		vlcVideoPanel.addVideoListener(locationTimerPanel);
+		vlcVideoPanel.addVideoListener(trial);
 		vlcVideoPanel.addVideoListener(counterPanel);
-		vlcVideoPanel.addVideoListener(actionTimerPanel);
 		vlcVideoPanel.addVideoListener(this);
-		infoPanel = new InfoPanel(DEFAULT_TIME_LIMIT);
-		infoPanel.addTrialSectionListener(locationTimerPanel);
-		locationTimerPanel.addTrialSectionListener(infoPanel);
+		infoPanel = new InfoPanel(trial);
+		trial.addListener(infoPanel);
 		globalKeyHandler.register(counterPanel);
 		globalKeyHandler.register(actionTimerPanel);
-		detailsPanel = new DetailsPanel(statusPanel);
+		detailsPanel = new DetailsPanel(statusPanel, trial);
 		fileChooser = new FileChooser(statusPanel);
 
 		mirrorLabel = new JLabel("Mirror / Divider");
@@ -149,85 +169,36 @@ public class Main implements VideoListener {
 		mirrorLabel.setBackground(Color.BLACK);
 		mirrorLabel.setOpaque(true);
 		mirrorLabel.setForeground(Color.WHITE);
-
-		GridBagConstraints infoPanelConstraints = new GridBagConstraints();
-		infoPanelConstraints.gridx = 0;
-		infoPanelConstraints.gridy = 0;
-		infoPanelConstraints.gridheight = 2;
-		infoPanelConstraints.gridwidth = 30;
-		infoPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-		infoPanelConstraints.weightx = 1;
-		mainPanel.add(infoPanel, infoPanelConstraints);
-
-		GridBagConstraints detailsPanelConstraints = new GridBagConstraints();
-		detailsPanelConstraints.gridx = 0;
-		detailsPanelConstraints.gridy = 2;
-		detailsPanelConstraints.gridheight = 2;
-		detailsPanelConstraints.gridwidth = 30;
-		detailsPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(detailsPanel, detailsPanelConstraints);
-
-		GridBagConstraints videoPanelConstraints = new GridBagConstraints();
-		videoPanelConstraints.gridx = 0;
-		videoPanelConstraints.gridy = 4;
-		videoPanelConstraints.gridheight = 11;
-		videoPanelConstraints.gridwidth = 30;
-		videoPanelConstraints.fill = GridBagConstraints.BOTH;
+		
+		GridBagConstraints videoPanelConstraints = createConstraints(0, 4, 30, 11, GridBagConstraints.BOTH);
 		videoPanelConstraints.weightx = 1;
 		videoPanelConstraints.weighty = 1;
 		videoPanelConstraints.anchor = GridBagConstraints.CENTER;
 		mainPanel.add(vlcVideoPanel, videoPanelConstraints);
 
-		GridBagConstraints mediaControlPanelConstraints = new GridBagConstraints();
-		mediaControlPanelConstraints.gridx = 0;
-		mediaControlPanelConstraints.gridy = 15;
-		mediaControlPanelConstraints.gridheight = 3;
-		mediaControlPanelConstraints.gridwidth = 30;
-		mediaControlPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(mediaControlPanel, mediaControlPanelConstraints);
+		GridBagConstraints infoPanelConstraints = createConstraints(0, 0, 30, 2, GridBagConstraints.HORIZONTAL);
+		infoPanelConstraints.weightx = 1;
+		mainPanel.add(infoPanel, infoPanelConstraints);
 
-		GridBagConstraints mirrorLabelConstraints = new GridBagConstraints();
-		mirrorLabelConstraints.gridx = 8;
-		mirrorLabelConstraints.gridy = 18;
-		mirrorLabelConstraints.gridwidth = 16;
-		mirrorLabelConstraints.gridheight = 1;
+		mainPanel.add(detailsPanel, createConstraints(0, 2, 30, 2, GridBagConstraints.HORIZONTAL));
+
+		mainPanel.add(mediaControlPanel, createConstraints(0, 15, 30, 3, GridBagConstraints.HORIZONTAL));
+
+		GridBagConstraints mirrorLabelConstraints = createConstraints(8, 18, 16, 1, GridBagConstraints.HORIZONTAL);
 		mirrorLabelConstraints.weightx = 1;
-		mirrorLabelConstraints.fill = GridBagConstraints.HORIZONTAL;
 		mainPanel.add(mirrorLabel, mirrorLabelConstraints);
 
-		GridBagConstraints locationPanelConstraints = new GridBagConstraints();
-		locationPanelConstraints.gridx = 8;
-		locationPanelConstraints.gridy = 19;
-		locationPanelConstraints.gridheight = 12;
-		locationPanelConstraints.gridwidth = 16;
+		GridBagConstraints locationPanelConstraints = createConstraints(8, 19, 16, 12, GridBagConstraints.BOTH);
 		locationPanelConstraints.weightx = 1;
-		locationPanelConstraints.fill = GridBagConstraints.BOTH;
 		mainPanel.add(locationTimerPanel, locationPanelConstraints);
 
-		GridBagConstraints statusPanelConstraints = new GridBagConstraints();
-		statusPanelConstraints.gridx = 0;
-		statusPanelConstraints.gridy = 31;
-		statusPanelConstraints.gridheight = 1;
-		statusPanelConstraints.gridwidth = 30;
-		statusPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(statusPanel, statusPanelConstraints);
+		mainPanel.add(statusPanel, createConstraints(0, 31, 30, 1, GridBagConstraints.HORIZONTAL));
 
-		GridBagConstraints counterPanelConstraints = new GridBagConstraints();
-		counterPanelConstraints.gridx = 23;
-		counterPanelConstraints.gridy = 19;
-		counterPanelConstraints.gridheight = 12;
-		counterPanelConstraints.gridwidth = 7;
+		GridBagConstraints counterPanelConstraints = createConstraints(23, 19, 7, 12, GridBagConstraints.VERTICAL);
 		counterPanelConstraints.anchor = GridBagConstraints.LINE_END;
-		counterPanelConstraints.fill = GridBagConstraints.VERTICAL;
 		mainPanel.add(counterPanel, counterPanelConstraints);
 
-		GridBagConstraints actionTimerPanelConstraints = new GridBagConstraints();
-		actionTimerPanelConstraints.gridx = 0;
-		actionTimerPanelConstraints.gridy = 19;
-		actionTimerPanelConstraints.gridheight = 12;
-		actionTimerPanelConstraints.gridwidth = 7;
-		actionTimerPanelConstraints.fill = GridBagConstraints.BOTH;
-		mainPanel.add(actionTimerPanel, actionTimerPanelConstraints); // 0, 17
+		mainPanel.add(actionTimerPanel, createConstraints(0, 19, 7, 12, GridBagConstraints.BOTH)); // 0, 17
 
 		mainPanel.validate();
 
@@ -271,7 +242,7 @@ public class Main implements VideoListener {
 				locationTimerPanel.resetAll();
 				counterPanel.resetAll();
 				detailsPanel.resetAll();
-				actionTimerPanel.resetAll();
+				//actionTimerPanel.resetAll();
 				infoPanel.resetAll();
 				vlcVideoPanel.resetAll();
 				mediaControlPanel.resetAll();
@@ -314,59 +285,88 @@ public class Main implements VideoListener {
 	}
 
 	private void showSaveDialog() {
-		int returnVal = fileChooser.showSaveDialog(frame);
-
-		if (returnVal == FileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
+		File file = chooseFile("Save cancelled.");
+		if (file != null) {
 			save(file);
-		} else {
-			statusPanel.setMessage("Save cancelled.");
 		}
 	}
 
 	private void showLoadVideoDialog() {
-		int returnVal = fileChooser.showOpenDialog(frame);
-
-		if (returnVal == FileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			openVideo(file);
-		} else {
-			statusPanel.setMessage("Open video cancelled.");
+		File file = chooseFile("Open video cancelled.");
+		if (file != null) {
+			vlcVideoPanel.openVideo(file, statusPanel);
 		}
 	}
 	
-	private void showFindVlcLibraryDialog() {
-		fileChooser.setDialogTitle("Find libvlc");
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		int returnVal = fileChooser.showOpenDialog(frame);
+	private File chooseFile(String cancelMessage){
+		int returnVal = fileChooser.showSaveDialog(frame);
+
 		if (returnVal == FileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			initVlc(file);
+			return fileChooser.getSelectedFile();
 		} else {
-			statusPanel.setMessage("Open video cancelled.");
+			statusPanel.setMessage(cancelMessage);
+			return null;
 		}
 	}
-
-
-	private void initVlc(File file) {
-		String canonicalPath = "C:/Program Files (x86)/VideoLAN/VLC";
-		NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), canonicalPath);
-        System.out.println(LibVlc.INSTANCE.libvlc_get_version());		
-	}
-
+	
 	private void save(File file) {
 		ExcelWriter writer = new ExcelWriter(file);
 		try {
 			TrialSection trial = new TrialSection();
 			List<ValidationError> validationMessages = detailsPanel.validateTrialData();
 			validationMessages.addAll(locationTimerPanel.validateTrialData());
+			//if (trial.isRunning()) { 
+			//	validationErrors.add(new ValidationError("All timers must be stopped to save. "));
+			//}
 			if (validationMessages.isEmpty()) {
-				detailsPanel.populateTrial(trial);
+				
+				trial.setDate(this.trial.getDetails().getDate());
+				trial.setTrialType(this.trial.getDetails().getDetail("Trial Type"));
+				trial.setRoosterId(this.trial.getDetails().getDetail("Rooster ID"));
+				trial.setSessionNumber(this.trial.getDetails().getDetail("Session Number"));
+				trial.setTrialNumber(this.trial.getDetails().getDetail("Trial Number"));
+				trial.setSectionNumber(this.trial.getDetails().getDetail("Section Number"));
+				trial.setMirror(this.trial.getDetails().getDetail("Mirror?"));
+				
 				locationTimerPanel.populateTrial(trial);
-				actionTimerPanel.populateTrial(trial);
-				counterPanel.populateTrial(trial);
-				infoPanel.populateTrial(trial);
+				
+				//Actions
+				trial.setFollowingClose(this.trial.getTimedBehaviours().get(0)
+						.getDuration(this.trial.getAreas().get(0)));
+				trial.setFollowingFar(this.trial.getTimedBehaviours().get(0)
+						.getDuration(this.trial.getAreas().get(1)));
+				trial.setFacingAwayClose(this.trial.getTimedBehaviours().get(1)
+						.getDuration(this.trial.getAreas().get(0)));
+				trial.setFacingAwayFar(this.trial.getTimedBehaviours().get(1)
+						.getDuration(this.trial.getAreas().get(1)));
+				trial.setGroomMarkClose(this.trial.getTimedBehaviours().get(2)
+						.getDuration(this.trial.getAreas().get(0)));
+				trial.setGroomMarkFar(this.trial.getTimedBehaviours().get(2)
+						.getDuration(this.trial.getAreas().get(1)));
+				trial.setOtherClose(this.trial.getTimedBehaviours().get(3)
+						.getDuration(this.trial.getAreas().get(0)));
+				trial.setOtherFar(this.trial.getTimedBehaviours().get(3)
+						.getDuration(this.trial.getAreas().get(1)));
+				
+				//Counts
+				trial.setPecksClose(this.trial.getInstantBehaviours().get(0)
+						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
+				trial.setPecksFar(this.trial.getInstantBehaviours().get(0)
+						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
+				trial.setHacklesClose(this.trial.getInstantBehaviours().get(1)
+						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
+				trial.setHacklesFar(this.trial.getInstantBehaviours().get(1)
+						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
+				trial.setAttacksClose(this.trial.getInstantBehaviours().get(2)
+						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
+				trial.setAttacksFar(this.trial.getInstantBehaviours().get(2)
+						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
+				trial.setCrouchesClose(this.trial.getInstantBehaviours().get(2)
+						.getNumberOfOccurrences(this.trial.getAreas().get(0)));
+				trial.setCrouchesFar(this.trial.getInstantBehaviours().get(2)
+						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
+				
+				trial.setLocationChanges(this.trial.getNumberOfAreaChanges());
 				//videoPanel.populateTrial(trial);
 				vlcVideoPanel.populateTrial(trial);
 				writer.write(trial);
@@ -379,32 +379,11 @@ public class Main implements VideoListener {
 		} catch (FileNotFoundException ex) {
 			JOptionPane.showMessageDialog(frame, "Cannot save spreadsheet. Is it opened in another program?");
 		}
-//		if (file.canRead()) {
-//			emailResults(file);
-//		}
 	}
 	
-//	private void emailResults(File file) {
-//		SMTPMailer mailer = new SMTPMailer("", "");
-//		try {
-//			mailer.send("johndeverall@gmail.com", "Rooster Spreadsheet Update",
-//					"Please find the latest spreadsheet attached.");
-//		} catch (InterruptedException | ExecutionException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-	private void openVideo(File file) {
-		vlcVideoPanel.openVideo(file, statusPanel);
-	}
-
 	private JFrame configureJFrame() {
 		JFrame frame = new JFrame("Behaviour Coder");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-//		int height = 500;
-//		int width = 1000;
-//		frame.setSize(width, height);
 		
 		frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 
@@ -436,44 +415,22 @@ public class Main implements VideoListener {
 	private void setLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void onVideoLoaded(double videoLength) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoLoaded(double videoLength) {}
 
 	@Override
-	public void onVideoPositionChange(long videoPosition) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoPositionChange(long videoPosition) {}
 
 	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoStart() {}
 
 	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoStop() {}
 
 	@Override
 	public void onVideoError(String developerMessage) {
@@ -489,9 +446,19 @@ public class Main implements VideoListener {
 	}
 
 	@Override
-	public void onVideoPercentThroughChange(int videoTime) {
-		// TODO Auto-generated method stub
-		
+	public void onVideoPercentThroughChange(int videoTime) {}
+	
+	/*
+	 * James's Abstraction Functions
+	 */
+	private GridBagConstraints createConstraints(int x, int y, int width, int height, int fill){
+		GridBagConstraints cons = new GridBagConstraints();
+		cons.gridx = x;
+		cons.gridy = y;
+		cons.gridheight = height;
+		cons.gridwidth = width;
+		cons.fill = fill;
+		return cons;
 	}
 
 }

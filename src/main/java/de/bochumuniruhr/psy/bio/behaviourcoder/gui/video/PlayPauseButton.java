@@ -5,19 +5,22 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+
 @SuppressWarnings("serial")
 public class PlayPauseButton extends JButton {
 
 	private boolean playing = false;
 	
 	public PlayPauseButton(final MediaControlPanel parent) { 
-
+		final PlayPauseButton that = this;
 		setText("Play");
 		
 		addActionListener( new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!that.isEnabled()) return;
 				if (playing) { 
 					parent.firePlayEvent(false);
 					setText("Play");
@@ -29,6 +32,11 @@ public class PlayPauseButton extends JButton {
 				}
 				
 			}});
+	}
+	
+	public void setPlaying(boolean playing){
+		this.playing = playing;
+		setText((playing) ? "Pause" : "Play");
 	}
 	
 	public void reset() { 

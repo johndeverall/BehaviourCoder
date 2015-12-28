@@ -6,178 +6,40 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JButton;
-
-import org.apache.commons.lang3.time.StopWatch;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.TimerButton;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.TimerMediator;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 
 @SuppressWarnings("serial")
-public class LocationTimerButton extends JButton implements ActionListener, TimerButton {
+public class LocationTimerButton extends JButton implements ActionListener {
 
-	private StopWatch stopWatch;
-	private TimerMediator mediator;
 	private DecimalFormat decimalFormatter;
-	private boolean lastClicked;
-	private String buttonName;
-	private boolean videoLoaded = false;
+	private Area area;
+	private Trial trial;
 	
-	public LocationTimerButton(String buttonName, TimerMediator mediator) { 
-		this.mediator = mediator;
-		this.buttonName = buttonName;
-		stopWatch = new StopWatch();
+	public LocationTimerButton(Trial trial, Area area) { 
+		this.trial = trial;
+		this.area = area;
 		addActionListener(this);
 		setFont(new Font("Arial", Font.BOLD, 30));
 		decimalFormatter = new DecimalFormat("0.00");
 	}
-	
-	public void stop() { 
-		stopWatch.stop();
-	}
+
 	
 	public void updateText() { 
-		Double timeInSeconds = (double) stopWatch.getTime() / 1000.00;
-		super.setText(decimalFormatter.format(timeInSeconds));
-	}
-	
-	public void suspendIfNotStoppedOrSuspended() { 
-		if (stopWatch.isStopped() || stopWatch.isSuspended()) { 
-			// do nothing
-		} else { 
-			stopWatch.suspend();
-		}
-	}
-	
-	public void startResumeOrSuspend() { 
-		if (stopWatch.isStopped()) { 
-			stopWatch.start();
-		} else if (stopWatch.isSuspended()) { 
-			stopWatch.resume();
-		} else { 
-			stopWatch.suspend();
-		} 
+		Double timeInSeconds = (double) trial.getAreaTime(area) / 1000.00;
+		super.setText(area.getName() + ": " + decimalFormatter.format(timeInSeconds));
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (videoLoaded) { 
-			mediator.enable(this);
+		if (trial.isReady()) { 
 			SoundMaker.playMouseClick();
-			lastClicked = true;
+			if (area.equals(trial.getCurrentArea())){
+				System.out.println(area);
+				trial.setCurrentArea(null);
+			} else {
+				trial.setCurrentArea(area);
+			}
 		}
 	}
-	
-	public void reset() { 
-		stopWatch.reset();
-		lastClicked = false;
-		videoLoaded = true;
-	}
-	
-	public boolean isStopped() { 
-		return stopWatch.isStopped();
-	}
-	
-	public boolean isSuspended() { 
-		return stopWatch.isSuspended();
-	}
-	
-	public boolean isStarted() { 
-		return stopWatch.isStarted();
-	}
-
-	public boolean isLastClicked() {
-		return lastClicked;
-	}
-
-	public void setLastClicked(boolean lastClicked) {
-		this.lastClicked = lastClicked;
-	}
-
-	@Override
-	public void onAreaChange(Area area) {
-	}
-	
-	@Override
-	public String getButtonName() { 
-		return this.buttonName;
-	}
-
-	@Override
-	public void onTrialSectionSuspend() {
-	}
-
-	@Override
-	public void onTrialSectionResume() {
-	}
-
-	@Override
-	public boolean isCounting() {
-		return !(this.isStopped() || this.isSuspended());
-	}
-
-	@Override
-	public void timeIsUp() {
-	}
-
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTimeLimitChange(Integer seconds) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoLoaded(double videoLength) {
-		this.videoLoaded = true;
-		reset();
-	}
-
-	@Override
-	public void onVideoPositionChange(long videoPosition) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoPercentThroughChange(int videoTime) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(char key) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

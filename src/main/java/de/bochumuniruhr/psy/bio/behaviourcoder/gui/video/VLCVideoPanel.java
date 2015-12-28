@@ -1,14 +1,7 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.video;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.scene.Scene;
 import jxl.common.Logger;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,16 +11,15 @@ import javax.swing.JPanel;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
-public class VLCVideoPanel extends JPanel implements TrialSectionListener, MediaControlListener {
+public class VLCVideoPanel extends JPanel implements TrialListener, MediaControlListener {
 
 	private List<VideoListener> videoListeners;
-	private boolean videoLoaded = false;
 	private long trialSectionStart;
 	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	private Logger logger = Logger.getLogger(this.getClass());
@@ -68,7 +60,6 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 	}
 		
 	private void fireVideoLoadedEvent() {
-		this.videoLoaded = true;
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoLoaded(mediaPlayerComponent.getMediaPlayer().getLength());
 		}
@@ -115,17 +106,17 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 	}
 
 	@Override
-	public void onTrialSectionSuspend() {
+	public void onPause() {
 		pause();		
 	}
 
 	@Override
-	public void onTrialSectionResume() {
+	public void onResume() {
 		play();
 	}
 
 	@Override
-	public void timeIsUp() {
+	public void onStop() {
 		pause();		
 	}
 
@@ -143,21 +134,12 @@ public class VLCVideoPanel extends JPanel implements TrialSectionListener, Media
 		skip(intervalInMiliseconds);
 	}
 
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-		//fireVideoTimeChangeEvent();
-	}
 
 	@Override
-	public void onTimeLimitChange(Integer seconds) {
-	}
+	public void onAreaChange(Area name) {}
 
 	@Override
-	public void onAreaChange(Area name) {
-	}
-
-	@Override
-	public void onTrialSectionStart() {
+	public void onStart() {
 		this.trialSectionStart = mediaPlayerComponent.getMediaPlayer().getTime() / 1000;
 	}
 

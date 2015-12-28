@@ -2,37 +2,47 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.gui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidatingTextField;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
-public class InfoPanel extends JPanel implements GlobalKeyListener, TrialSectionListener {
+public class InfoPanel extends JPanel implements TrialListener {
 
 	private JLabel totalTime;
-	private ValidatingTextField timeLimit;
+	private JFormattedTextField timeLimit;
 	private JLabel transitions;
-	private int transitionCount = 0;
 	private final int LABEL_FONT_SIZE = 30;
-	private final int DEFAULT_TIME_LIMIT;
-	private List<TrialSectionListener> trialSectionListeners;
-	private Area currentArea;
+	private Trial trial;
+	private DecimalFormat decimalFormatter;
 	
-	public InfoPanel(int defaultTimeLimit) { 
-		
-		this.DEFAULT_TIME_LIMIT = defaultTimeLimit;
-	
-		trialSectionListeners = new ArrayList<TrialSectionListener>();
-		
+	public InfoPanel(Trial trialSession) { 
+		trial = trialSession;
+		decimalFormatter = new DecimalFormat("0.00");
 		this.setLayout(new GridLayout(1, 3));
 		
 		totalTime = new JLabel("0");
@@ -40,16 +50,26 @@ public class InfoPanel extends JPanel implements GlobalKeyListener, TrialSection
 		totalTime.setHorizontalAlignment(JLabel.CENTER);
 		add(totalTime);
 		
-		timeLimit = new ValidatingTextField("" + DEFAULT_TIME_LIMIT, "You must enter a time limit");
+		NumberFormat format = NumberFormat.getIntegerInstance();
+		format.setGroupingUsed(false);
+		timeLimit = new JFormattedTextField(format);
 		timeLimit.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
 		timeLimit.setHorizontalAlignment(JLabel.CENTER);
+		
+		
 		timeLimit.addKeyListener(new KeyAdapter(){
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				fireTimeLimitChangeEvent(timeLimit.getText());
+				//Coerce value to be an integer
+				try {
+					timeLimit.commitEdit();
+				} catch (ParseException e1) {
+				}
+				trial.getDetails().setDuration((long) timeLimit.getValue());
 			}
 		});
+		timeLimit.setValue(trial.getDetails().getDuration());
 		
 		add(timeLimit);
 		
@@ -57,85 +77,44 @@ public class InfoPanel extends JPanel implements GlobalKeyListener, TrialSection
 		transitions.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
 		transitions.setHorizontalAlignment(JLabel.CENTER);
 		add(transitions);
+		
+		setupClockRedrawRate();
+	}
 	
+	private void setupClockRedrawRate() { 
+		TimerTask clockRedrawer = new TimerTask() {
+
+			@Override
+			public void run() {
+				totalTime.setText(decimalFormatter.format(trial.getCurrentTime() / 1000.0));
+			} 
+		};
+		
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(clockRedrawer, 0, 10); // redraw every 1 ms after a delay of 0 ms
 	}
 	
 	public void resetAll() {
 		totalTime.setText("0.00");
-		timeLimit.setText("" + DEFAULT_TIME_LIMIT);
+		timeLimit.setValue(trial.getDetails().getDuration());
 		transitions.setText("0");
-		transitionCount = 0;
-	}
-	
-	private void fireTimeLimitChangeEvent(String newTime) {
-		for (TrialSectionListener trialSectionListener : trialSectionListeners) { 
-			
-			if (newTime.length() < 7 && newTime.length() > 0 && isInteger(newTime)) { 
-				trialSectionListener.onTimeLimitChange(Integer.parseInt(newTime));
-			}
-		}
-	}
-	
-	private static boolean isInteger(String s) {
-	    try { 
-	        Integer.parseInt(s); 
-	    } catch(NumberFormatException e) { 
-	        return false; 
-	    } catch(NullPointerException e) {
-	        return false;
-	    }
-	    // only got here if we didn't return false
-	    return true;
-	}
-	
-	public void addTrialSectionListener(TrialSectionListener trialSectionListener) { 
-		this.trialSectionListeners.add(trialSectionListener);
 	}
 
 	@Override
 	public void onAreaChange(Area area) {
-		if (this.currentArea != null) { 
-			transitionCount++;
-		}
-		this.currentArea = area;
-		transitions.setText("" + transitionCount);
+		transitions.setText("" + trial.getNumberOfAreaChanges());
 	}
 
 	@Override
-	public void onTrialSectionSuspend() {
-	}
+	public void onStart() {}
 
 	@Override
-	public void onTrialSectionResume() {
-	}
+	public void onStop() {}
 
 	@Override
-	public void timeIsUp() {
-	}
+	public void onPause() {}
 
 	@Override
-	public void keyPressed(char key) {
-	}
+	public void onResume() {}
 
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-		totalTime.setText("" + trialTime);
-	}
-
-	@Override
-	public void onTimeLimitChange(Integer seconds) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void populateTrial(TrialSection trial) {
-		trial.setLocationChanges(transitionCount);
-	}
-
-	@Override
-	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

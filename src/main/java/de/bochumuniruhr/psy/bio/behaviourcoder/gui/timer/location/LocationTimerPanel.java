@@ -7,52 +7,42 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JPanel;
-
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
-public class LocationTimerPanel extends JPanel implements TrialSectionListener, VideoListener {
+public class LocationTimerPanel extends JPanel implements TrialSectionListener, TrialListener {
 
-	private LocationTimerMediator timerMediator;
 	private StatusPanel statusBar; 
 	private DecimalFormat decimalFormatter;
-	private boolean trialOver;
-	private double timeLimit;
 	private List<TrialSectionListener> trialSectionListeners;
-	private LocationTimerButton closeTimer;
-	private LocationTimerButton farTimer;
+	private List<LocationTimerButton> buttons;
+	private Trial trial;
 	
-	public LocationTimerPanel(StatusPanel statusBar, int defaultTimeLimit) { 
+	public LocationTimerPanel(Trial trial, StatusPanel statusBar) { 
 		
 		trialSectionListeners = new ArrayList<TrialSectionListener>();
-		
-		this.timeLimit = (double)defaultTimeLimit;
+		buttons = new ArrayList<LocationTimerButton>();
 		
 		this.statusBar = statusBar;
-		
-		this.trialOver = false;
+		this.trial = trial;
 		
 		decimalFormatter = new DecimalFormat("0.00");
 		
-		timerMediator = new LocationTimerMediator(statusBar);
-		
 		setLayout(new GridLayout(0, 1));
-
-		closeTimer = new LocationTimerButton("CLOSE", timerMediator);
-		timerMediator.register(closeTimer);
-		add(closeTimer);
 		
-		farTimer = new LocationTimerButton("FAR", timerMediator);
-		timerMediator.register(farTimer);
-		add(farTimer);
+		for (Area a : trial.getAreas()){
+			LocationTimerButton button = new LocationTimerButton(trial, a);
+			buttons.add(button);
+			trial.addListener(this);
+			add(button);
+		}
 		
 		setupClockRedrawRate();
 		
@@ -74,19 +64,19 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 	}
 
 	public void resetAll() {
-		trialOver = false;
-		timerMediator.resetAll();
+		for (LocationTimerButton button : buttons) { 
+			button.setEnabled(true);
+		}
 		statusBar.setMessage("Stopped");
 	}
 
 	public void reDraw() {
-		timerMediator.reDraw();
-		double totalTime = timerMediator.getTotalTime();
+		for (LocationTimerButton button : buttons){
+			button.updateText();
+		}
+		double totalTime = trial.getCurrentTime() / 1000.00;
 		fireTrialStopWatchUpdateEvent(totalTime);
 		
-		stopIfTimeLimitReached(totalTime);
-		
-		//transitions.setText("" + timerMediator.getTransitionCount());
 	}
 
 	private void fireTrialStopWatchUpdateEvent(double totalTime) {
@@ -95,32 +85,16 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		}
 	}
 
-	private void stopIfTimeLimitReached(double totalTime) {
-		if ((totalTime > timeLimit) && (trialOver == false)) { 
-			this.trialOver = true;
-			timerMediator.suspendAll();
-			timerMediator.disableAllButtons();
-			fireTimeUpEvent();
-			SoundMaker.playTimesUp();
-		}
-	}
-	
-	private void fireTimeUpEvent() {
-		for (TrialSectionListener trialSectionListener : trialSectionListeners) { 
-			trialSectionListener.timeIsUp();
-		}
-	}
-
 	public void populateTrial(TrialSection trial) {
-		trial.setClose(Double.parseDouble(closeTimer.getText()));
-		trial.setFar(Double.parseDouble(farTimer.getText()));
+		trial.setClose(this.trial.getAreaTime(this.trial.getAreas().get(0))/1000.0);
+		trial.setFar(this.trial.getAreaTime(this.trial.getAreas().get(1))/1000.0);
 	}
 
 	public Collection<? extends ValidationError> validateTrialData() {
 		
 		List<ValidationError> validationErrors = new ArrayList<ValidationError>();
 		
-		if (timerMediator.hasCountingTimer()) { 
+		if (trial.isRunning()) { 
 			validationErrors.add(new ValidationError("All timers must be stopped to save. "));
 		}
 		
@@ -129,84 +103,46 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 
 	public void addTrialSectionListener(TrialSectionListener trialSectionListener) {
 		this.trialSectionListeners.add(trialSectionListener);
-		this.timerMediator.addTrialSectionListener(trialSectionListener);
 	}
 
 	@Override
-	public void onAreaChange(Area name) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onAreaChange(Area name) {}
 
 	@Override
-	public void onTrialSectionSuspend() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onTrialSectionSuspend() {}
 
 	@Override
-	public void onTrialSectionResume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onTrialSectionResume() {}
 
 	@Override
-	public void timeIsUp() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void timeIsUp() {}
 
 	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void trialStopWatchUpdate(String trialTime) {}
 
 	@Override
 	public void onTimeLimitChange(Integer seconds) {
-		this.timeLimit = seconds;
+		//this.timeLimit = seconds;
 		statusBar.setMessage("Time limit set to " + seconds + " seconds.");
 	}
 
 	@Override
-	public void onVideoLoaded(double videoLength) {
-		timerMediator.onVideoLoaded(videoLength);
+	public void onTrialSectionStart() {}
+
+	@Override
+	public void onStop() {
+		for (LocationTimerButton button : buttons){
+			button.setEnabled(false);
+		}
 	}
 
 	@Override
-	public void onVideoPositionChange(long videoPosition) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onPause() {}
 
 	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onResume() {}
 
 	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onStart() {}
 
-	@Override
-	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoPercentThroughChange(int videoTime) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

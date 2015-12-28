@@ -17,10 +17,12 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
 @SuppressWarnings("serial")
-public class MediaControlPanel extends JPanel implements TrialSectionListener, VideoListener {
+public class MediaControlPanel extends JPanel implements TrialListener, VideoListener {
 
 	private PlayPauseButton playPauseButton;
 	private JButton skipForward;
@@ -30,8 +32,10 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 	private List<MediaControlListener> mediaControlListeners;
 	private JSlider seeker = new JSlider();
 	private Logger logger = Logger.getLogger(this.getClass());
+	private Trial trial;
 	
-	public MediaControlPanel() {
+	public MediaControlPanel(Trial trial) {
+		this.trial = trial;
 
 		setLayout(new GridBagLayout());
 
@@ -138,9 +142,15 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 		if (play) { 
 			skipForward.setEnabled(true);
 			skipBack.setEnabled(true);
+			if (trial.isActive()){
+				trial.resume();
+			}
 		} else { 
 			skipForward.setEnabled(false);
 			skipBack.setEnabled(false);
+			if (trial.isActive()){
+				trial.pause();
+			}
 		}
 		for (MediaControlListener mediaControlListener : mediaControlListeners) {
 			mediaControlListener.onPlay(play);
@@ -192,59 +202,42 @@ public class MediaControlPanel extends JPanel implements TrialSectionListener, V
 	}
 
 	@Override
-	public void onAreaChange(Area name) {
-	}
+	public void onAreaChange(Area name) {}
 
 	@Override
-	public void onTrialSectionStart() {
-		disableControls();
-	}
+	public void onVideoStart() {}
 
 	@Override
-	public void onTrialSectionSuspend() {
-	}
+	public void onVideoStop() {}
 
 	@Override
-	public void onTrialSectionResume() {
-	}
-
-	@Override
-	public void timeIsUp() {
-		enableControls();
-	}
-
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-
-	}
-
-	@Override
-	public void onTimeLimitChange(Integer seconds) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
-
-	}
+	public void onVideoError(String message) {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {
 		seeker.setValue(videoTime);
+	}
+
+	@Override
+	public void onStop() {
+		enableControls();
+		playPauseButton.setPlaying(false);
+	}
+
+	@Override
+	public void onPause() {
+		playPauseButton.setPlaying(false);
+	}
+
+	@Override
+	public void onResume() {
+		playPauseButton.setPlaying(true);
+	}
+
+	@Override
+	public void onStart() {
+		disableControls();
+		playPauseButton.setPlaying(true);
 	}
 
 }

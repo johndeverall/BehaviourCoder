@@ -10,7 +10,7 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
 
-public class LocationTimerMediator implements TimerMediator, VideoListener {
+public class LocationTimerMediator implements TimerMediator {
 	
 	private ArrayList<TimerButton> buttons;
 	
@@ -53,7 +53,8 @@ public class LocationTimerMediator implements TimerMediator, VideoListener {
 				if (!timerButton.isLastClicked()) { 
 					// we don't want to increment switches if a running timer is clicked on
 					switches++;
-					fireAreaChangeEvent(Area.valueOf(buttonToEnable.getButtonName()));
+					//FIXME: Choose area correctly
+					fireAreaChangeEvent(null); //Area.valueOf(buttonToEnable.getButtonName()));
 				}
 				timerButton.setLastClicked(true);
 				buttonToEnable.startResumeOrSuspend();
@@ -157,41 +158,6 @@ public class LocationTimerMediator implements TimerMediator, VideoListener {
 		}
 		
 		return hasCountingTimer;
-	}
-
-	@Override
-	public void onVideoLoaded(double videoLength) {
-		for (TimerButton button : buttons) { 
-			button.onVideoLoaded(videoLength);
-		}
-	}
-
-	@Override
-	public void onVideoPositionChange(long videoPosition) {
-	}
-
-	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoPercentThroughChange(int videoTime) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

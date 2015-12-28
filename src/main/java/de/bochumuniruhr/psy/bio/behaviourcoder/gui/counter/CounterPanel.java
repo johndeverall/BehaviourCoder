@@ -1,188 +1,65 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.counter;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridLayout;
-
-import javax.swing.JLabel;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
-
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSectionListener;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 
 @SuppressWarnings("serial")
-public class CounterPanel extends JPanel implements GlobalKeyListener, TrialSectionListener, VideoListener {
+public class CounterPanel extends JPanel implements GlobalKeyListener, VideoListener {
 	
-	private ClickCounterButton pecks;
-	private ClickCounterButton hackles;
-	private ClickCounterButton attacks;
-	private ClickCounterButton crouches;
-	private StatusPanel statusBar;
-	private Area currentArea;
+	private List<ClickCounterButton> buttons;
 	
-	public CounterPanel(StatusPanel statusBar) { 
+	public CounterPanel(Trial trial, List<Character> increment, List<Character> decrememt) { 
+		List<InstantBehaviour> behaviours = trial.getInstantBehaviours();
+		setLayout(new GridLayout(behaviours.size(), 1));
+
+		buttons = new ArrayList<ClickCounterButton>();
 		
-		this.statusBar = statusBar;
-		
-		setLayout(new GridLayout(4, 2));
-		
-		// movements
-		JLabel label1 = new JLabel("Peck: ");
-		label1.setFont(new Font("Arial", Font.BOLD, 20));
-		label1.setHorizontalAlignment(JLabel.RIGHT);
-		pecks = new ClickCounterButton("0", 'p', ';');
-		pecks.setBackground(Color.YELLOW);		
-		
-		// social calls
-		JLabel label2 = new JLabel("<html>Hackles: </html>");
-		label2.setFont(new Font("Arial", Font.BOLD, 20));
-		label2.setHorizontalAlignment(JLabel.RIGHT);
-		hackles = new ClickCounterButton("0", 'o', 'l');
-		hackles.setBackground(Color.GREEN);
-		
-		// alarm calls
-		JLabel label3 = new JLabel("<html>Attack: </html>");
-		label3.setFont(new Font("Arial", Font.BOLD, 20));
-		label3.setHorizontalAlignment(JLabel.RIGHT);
-		attacks = new ClickCounterButton("0", 'i', 'k');
-		attacks.setBackground(Color.RED);
-		
-		// head bobs
-		JLabel label4 = new JLabel("<html>Crouch: </html>");
-		label4.setFont(new Font("Arial", Font.BOLD, 20));
-		label4.setHorizontalAlignment(JLabel.RIGHT);
-		crouches = new ClickCounterButton("0", 'u', 'j');
-		crouches.setBackground(Color.CYAN);
-		
-		// add everything
-		add(label1);
-		add(pecks);
-		add(label2);
-		add(hackles);
-		add(label3);
-		add(attacks);
-		add(label4);
-		add(crouches);
+		for (int i = 0; i < behaviours.size(); ++i){
+			ClickCounterButton button = new ClickCounterButton(trial, behaviours.get(i),
+					increment.get(i), decrememt.get(i));
+			buttons.add(button);
+			add(button);
+		}
 	}
 
 	public void resetAll() {
-		pecks.reset();
-		hackles.reset();
-		attacks.reset();
-		crouches.reset();
-	}
-
-	public void populateTrial(TrialSection trial) {
-		
-		trial.setPecksClose(pecks.getCloseClicks());
-		trial.setPecksFar(pecks.getFarClicks());
-		trial.setHacklesClose(hackles.getCloseClicks());
-		trial.setHacklesFar(hackles.getFarClicks());
-		trial.setAttacksClose(attacks.getCloseClicks());
-		trial.setAttacksFar(attacks.getFarClicks());
-		trial.setCrouchesClose(crouches.getCloseClicks());
-		trial.setCrouchesFar(crouches.getFarClicks());
-		
-		
+		for (ClickCounterButton button : buttons){
+			button.reset();
+		}
 	}
 
 	public void keyPressed(char key) {
-		pecks.keyPressed(key);
-		hackles.keyPressed(key);
-		attacks.keyPressed(key);
-		crouches.keyPressed(key);
-	}
-
-	@Override
-	public void onAreaChange(Area area) {
-		pecks.onAreaChange(area);
-		hackles.onAreaChange(area);
-		attacks.onAreaChange(area);
-		crouches.onAreaChange(area);
-	}
-
-	@Override
-	public void onTrialSectionSuspend() {
-		pecks.onTrialSectionSuspend();
-		hackles.onTrialSectionSuspend();
-		attacks.onTrialSectionSuspend();
-		crouches.onTrialSectionSuspend();
-	}
-
-	@Override
-	public void onTrialSectionResume() {
-		pecks.onTrialSectionResume();
-		hackles.onTrialSectionResume();
-		attacks.onTrialSectionResume();
-		crouches.onTrialSectionResume();		
-	}
-
-	@Override
-	public void timeIsUp() {
-		pecks.timeIsUp();
-		hackles.timeIsUp();
-		attacks.timeIsUp();
-		crouches.timeIsUp();
-	}
-
-	@Override
-	public void trialStopWatchUpdate(String trialTime) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onTimeLimitChange(Integer seconds) {
-		// TODO Auto-generated method stub
-		
+		for (ClickCounterButton button : buttons){
+			button.keyPressed(key);
+		}
 	}
 
 	@Override
 	public void onVideoLoaded(double videoLength) {
-		pecks.onVideoLoaded(videoLength);
-		hackles.onVideoLoaded(videoLength);
-		attacks.onVideoLoaded(videoLength);
-		crouches.onVideoLoaded(videoLength);
+		for (ClickCounterButton button : buttons){
+			button.onVideoLoaded(videoLength);
+		}
 	}
 
 	@Override
-	public void onVideoPositionChange(long videoPosition) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoPositionChange(long videoPosition) {}
 
 	@Override
-	public void onVideoStart() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoStart() {}
 
 	@Override
-	public void onVideoStop() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoStop() {}
 
 	@Override
-	public void onTrialSectionStart() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoError(String message) {}
 
 	@Override
-	public void onVideoError(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onVideoPercentThroughChange(int videoTime) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onVideoPercentThroughChange(int videoTime) {}
 
 }

@@ -1,96 +1,53 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.details;
 
 import java.awt.Color;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextField;
 
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
+
 @SuppressWarnings("serial")
 public class ValidatingTextField extends JTextField {
-
-	private String defaultText;
-	private String validationFailureMessage;
-	private String[] whitelist;
 	
-	public ValidatingTextField(final String defaultText, String validationFailureMessage, String... whitelist) { 
-		this.whitelist = whitelist;
-		this.defaultText = defaultText;
-		this.validationFailureMessage = validationFailureMessage;
-		setText(this.defaultText);
-		
-		addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (getText().equals(defaultText)) { 
-					setText("");
-					setBackground(Color.WHITE);
-				}
-			}
-		});
-		
-		addFocusListener(new FocusAdapter() { 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (getText().equals("")) { 
-					setText(defaultText);
-				}
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (getText().equals(defaultText)) { 
-					setText("");
-				}
-			}
-		});
-		
+	private String detail;
+	private TrialDetails details;
+	
+	public ValidatingTextField(TrialDetails trialDetails, String detailName) { 
+		detail = detailName;
+		details = trialDetails;
 		addKeyListener(new KeyAdapter() { 
-			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (getText() == null) { 
-					setText(defaultText);
-				} else { 
+				details.setDetail(detail, getText());
+				if (details.isValid(detail)){ 
 					setBackground(Color.WHITE);
+				} else {
+					setBackground(Color.PINK);
 				}
 			}
 		});
-		
+		setFont(new Font("Arial", Font.PLAIN, 30));
 	}
 	
 	public List<ValidationError> validateTextField() { 
 		List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-		if (isEmptyOrNullOrEqual(getText()) || notInWhiteList()) { 
+		if (!details.isValid(detail)) { 
+			String message = "Invalid " + detail + ".";
+			if (details.getConstraint(detail).holdsForAny()){
+				message = detail + " cannot be empty.";
+			}
+			validationErrors.add(new ValidationError(message));
 			setBackground(Color.PINK);
-			validationErrors.add(new ValidationError(validationFailureMessage));
-		} else { 
-			setBackground(Color.WHITE);
 		}
 		return validationErrors;
 	}
-	
-	private boolean notInWhiteList() {
-		String text = getText();
-		for (String valid : whitelist) { 
-			if (text.equals(valid)) { 
-				return false;
-			}
-		}
-		return true && whitelist.length > 0;
-	}
 
 	public void reset() { 
-		setText(defaultText);
+		setText("");
 	}
-	
-
-	private boolean isEmptyOrNullOrEqual(String text) { 
-		return text == null || text.equals("") || defaultText.equals(text);
-	}
-	
 }
