@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -45,7 +44,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
@@ -147,7 +145,7 @@ public class Main implements VideoListener {
 		trial.addListener(locationTimerPanel);
 		counterPanel = new CounterPanel(trial,
 				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
-		vlcVideoPanel = new VLCVideoPanel();
+		vlcVideoPanel = new VLCVideoPanel(trial);
 		mediaControlPanel = new MediaControlPanel(trial);
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
 		trial.addListener(vlcVideoPanel);
@@ -312,14 +310,13 @@ public class Main implements VideoListener {
 	private void save(File file) {
 		ExcelWriter writer = new ExcelWriter(file);
 		try {
-			TrialSection trial = new TrialSection();
 			List<ValidationError> validationMessages = detailsPanel.validateTrialData();
 			validationMessages.addAll(locationTimerPanel.validateTrialData());
 			//if (trial.isRunning()) { 
 			//	validationErrors.add(new ValidationError("All timers must be stopped to save. "));
 			//}
 			if (validationMessages.isEmpty()) {
-				
+				/*
 				trial.setDate(this.trial.getDetails().getDate());
 				trial.setTrialType(this.trial.getDetails().getDetail("Trial Type"));
 				trial.setRoosterId(this.trial.getDetails().getDetail("Rooster ID"));
@@ -328,7 +325,8 @@ public class Main implements VideoListener {
 				trial.setSectionNumber(this.trial.getDetails().getDetail("Section Number"));
 				trial.setMirror(this.trial.getDetails().getDetail("Mirror?"));
 				
-				locationTimerPanel.populateTrial(trial);
+				trial.setClose(this.trial.getAreaTime(this.trial.getAreas().get(0))/1000.0);
+				trial.setFar(this.trial.getAreaTime(this.trial.getAreas().get(1))/1000.0);
 				
 				//Actions
 				trial.setFollowingClose(this.trial.getTimedBehaviours().get(0)
@@ -367,8 +365,9 @@ public class Main implements VideoListener {
 						.getNumberOfOccurrences(this.trial.getAreas().get(1)));
 				
 				trial.setLocationChanges(this.trial.getNumberOfAreaChanges());
-				//videoPanel.populateTrial(trial);
-				vlcVideoPanel.populateTrial(trial);
+				trial.setTrialSectionStart(this.trial.getDetails().getVideoTimeOffset());
+				*/
+				
 				writer.write(trial);
 				statusPanel.setMessage("Saved OK");
 				SoundMaker.playSave();

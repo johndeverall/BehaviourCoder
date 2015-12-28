@@ -14,6 +14,8 @@ public class TrialDetails {
 	 * Duration of the trial session in seconds.
 	 */
 	private long duration;
+	private double videoTimeOffset;
+	
 	private Map<String, String> details;
 	private List<String> names;
 	private Map<String, Constraint> constraints;
@@ -23,6 +25,7 @@ public class TrialDetails {
 		this.constraints = new HashMap<String, Constraint>();
 		this.names = names;
 		this.duration = duration;
+		videoTimeOffset = 0;
 		for (int i = 0; i < names.size(); ++i){
 			details.put(names.get(i), "");
 			this.constraints.put(names.get(i), constraints.get(i));
@@ -81,6 +84,15 @@ public class TrialDetails {
 	public Constraint getConstraint(String detail){
 		return constraints.get(detail);
 	}
+	
+	public double getVideoTimeOffset() {
+		return videoTimeOffset;
+	}
+	
+	public void setVideoTimeOffset(double offset) {
+		videoTimeOffset = offset;
+	}
+	
 	
 	public static class Constraint {
 		private String[] whitelist;

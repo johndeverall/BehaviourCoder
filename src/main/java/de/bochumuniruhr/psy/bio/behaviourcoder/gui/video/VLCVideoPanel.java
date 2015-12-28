@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialSection;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -20,11 +21,11 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 public class VLCVideoPanel extends JPanel implements TrialListener, MediaControlListener {
 
 	private List<VideoListener> videoListeners;
-	private long trialSectionStart;
 	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	private Logger logger = Logger.getLogger(this.getClass());
+	private Trial trial;
 	
-	public VLCVideoPanel() { 
+	public VLCVideoPanel(Trial trial) { 
 		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		setLayout(new BorderLayout());
 		add(mediaPlayerComponent, BorderLayout.CENTER);
@@ -40,6 +41,7 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 			
 			
 		});
+		this.trial = trial;
 	}
 
 	public void openVideo(final File file, StatusPanel statusBar) {
@@ -140,11 +142,7 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 
 	@Override
 	public void onStart() {
-		this.trialSectionStart = mediaPlayerComponent.getMediaPlayer().getTime() / 1000;
-	}
-
-	public void populateTrial(TrialSection trial) {
-		trial.setTrialSectionStart(trialSectionStart);
+		trial.setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
 	}
 
 }

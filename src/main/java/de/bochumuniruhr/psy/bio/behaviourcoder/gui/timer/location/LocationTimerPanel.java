@@ -85,11 +85,6 @@ public class LocationTimerPanel extends JPanel implements TrialSectionListener, 
 		}
 	}
 
-	public void populateTrial(TrialSection trial) {
-		trial.setClose(this.trial.getAreaTime(this.trial.getAreas().get(0))/1000.0);
-		trial.setFar(this.trial.getAreaTime(this.trial.getAreas().get(1))/1000.0);
-	}
-
 	public Collection<? extends ValidationError> validateTrialData() {
 		
 		List<ValidationError> validationErrors = new ArrayList<ValidationError>();

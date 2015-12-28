@@ -236,4 +236,9 @@ public class Trial implements VideoListener {
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
+
+	public void setVideoTimeOffset(double d) {
+		// TODO Auto-generated method stub
+		
+	}
 }
