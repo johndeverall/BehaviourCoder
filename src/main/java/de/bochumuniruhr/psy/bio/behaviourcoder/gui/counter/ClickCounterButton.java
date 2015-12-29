@@ -78,9 +78,6 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Vi
 	public void onVideoStop() {}
 
 	@Override
-	public void onVideoError(String message) {}
-
-	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
 
 	private class MouseCounter extends MouseAdapter { 

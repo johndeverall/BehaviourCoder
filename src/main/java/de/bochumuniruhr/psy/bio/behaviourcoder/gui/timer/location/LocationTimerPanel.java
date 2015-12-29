@@ -2,12 +2,10 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.location;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
@@ -15,13 +13,10 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 @SuppressWarnings("serial")
 public class LocationTimerPanel extends JPanel implements TrialListener {
 
-	private StatusPanel statusBar; 
 	private List<LocationTimerButton> buttons;
 	
-	public LocationTimerPanel(Trial trial, StatusPanel statusBar) { 
+	public LocationTimerPanel(Trial trial) { 
 		buttons = new ArrayList<LocationTimerButton>();
-		
-		this.statusBar = statusBar;
 		
 		setLayout(new GridLayout(0, 1));
 		
@@ -32,9 +27,12 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 		}
 		
 		setupClockRedrawRate();
-		
-		statusBar.setMessage("Stopped");
-		
+	}
+
+	public void resetAll() {
+		for (LocationTimerButton button : buttons) { 
+			button.setEnabled(true);
+		}
 	}
 	
 	private void setupClockRedrawRate() { 
@@ -42,30 +40,16 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 
 			@Override
 			public void run() {
-				reDraw();
+				for (LocationTimerButton button : buttons){
+					button.updateText();
+				}
 			} 
 		};
 		
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(clockRedrawer, 0, 10); // redraw every 1 ms after a delay of 0 ms
 	}
-
-	public void resetAll() {
-		for (LocationTimerButton button : buttons) { 
-			button.setEnabled(true);
-		}
-		statusBar.setMessage("Stopped");
-	}
-
-	public void reDraw() {
-		for (LocationTimerButton button : buttons){
-			button.updateText();
-		}
-	}
-
-	@Override
-	public void onAreaChange(Area name) {}
-
+	
 	@Override
 	public void onStop() {
 		for (LocationTimerButton button : buttons){
@@ -74,18 +58,14 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 	}
 
 	@Override
-	public void onPause() {
-		statusBar.setMessage("Trial suspended");
-	}
+	public void onAreaChange(Area name) {}
 
 	@Override
-	public void onResume() {
-		statusBar.setMessage("Trial in progress");
-	}
+	public void onPause() {}
 
 	@Override
-	public void onStart() {
-		statusBar.setMessage("Trial in progress");
-	}
+	public void onResume() {}
 
+	@Override
+	public void onStart() {}
 }

@@ -206,9 +206,6 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	public void onVideoStop() {}
 
 	@Override
-	public void onVideoError(String message) {}
-
-	@Override
 	public void onVideoPercentThroughChange(int videoTime) {
 		seeker.setValue(videoTime);
 	}

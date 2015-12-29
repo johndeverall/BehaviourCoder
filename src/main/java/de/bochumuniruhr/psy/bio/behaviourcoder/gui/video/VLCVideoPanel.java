@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
@@ -36,13 +35,11 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 				fireVideoPercentThroughChangeEvent(iPos);
 				fireVideoPositionChangeEvent(mediaPlayer.getTime());
 			}
-			
-			
 		});
 		this.trial = trial;
 	}
 
-	public void openVideo(final File file, StatusPanel statusBar) {
+	public void openVideo(final File file) {
 		String video = null;
 		try {
 			video = file.getCanonicalPath();

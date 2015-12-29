@@ -142,26 +142,32 @@ public class Main implements VideoListener {
 
 		statusPanel = new StatusPanel(frame);
 		actionTimerPanel = new ActionTimerPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
-		locationTimerPanel = new LocationTimerPanel(trial, statusPanel);
-		trial.addListener(locationTimerPanel);
+		locationTimerPanel = new LocationTimerPanel(trial);
 		counterPanel = new CounterPanel(trial,
 				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
 		vlcVideoPanel = new VLCVideoPanel(trial);
 		mediaControlPanel = new MediaControlPanel(trial);
-		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
+		infoPanel = new InfoPanel(trial, statusPanel);
+		detailsPanel = new DetailsPanel(trial);
+		fileChooser = new FileChooser(statusPanel);
+
+
 		trial.addListener(vlcVideoPanel);
 		trial.addListener(mediaControlPanel);
+		trial.addListener(infoPanel);
+		trial.addListener(locationTimerPanel);
+		trial.addListener(statusPanel);
+
 		vlcVideoPanel.addVideoListener(mediaControlPanel);
 		vlcVideoPanel.addVideoListener(trial);
 		vlcVideoPanel.addVideoListener(counterPanel);
 		vlcVideoPanel.addVideoListener(this);
-		infoPanel = new InfoPanel(trial, statusPanel);
-		trial.addListener(infoPanel);
+
+		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
+
 		globalKeyHandler.register(counterPanel);
 		globalKeyHandler.register(actionTimerPanel);
-		detailsPanel = new DetailsPanel(trial);
-		fileChooser = new FileChooser(statusPanel);
-
+		
 		mirrorLabel = new JLabel("Mirror / Divider");
 		mirrorLabel.setFont(new Font("Arial", Font.BOLD, 15));
 		mirrorLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -257,14 +263,6 @@ public class Main implements VideoListener {
 			}
 		});
 		
-//		JMenuItem findVlcLibrary = new JMenuItem("Find VLC Library");
-//		findVlcLibrary.addActionListener(new ActionListener() { 
-//			public void actionPerformed(ActionEvent e) { 
-//				showFindVlcLibraryDialog();
-//			}
-//		});
-//		menu.add(findVlcLibrary);
-
 		JMenuItem save = new JMenuItem("Save");
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -293,7 +291,7 @@ public class Main implements VideoListener {
 	private void showLoadVideoDialog() {
 		File file = chooseFile("Open video cancelled.");
 		if (file != null) {
-			vlcVideoPanel.openVideo(file, statusPanel);
+			vlcVideoPanel.openVideo(file);
 		}
 	}
 	
@@ -376,19 +374,6 @@ public class Main implements VideoListener {
 
 	@Override
 	public void onVideoStop() {}
-
-	@Override
-	public void onVideoError(String developerMessage) {
-		String separator = System.getProperty("line.separator");
-		String displayMessage = new StringBuilder()
-				.append("The video file you tried opening could not be loaded." + separator)
-				.append("It should be an MP4 with H.264/AVC video encoding and AAC audio encoding." + separator)
-				.append("See http://docs.oracle.com/javafx/2/api/javafx/scene/media/package-summary.html#SupportedMediaTypes for details." + separator)
-				.append(separator)
-				.append("Developer message: " + developerMessage + separator)
-				.toString();
-		JOptionPane.showMessageDialog(frame, displayMessage);
-	}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}

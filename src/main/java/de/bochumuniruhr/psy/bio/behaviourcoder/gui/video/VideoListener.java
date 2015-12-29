@@ -9,8 +9,6 @@ public interface VideoListener {
 	public void onVideoStart();
 	
 	public void onVideoStop();
-		
-	public void onVideoError(String message);
 	
 	public void onVideoPercentThroughChange(int videoTime);
 }

@@ -11,10 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 
 @SuppressWarnings("serial")
-public class StatusPanel extends JPanel {
+public class StatusPanel extends JPanel implements TrialListener {
 
 	private JLabel statusLabel;
 	
@@ -25,6 +27,8 @@ public class StatusPanel extends JPanel {
 		statusLabel = new JLabel();
 		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		add(statusLabel);
+		
+		statusLabel.setText("Stopped");
 	}
 
 	public void showErrors(final List<ValidationError> errors) {
@@ -40,5 +44,31 @@ public class StatusPanel extends JPanel {
 		statusLabel.setForeground(Color.BLACK);
 		statusLabel.setText(message);
 	}
+	
+	public void reset(){
+		setMessage("Stopped");
+	}
 
+	@Override
+	public void onAreaChange(Area newArea) {}
+
+	@Override
+	public void onStop() {
+		setMessage("Trial finished");
+	}
+	
+	@Override
+	public void onPause() {
+		setMessage("Trial suspended");
+	}
+
+	@Override
+	public void onResume() {
+		setMessage("Trial in progress");
+	}
+
+	@Override
+	public void onStart() {
+		setMessage("Trial in progress");
+	}
 }

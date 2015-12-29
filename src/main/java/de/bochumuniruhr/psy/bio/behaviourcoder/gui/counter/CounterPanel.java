@@ -57,9 +57,6 @@ public class CounterPanel extends JPanel implements GlobalKeyListener, VideoList
 	public void onVideoStop() {}
 
 	@Override
-	public void onVideoError(String message) {}
-
-	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
 
 }

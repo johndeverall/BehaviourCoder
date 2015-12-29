@@ -232,9 +232,6 @@ public class Trial implements VideoListener {
 	public void onVideoStop() {}
 
 	@Override
-	public void onVideoError(String message) {}
-
-	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
 
 	public void setVideoTimeOffset(double d) {
