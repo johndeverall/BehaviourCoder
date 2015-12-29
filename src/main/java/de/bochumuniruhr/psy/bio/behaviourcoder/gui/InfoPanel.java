@@ -33,16 +33,21 @@ public class InfoPanel extends JPanel implements TrialListener {
 		decimalFormatter = new DecimalFormat("0.00");
 		this.setLayout(new GridLayout(1, 3));
 		
-		totalTime = new JLabel("0");
+		totalTime = new JLabel("Time: 0.00");
 		totalTime.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
 		totalTime.setHorizontalAlignment(JLabel.CENTER);
 		add(totalTime);
+		
+		JLabel duration = new JLabel("Trial Duration: ");
+		duration.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
+		duration.setHorizontalAlignment(JLabel.RIGHT);
+		add(duration);
 		
 		NumberFormat format = NumberFormat.getIntegerInstance();
 		format.setGroupingUsed(false);
 		timeLimit = new JFormattedTextField(format);
 		timeLimit.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
-		timeLimit.setHorizontalAlignment(JLabel.CENTER);
+		timeLimit.setHorizontalAlignment(JLabel.LEFT);
 		
 		
 		timeLimit.addKeyListener(new KeyAdapter(){
@@ -62,7 +67,7 @@ public class InfoPanel extends JPanel implements TrialListener {
 		
 		add(timeLimit);
 		
-		transitions = new JLabel("0");
+		transitions = new JLabel("Location Changes: 0");
 		transitions.setFont(new Font("Arial", Font.BOLD, LABEL_FONT_SIZE));
 		transitions.setHorizontalAlignment(JLabel.CENTER);
 		add(transitions);
@@ -75,7 +80,7 @@ public class InfoPanel extends JPanel implements TrialListener {
 
 			@Override
 			public void run() {
-				totalTime.setText(decimalFormatter.format(trial.getCurrentTime() / 1000.0));
+				totalTime.setText("Time: " + decimalFormatter.format(trial.getCurrentTime() / 1000.0));
 			} 
 		};
 		
@@ -84,14 +89,14 @@ public class InfoPanel extends JPanel implements TrialListener {
 	}
 	
 	public void resetAll() {
-		totalTime.setText("0.00");
+		totalTime.setText("Time: 0.00");
 		timeLimit.setValue(trial.getDetails().getDuration());
-		transitions.setText("0");
+		transitions.setText("Location Changes: 0");
 	}
 
 	@Override
 	public void onAreaChange(Area area) {
-		transitions.setText("" + trial.getNumberOfAreaChanges());
+		transitions.setText("Location Changes: " + trial.getNumberOfAreaChanges());
 	}
 
 	@Override
