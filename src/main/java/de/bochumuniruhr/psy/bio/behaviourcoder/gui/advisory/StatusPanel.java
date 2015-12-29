@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel {

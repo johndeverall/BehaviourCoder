@@ -32,7 +32,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.counter.CounterPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.DetailsPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.action.ActionTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.location.LocationTimerPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
@@ -45,6 +44,8 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.TrialValidator;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -158,7 +159,7 @@ public class Main implements VideoListener {
 		trial.addListener(infoPanel);
 		globalKeyHandler.register(counterPanel);
 		globalKeyHandler.register(actionTimerPanel);
-		detailsPanel = new DetailsPanel(statusPanel, trial);
+		detailsPanel = new DetailsPanel(trial);
 		fileChooser = new FileChooser(statusPanel);
 
 		mirrorLabel = new JLabel("Mirror / Divider");
@@ -310,11 +311,8 @@ public class Main implements VideoListener {
 	private void save(File file) {
 		ExcelWriter writer = new ExcelWriter(file);
 		try {
-			List<ValidationError> validationMessages = detailsPanel.validateTrialData();
-			validationMessages.addAll(locationTimerPanel.validateTrialData());
-			//if (trial.isRunning()) { 
-			//	validationErrors.add(new ValidationError("All timers must be stopped to save. "));
-			//}
+			List<ValidationError> validationMessages = TrialValidator.validate(trial);
+			
 			if (validationMessages.isEmpty()) {
 				writer.write(trial);
 				statusPanel.setMessage("Saved OK");

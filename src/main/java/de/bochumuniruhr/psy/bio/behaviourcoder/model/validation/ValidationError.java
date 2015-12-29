@@ -1,10 +1,10 @@
-package de.bochumuniruhr.psy.bio.behaviourcoder.gui.details;
+package de.bochumuniruhr.psy.bio.behaviourcoder.model.validation;
 
 public class ValidationError {
 
 	private String message;
 	
-	public ValidationError(String message) { 
+	ValidationError(String message) { 
 		this.message = message;
 	}
 	

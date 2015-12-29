@@ -8,7 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.ValidationError;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
@@ -18,20 +17,17 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 
 	private StatusPanel statusBar; 
 	private List<LocationTimerButton> buttons;
-	private Trial trial;
 	
 	public LocationTimerPanel(Trial trial, StatusPanel statusBar) { 
 		buttons = new ArrayList<LocationTimerButton>();
 		
 		this.statusBar = statusBar;
-		this.trial = trial;
 		
 		setLayout(new GridLayout(0, 1));
 		
 		for (Area a : trial.getAreas()){
 			LocationTimerButton button = new LocationTimerButton(trial, a);
 			buttons.add(button);
-			trial.addListener(this);
 			add(button);
 		}
 		
@@ -65,17 +61,6 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 		for (LocationTimerButton button : buttons){
 			button.updateText();
 		}
-	}
-
-	public Collection<? extends ValidationError> validateTrialData() {
-		
-		List<ValidationError> validationErrors = new ArrayList<ValidationError>();
-		
-		if (trial.isRunning()) { 
-			validationErrors.add(new ValidationError("All timers must be stopped to save. "));
-		}
-		
-		return validationErrors;
 	}
 
 	@Override

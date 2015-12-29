@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -21,12 +20,10 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
 public class DetailsPanel extends JPanel {
 	
 	private JDatePickerImpl datePicker;
-	private List<ValidatingTextField> fields;
-	private StatusPanel statusBar;
+	private List<DetailField> fields;
 	
-	public DetailsPanel(StatusPanel statusBar, Trial trial) { 
+	public DetailsPanel(Trial trial) { 
 		final TrialDetails details = trial.getDetails();
-		this.statusBar = statusBar;
 		setLayout(new GridLayout(1, details.getDetailNames().size() * 2 + 2));
 
 		JLabel label = new JLabel("Date:");
@@ -40,10 +37,12 @@ public class DetailsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				details.setDate((Date) ((JDatePanelImpl) e.getSource()).getModel().getValue());		
+				datePicker.setBackground(Color.WHITE);
 			}
 		});
 		add(datePicker);
-		fields = new ArrayList<ValidatingTextField>();
+		datePicker.setBackground(Color.PINK);
+		fields = new ArrayList<DetailField>();
 		
 		for (String detail : details.getDetailNames()){
 			label = new JLabel(detail + ":");
@@ -59,34 +58,16 @@ public class DetailsPanel extends JPanel {
 			label.setHorizontalAlignment(JLabel.CENTER);
 			label.setFont(new Font("Arial", Font.BOLD, 20));
 			add(label);
-			ValidatingTextField field = new ValidatingTextField(details, detail);
+			DetailField field = new DetailField(details, detail);
 			field.setToolTipText(tooltip);
 			add(field);
+			field.setBackground(Color.PINK);
 			fields.add(field);
 		}
 	}
-	
-	public List<ValidationError> validateTrialData() { 
-		List<ValidationError> errors = new ArrayList<ValidationError>();
-		
-		for (ValidatingTextField field : fields){
-			errors.addAll(field.validateTextField());
-		}
-		
-		if (datePicker.getModel().getValue() == null) { 
-			datePicker.setBackground(Color.PINK);
-			errors.add(new ValidationError("Date cannot be empty. "));
-		} else { 
-			datePicker.setBackground(Color.WHITE);
-		}
-		
-		statusBar.showErrors(errors);
-		
-		return errors;
-	}
 
 	public void resetAll() {
-		for (ValidatingTextField field : fields){
+		for (DetailField field : fields){
 			field.reset();
 		}		
 		datePicker.getModel().setValue(null);
