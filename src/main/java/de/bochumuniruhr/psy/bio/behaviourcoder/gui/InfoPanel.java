@@ -88,7 +88,8 @@ public class InfoPanel extends JPanel implements TrialListener {
 		timer.scheduleAtFixedRate(clockRedrawer, 0, 10); // redraw every 1 ms after a delay of 0 ms
 	}
 	
-	public void resetAll() {
+	@Override
+	public void onReset() {
 		totalTime.setText("Time: 0.00");
 		timeLimit.setValue(trial.getDetails().getDuration());
 		transitions.setText("Location Changes: 0");

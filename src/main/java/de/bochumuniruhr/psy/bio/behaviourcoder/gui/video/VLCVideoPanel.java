@@ -84,16 +84,6 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	public void skip(final long intervalInMiliseconds) { 
 		mediaPlayerComponent.getMediaPlayer().skip(intervalInMiliseconds);
 	}
-	
-	public void reset() { 
-		skip(0);
-		mediaPlayerComponent.getMediaPlayer().stop();
-	}
-	
-	public void resetAll() {
-		skip(0);
-		mediaPlayerComponent.getMediaPlayer().stop();
-	}
 
 	@Override
 	public void onPause() {
@@ -129,7 +119,13 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 
 	@Override
 	public void onStart() {
-		trial.setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
+		trial.getDetails().setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
+	}
+
+	@Override
+	public void onReset() {
+		skip(0);
+		mediaPlayerComponent.getMediaPlayer().stop();
 	}
 
 }

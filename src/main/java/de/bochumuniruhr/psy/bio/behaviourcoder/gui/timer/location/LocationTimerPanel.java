@@ -28,12 +28,6 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 		
 		setupClockRedrawRate();
 	}
-
-	public void resetAll() {
-		for (LocationTimerButton button : buttons) { 
-			button.setEnabled(true);
-		}
-	}
 	
 	private void setupClockRedrawRate() { 
 		TimerTask clockRedrawer = new TimerTask() {
@@ -54,6 +48,13 @@ public class LocationTimerPanel extends JPanel implements TrialListener {
 	public void onStop() {
 		for (LocationTimerButton button : buttons){
 			button.setEnabled(false);
+		}
+	}
+	
+	@Override
+	public void onReset() {
+		for (LocationTimerButton button : buttons) { 
+			button.setEnabled(true);
 		}
 	}
 

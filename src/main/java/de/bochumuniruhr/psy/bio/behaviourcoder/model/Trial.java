@@ -82,6 +82,13 @@ public class Trial implements VideoListener {
 		areaTimes.clear();
 		time.reset();
 		ready = false;
+		for (InstantBehaviour behaviour : instant){
+			behaviour.reset();
+		}
+		
+		for (TrialListener listener : listeners){
+			listener.onReset();
+		}
 	}
 	
 	public boolean isRunning(){
@@ -233,9 +240,4 @@ public class Trial implements VideoListener {
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
-
-	public void setVideoTimeOffset(double d) {
-		// TODO Auto-generated method stub
-		
-	}
 }

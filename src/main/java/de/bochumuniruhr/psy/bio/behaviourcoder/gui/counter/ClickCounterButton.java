@@ -47,7 +47,6 @@ public class ClickCounterButton extends JButton implements GlobalKeyListener, Vi
 	}
 	
 	public void reset() { 
-		behaviour.reset();
 		setText(behaviour.getName() + ": 0");
 	}
 	

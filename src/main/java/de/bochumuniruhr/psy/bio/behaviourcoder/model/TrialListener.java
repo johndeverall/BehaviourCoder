@@ -12,4 +12,6 @@ public interface TrialListener {
 	
 	public void onResume();
 	
+	public void onReset();
+	
 }

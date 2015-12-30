@@ -188,7 +188,8 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 		currentPosition.setText("" + videoPosition / 1000);
 	}
 
-	public void resetAll() {
+	@Override
+	public void onReset() {
 		skipField.setText("" + 0);
 		enableControls();
 		playPauseButton.reset();

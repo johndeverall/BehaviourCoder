@@ -117,5 +117,10 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 
 	@Override
 	public void onResume() {}
+
+	@Override
+	public void onReset() {
+		occurrences = new ArrayList<Occurrence>();
+	}
 	
 }

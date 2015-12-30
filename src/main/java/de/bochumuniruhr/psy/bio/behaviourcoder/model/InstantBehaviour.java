@@ -32,7 +32,7 @@ public class InstantBehaviour extends Behaviour {
 		}
 	}
 	
-	public void reset() {
+	void reset() {
 		occurrences.clear();
 	}
 	

@@ -244,13 +244,9 @@ public class Main implements VideoListener {
 		menu.add(reset);
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				locationTimerPanel.resetAll();
 				counterPanel.resetAll();
 				detailsPanel.resetAll();
-				//actionTimerPanel.resetAll();
-				infoPanel.resetAll();
-				vlcVideoPanel.resetAll();
-				mediaControlPanel.resetAll();
+				trial.reset();
 			}
 		});
 
