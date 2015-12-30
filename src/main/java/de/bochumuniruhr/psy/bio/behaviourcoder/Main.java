@@ -315,6 +315,8 @@ public class Main {
 	 */
 	private JMenuBar configureJMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
+		//Note no OS check is needed as non apple systems will ignore this property
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
 
 		JMenu programMenu = configureProgramMenu();
 		menuBar.add(programMenu);
