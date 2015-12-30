@@ -75,13 +75,13 @@ public class Trial implements VideoListener {
 	 * Creates a trial.
 	 * 
 	 * @param duration - the initial duration the trial will run for
-	 * @param areas - the list of areas in the trial
+	 * @param locations - the list of locations in the trial
 	 * @param detailNames - the names of the details of the trial
 	 * @param detailConstraints - the constraints of those details. Constraints are matched to the names by index.
 	 */
-	public Trial(long duration, List<Location> areas, List<String> detailNames, List<Constraint> detailConstraints){
+	public Trial(long duration, List<Location> locations, List<String> detailNames, List<Constraint> detailConstraints){
 		details = new TrialDetails(duration, detailNames, detailConstraints);
-		this.locations = areas;
+		this.locations = locations;
 		timed = new ArrayList<TimedBehaviour>();
 		instant = new ArrayList<InstantBehaviour>();
 		locationChanges = 0;

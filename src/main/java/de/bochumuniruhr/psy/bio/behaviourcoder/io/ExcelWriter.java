@@ -85,21 +85,21 @@ public class ExcelWriter {
 				for (String detail : trial.getDetails().getDetailNames()){
 					header.add(detail.replaceAll("\\s+", "_"));
 				}
-				//Add the instant behaviours with each area to the header
+				//Add the instant behaviours with each location to the header
 				for (InstantBehaviour instant : trial.getInstantBehaviours()){
-					for (Location area : trial.getLocations()){
-						header.add((instant.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
+					for (Location location : trial.getLocations()){
+						header.add((instant.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
 					}
 				}
-				//Add the timed behaviours with each area to the header
+				//Add the timed behaviours with each location to the header
 				for (TimedBehaviour timed : trial.getTimedBehaviours()){
-					for (Location area : trial.getLocations()){
-						header.add((timed.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
+					for (Location location : trial.getLocations()){
+						header.add((timed.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
 					}
 				}
-				//Add the areas to the header
-				for (Location area : trial.getLocations()){
-					header.add(area.getName().replaceAll("\\s+", "_"));
+				//Add the locations to the header
+				for (Location location : trial.getLocations()){
+					header.add(location.getName().replaceAll("\\s+", "_"));
 				}
 				//Add some additional information to the header
 				header.add("Location_Changes");
@@ -164,26 +164,26 @@ public class ExcelWriter {
 				sheet.addCell(label);
 				++column;
 			}
-			//Number of occurrences of each behaviour in each area
+			//Number of occurrences of each behaviour in each location
 			for (InstantBehaviour instant : trial.getInstantBehaviours()){
-				for (Location area : trial.getLocations()){
-					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(area));
+				for (Location location : trial.getLocations()){
+					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(location));
 					sheet.addCell(num);
 					++column;
 				}
 			}
-			//Time that each behaviour occurred in each area
+			//Time that each behaviour occurred in each location
 			for (TimedBehaviour timed : trial.getTimedBehaviours()){
-				for (Location area : trial.getLocations()){
-					Number num = new Number(column, nextEmptyRow, timed.getDuration(area));
+				for (Location location : trial.getLocations()){
+					Number num = new Number(column, nextEmptyRow, timed.getDuration(location));
 					sheet.addCell(num);
 					++column;
 				}
 			}
-			//Time for each area
-			for (Location area : trial.getLocations()){
+			//Time for each location
+			for (Location location : trial.getLocations()){
 				//Dividing by 1000 to get seconds
-				Number num = new Number(column, nextEmptyRow, trial.getLocationTime(area) / 1000.0);
+				Number num = new Number(column, nextEmptyRow, trial.getLocationTime(location) / 1000.0);
 				sheet.addCell(num);
 				++column;
 			}
