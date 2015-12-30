@@ -33,7 +33,7 @@ public class LocationPanel extends JPanel implements TrialListener {
 		setLayout(new GridLayout(0, 1));
 		
 		//Create the buttons
-		for (Location a : trial.getAreas()){
+		for (Location a : trial.getLocations()){
 			LocationButton button = new LocationButton(trial, a);
 			buttons.add(button);
 			add(button);
@@ -79,7 +79,7 @@ public class LocationPanel extends JPanel implements TrialListener {
 	}
 
 	@Override
-	public void onAreaChange(Location name) {}
+	public void onLocationChange(Location newLocation) {}
 
 	@Override
 	public void onPause() {}

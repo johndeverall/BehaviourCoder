@@ -53,10 +53,10 @@ public class LocationButton extends JButton {
 				if (trial.isReady()) { 
 					SoundMaker.playMouseClick();
 					//Set no location for the trial if it is the current location
-					if (location.equals(trial.getCurrentArea())){
-						trial.setCurrentArea(null);
+					if (location.equals(trial.getCurrentLocation())){
+						trial.setCurrentLocation(null);
 					} else {
-						trial.setCurrentArea(location);
+						trial.setCurrentLocation(location);
 					}
 				}
 			}
@@ -67,7 +67,7 @@ public class LocationButton extends JButton {
 	 * Updates the text of this button to show the time in the location in seconds.
 	 */
 	void updateText() { 
-		Double timeInSeconds = (double) trial.getAreaTime(location) / 1000.00;
+		Double timeInSeconds = (double) trial.getLocationTime(location) / 1000.00;
 		super.setText(location.getName() + ": " + decimalFormatter.format(timeInSeconds));
 	}
 }

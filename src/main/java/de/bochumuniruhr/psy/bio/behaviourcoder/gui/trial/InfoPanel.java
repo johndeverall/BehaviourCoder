@@ -133,8 +133,8 @@ public class InfoPanel extends JPanel implements TrialListener {
 	}
 
 	@Override
-	public void onAreaChange(Location area) {
-		transitions.setText("Location Changes: " + trial.getNumberOfAreaChanges());
+	public void onLocationChange(Location newLocation) {
+		transitions.setText("Location Changes: " + trial.getNumberOfLocationChanges());
 	}
 
 	@Override

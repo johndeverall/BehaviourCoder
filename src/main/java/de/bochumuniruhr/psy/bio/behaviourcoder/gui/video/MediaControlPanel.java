@@ -218,7 +218,7 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	}
 
 	@Override
-	public void onAreaChange(Location name) {}
+	public void onLocationChange(Location newLocation) {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {

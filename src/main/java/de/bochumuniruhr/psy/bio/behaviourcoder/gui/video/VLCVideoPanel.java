@@ -152,7 +152,7 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	}
 
 	@Override
-	public void onAreaChange(Location name) {}
+	public void onLocationChange(Location newLocation) {}
 
 	@Override
 	public void onStart() {

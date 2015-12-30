@@ -87,18 +87,18 @@ public class ExcelWriter {
 				}
 				//Add the instant behaviours with each area to the header
 				for (InstantBehaviour instant : trial.getInstantBehaviours()){
-					for (Location area : trial.getAreas()){
+					for (Location area : trial.getLocations()){
 						header.add((instant.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
 				//Add the timed behaviours with each area to the header
 				for (TimedBehaviour timed : trial.getTimedBehaviours()){
-					for (Location area : trial.getAreas()){
+					for (Location area : trial.getLocations()){
 						header.add((timed.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
 				//Add the areas to the header
-				for (Location area : trial.getAreas()){
+				for (Location area : trial.getLocations()){
 					header.add(area.getName().replaceAll("\\s+", "_"));
 				}
 				//Add some additional information to the header
@@ -166,7 +166,7 @@ public class ExcelWriter {
 			}
 			//Number of occurrences of each behaviour in each area
 			for (InstantBehaviour instant : trial.getInstantBehaviours()){
-				for (Location area : trial.getAreas()){
+				for (Location area : trial.getLocations()){
 					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(area));
 					sheet.addCell(num);
 					++column;
@@ -174,21 +174,21 @@ public class ExcelWriter {
 			}
 			//Time that each behaviour occurred in each area
 			for (TimedBehaviour timed : trial.getTimedBehaviours()){
-				for (Location area : trial.getAreas()){
+				for (Location area : trial.getLocations()){
 					Number num = new Number(column, nextEmptyRow, timed.getDuration(area));
 					sheet.addCell(num);
 					++column;
 				}
 			}
 			//Time for each area
-			for (Location area : trial.getAreas()){
+			for (Location area : trial.getLocations()){
 				//Dividing by 1000 to get seconds
-				Number num = new Number(column, nextEmptyRow, trial.getAreaTime(area) / 1000.0);
+				Number num = new Number(column, nextEmptyRow, trial.getLocationTime(area) / 1000.0);
 				sheet.addCell(num);
 				++column;
 			}
 			//Number of transitions
-			Number trans = new Number(column, nextEmptyRow, trial.getNumberOfAreaChanges());
+			Number trans = new Number(column, nextEmptyRow, trial.getNumberOfLocationChanges());
 			sheet.addCell(trans);
 			++column;
 			

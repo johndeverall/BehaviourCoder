@@ -74,7 +74,7 @@ public class StatusPanel extends JPanel implements TrialListener {
 	}
 
 	@Override
-	public void onAreaChange(Location newArea) {}
+	public void onLocationChange(Location newLocation) {}
 
 	@Override
 	public void onStop() {
