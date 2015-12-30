@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -38,7 +39,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
-import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
@@ -56,7 +56,7 @@ public class Main implements VideoListener {
 	private InstantBehaviourPanel counterPanel;
 	private DetailsPanel detailsPanel;
 	private StatusPanel statusPanel;
-	private FileChooser fileChooser;
+	private JFileChooser fileChooser;
 	private GlobalKeyPressHandler globalKeyHandler;
 	private JLabel mirrorLabel;
 	private InfoPanel infoPanel;
@@ -149,7 +149,7 @@ public class Main implements VideoListener {
 		mediaControlPanel = new MediaControlPanel();
 		infoPanel = new InfoPanel(trial, statusPanel);
 		detailsPanel = new DetailsPanel(trial);
-		fileChooser = new FileChooser(statusPanel);
+		fileChooser = new JFileChooser();
 
 
 		trial.addListener(vlcVideoPanel);
@@ -293,7 +293,7 @@ public class Main implements VideoListener {
 	private File chooseFile(String cancelMessage){
 		int returnVal = fileChooser.showSaveDialog(frame);
 
-		if (returnVal == FileChooser.APPROVE_OPTION) {
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			return fileChooser.getSelectedFile();
 		} else {
 			statusPanel.setMessage(cancelMessage);

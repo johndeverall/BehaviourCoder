@@ -13,7 +13,6 @@ import jxl.Workbook;
 import jxl.format.Colour;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
-import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
@@ -22,26 +21,45 @@ import jxl.write.WriteException;
 import jxl.write.Number;
 import jxl.write.DateTime;
 
+/**
+ * Writer for saving trials as spreadsheets using the XLS format.
+ */
 public class ExcelWriter {
 
+	/**
+	 * The file to be written to.
+	 */
 	private File file;
 	
+	/**
+	 * Creates an excel writer.
+	 * 
+	 * @param file - the file to write to. Must either not exist or be in the XLS format.
+	 */
 	public ExcelWriter(File file) {
 		this.file = file;
 	}
 
+	/**
+	 * Writes a trial to the file.
+	 * 
+	 * @param trial - the trial to be saved.
+	 * @throws FileNotFoundException
+	 */
 	public void write(Trial trial) throws FileNotFoundException {
-
+		//The workbook to be modified
 		WritableWorkbook workbook = null;
 		try {
-			Workbook workbookIn = null;
+			//If the file exists
 			if (file.exists()) {
-				workbookIn = Workbook.getWorkbook(file);
+				//Load it and use it to create a modify version
+				Workbook workbookIn = Workbook.getWorkbook(file);
 				workbook = Workbook.createWorkbook(file, workbookIn);
 
-				WritableSheet sheet = workbook.getSheet("Page1");
+				//Get the results sheet
+				WritableSheet sheet = workbook.getSheet("Results");
 
-				// find the first empty row in the spreadsheet
+				//Find the first empty row in the spreadsheet
 				int nextEmptyRow = 1;
 				while (true) {
 					if (sheet.getCell(0, nextEmptyRow).getContents().equals("")) {
@@ -50,82 +68,87 @@ public class ExcelWriter {
 					nextEmptyRow++;
 				}
 
+				//Write the trial in the empty row that was found
 				writeRow(trial, nextEmptyRow, workbook, sheet);
-
 			} else {
+				//Otherwise create a new workbook
 				workbook = Workbook.createWorkbook(file);
 
-				WritableSheet sheet = workbook.createSheet("Page1", 0);
+				//Create the sheet for the results
+				WritableSheet sheet = workbook.createSheet("Results", 0);
 
-				// Set Header
+				//Create the list names for the header
 				ArrayList<String> header = new ArrayList<String>();
 				
+				//Add the detail names to the header
 				header.add("Date");
-				
 				for (String detail : trial.getDetails().getDetailNames()){
 					header.add(detail.replaceAll("\\s+", "_"));
 				}
-				
+				//Add the instant behaviours with each area to the header
 				for (InstantBehaviour instant : trial.getInstantBehaviours()){
 					for (Location area : trial.getAreas()){
 						header.add((instant.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
-				
+				//Add the timed behaviours with each area to the header
 				for (TimedBehaviour timed : trial.getTimedBehaviours()){
 					for (Location area : trial.getAreas()){
 						header.add((timed.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
-				
+				//Add the areas to the header
 				for (Location area : trial.getAreas()){
 					header.add(area.getName().replaceAll("\\s+", "_"));
 				}
-				
+				//Add some additional information to the header
 				header.add("Location_Changes");
 				header.add("Trial_Section_Start");
 				
-				// Setting Background colour for Cells
-				
-				Colour bckcolor = Colour.DARK_GREEN;
+				//Set the background colour for the header cells
 				WritableCellFormat cellFormat = new WritableCellFormat();
+				cellFormat.setBackground(Colour.DARK_GREEN);
 
-				cellFormat.setBackground(bckcolor);
-
-				// Setting Colour & Font for the Text
-
+				//Set the colour and font of the text for the header cells
 				WritableFont font = new WritableFont(WritableFont.ARIAL);
-
 				font.setColour(Colour.GOLD);
-
 				cellFormat.setFont(font);
 
-				// Write the Header to the excel file
+				//Create the cells for each name in the header
 				int column = 0;
+				int headerRow = 0;
 				for (String columnTitle : header) {
-					int headerRow = 0;
+					//Create the label
 					Label label = new Label(column, headerRow, columnTitle);
-
+					label.setCellFormat(cellFormat);
 					sheet.addCell(label);
 
-					WritableCell cell = sheet
-							.getWritableCell(column, headerRow);
-					cell.setCellFormat(cellFormat);
-
+					//Move along the header
 					column++;
 				}
 
+				//Now write the row
 				writeRow(trial, 1, workbook, sheet);
 			}
 
 		} catch (FileNotFoundException e) { 
-			throw e; // user can probably do something about this
+			//User should be informed of the file not being found
+			//NOTE: May never be thrown
+			throw e;
 		} catch (IOException | WriteException | BiffException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void writeRow(Trial trial, int nextEmptyRow,
+	/**
+	 * Writes the trial into the spreadsheet as a row.
+	 * 
+	 * @param trial - the trial to write into the spreadsheet
+	 * @param nextEmptyRow - the next empty row in the sheet
+	 * @param workbook - the workbook being written to
+	 * @param sheet - the sheet being written to
+	 */
+	private void writeRow(Trial trial, int nextEmptyRow,
 			WritableWorkbook workbook, WritableSheet sheet) {
 		try {
 			TrialDetails details = trial.getDetails();
@@ -141,7 +164,6 @@ public class ExcelWriter {
 				sheet.addCell(label);
 				++column;
 			}
-			
 			//Number of occurrences of each behaviour in each area
 			for (InstantBehaviour instant : trial.getInstantBehaviours()){
 				for (Location area : trial.getAreas()){
@@ -150,7 +172,6 @@ public class ExcelWriter {
 					++column;
 				}
 			}
-
 			//Time that each behaviour occurred in each area
 			for (TimedBehaviour timed : trial.getTimedBehaviours()){
 				for (Location area : trial.getAreas()){
@@ -159,7 +180,6 @@ public class ExcelWriter {
 					++column;
 				}
 			}
-			
 			//Time for each area
 			for (Location area : trial.getAreas()){
 				//Dividing by 1000 to get seconds
@@ -167,7 +187,6 @@ public class ExcelWriter {
 				sheet.addCell(num);
 				++column;
 			}
-			
 			//Number of transitions
 			Number trans = new Number(column, nextEmptyRow, trial.getNumberOfAreaChanges());
 			sheet.addCell(trans);
