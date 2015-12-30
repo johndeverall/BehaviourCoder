@@ -37,7 +37,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.location.LocationPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed.TimedBehaviourPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
@@ -49,32 +48,92 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
-public class Main implements VideoListener {
+/**
+ * Main class for BehaviourCoder, constructs the entire GUI.
+ */
+public class Main {
 
-	private LocationPanel locationTimerPanel;
-	private TimedBehaviourPanel actionTimerPanel;
-	private InstantBehaviourPanel counterPanel;
+	/**
+	 * The panel that allows locations to be chosen.
+	 */
+	private LocationPanel locationPanel;
+	
+	/**
+	 * The panel that allows timed behaviours to be toggled.
+	 */
+	private TimedBehaviourPanel timedBehaviourPanel;
+	
+	/**
+	 * The panel that allows instant behaviours to be triggered.
+	 */
+	private InstantBehaviourPanel instantBehaviourPanel;
+	
+	/**
+	 * The panel that provides the details of the trial.
+	 */
 	private DetailsPanel detailsPanel;
-	private StatusPanel statusPanel;
+	
+	/**
+	 * The bar used to display status messages.
+	 */
+	private StatusPanel statusBar;
+	
+	/**
+	 * TODO: Split into two choosers.
+	 * 
+	 * The file chooser to select videos and save files.
+	 */
 	private JFileChooser fileChooser;
+	
+	/**
+	 * The listener for all key presses.
+	 */
 	private GlobalKeyPressHandler globalKeyHandler;
-	private JLabel mirrorLabel;
+	
+	/**
+	 * The panel that shows information about the trial.
+	 */
 	private InfoPanel infoPanel;
+	
+	/**
+	 * The panel that provides control over the video.
+	 */
 	private MediaControlPanel mediaControlPanel;
+	
+	/**
+	 * The panel that displays the video.
+	 */
 	private VLCVideoPanel vlcVideoPanel;
+	
+	/**
+	 * Whether VLC was found.
+	 */
 	private boolean foundVlc;
+	
+	/**
+	 * The logger for this class.
+	 */
 	private Logger logger = Logger.getLogger(this.getClass());
 	
+	/**
+	 * The current trial.
+	 */
 	private Trial trial;
 
+	/**
+	 * The default time limit for a trial.
+	 */
 	private int DEFAULT_TIME_LIMIT = 120;
 
+	/**
+	 * The main window
+	 */
 	private JFrame frame;
 
 	public static void main(String[] args) {
+		//TODO: Create cross platform solution
 		System.setProperty("jna.library.path", "C:\\Program Files\\VideoLAN\\VLC\\");
 		
-		//boolean found = new NativeDiscovery(new CustomNativeDiscoveryStrategy()).discover();
 		final boolean found = new NativeDiscovery().discover();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -83,21 +142,25 @@ public class Main implements VideoListener {
 		});
 	}
 
+	/**
+	 * Creates the main window.
+	 * 
+	 * @param found - whether VLC was found
+	 */
 	public Main(boolean found) {
 		this.foundVlc = true;
 		KeyboardFocusManager currentKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		globalKeyHandler = new GlobalKeyPressHandler(currentKeyboardFocusManager, this);
 		
-		trial = new Trial(DEFAULT_TIME_LIMIT, Arrays.asList(new Location("Close"), new Location("Far")),
-				Arrays.asList("Trial Type", "Rooster ID", "Session Number", "Trial Number", "Section Number", "Mirror?"),
-				Arrays.asList(new Constraint("BM", "NM", "BS", "NS", "WM", "WS"),
-						new Constraint("554", "570", "547", "538", "546", "551", "559", "548", "544", "578", "579", "542", "567"),
-						new Constraint(), new Constraint(), new Constraint(),
-						new Constraint("0", "1")));
-		setupBehaviours();
+		setupTrial();
 		setupUI();
 	}
 
+	/**
+	 * Saves a file. 
+	 * 
+	 * TODO: Fix so it doesn't try to overwrite video file.
+	 */
 	public void save() {
 		File file = fileChooser.getSelectedFile();
 		if (file == null) {
@@ -107,7 +170,19 @@ public class Main implements VideoListener {
 		}
 	}
 	
-	private void setupBehaviours(){
+	/**
+	 * TODO: Replace with trial load and trial create
+	 * 
+	 * Setups the trial to match previous versions.
+	 */
+	private void setupTrial(){
+		trial = new Trial(DEFAULT_TIME_LIMIT, Arrays.asList(new Location("Close"), new Location("Far")),
+				Arrays.asList("Trial Type", "Rooster ID", "Session Number", "Trial Number", "Section Number", "Mirror?"),
+				Arrays.asList(new Constraint("BM", "NM", "BS", "NS", "WM", "WS"),
+						new Constraint("554", "570", "547", "538", "546", "551", "559", "548", "544", "578", "579", "542", "567"),
+						new Constraint(), new Constraint(), new Constraint(),
+						new Constraint("0", "1")));
+		
 		trial.addInstantBehaviour(new InstantBehaviour("Peck", Color.YELLOW, trial));
 		trial.addInstantBehaviour(new InstantBehaviour("Hackles", Color.GREEN, trial));
 		trial.addInstantBehaviour(new InstantBehaviour("Attack", Color.RED, trial));
@@ -119,6 +194,9 @@ public class Main implements VideoListener {
 		trial.addTimedBehaviour(new TimedBehaviour("Grooming Other", null, trial));
 	}
 
+	/**
+	 * Setups the GUI.
+	 */
 	private void setupUI() {
 		setupUIComponents();
 		if (foundVlc) { 
@@ -129,88 +207,112 @@ public class Main implements VideoListener {
 		}
 	}
 
+	/**
+	 * Setups the GUI components.
+	 */
 	private void setupUIComponents() {
 		setNimbusLookAndFeel();
 
+		//Create frame
 		frame = configureJFrame();
 
+		//Create the menu bar
 		JMenuBar menuBar = configureJMenuBar();
 		frame.setJMenuBar(menuBar);
 
+		//Create the main panel
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridBagLayout());
 
-		statusPanel = new StatusPanel(frame);
-		actionTimerPanel = new TimedBehaviourPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
-		locationTimerPanel = new LocationPanel(trial);
-		counterPanel = new InstantBehaviourPanel(trial,
+		//Create each internal panel
+		statusBar = new StatusPanel(frame);
+		timedBehaviourPanel = new TimedBehaviourPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
+		locationPanel = new LocationPanel(trial);
+		instantBehaviourPanel = new InstantBehaviourPanel(trial,
 				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
 		vlcVideoPanel = new VLCVideoPanel(trial.getDetails());
 		mediaControlPanel = new MediaControlPanel();
-		infoPanel = new InfoPanel(trial, statusPanel);
+		infoPanel = new InfoPanel(trial, statusBar);
 		detailsPanel = new DetailsPanel(trial);
+		
+		//Create the file chooser
 		fileChooser = new JFileChooser();
 
-
+		//Add trial listeners
 		trial.addListener(vlcVideoPanel);
 		trial.addListener(mediaControlPanel);
 		trial.addListener(infoPanel);
-		trial.addListener(locationTimerPanel);
-		trial.addListener(statusPanel);
+		trial.addListener(locationPanel);
+		trial.addListener(statusBar);
 
+		//Add video listeners
 		vlcVideoPanel.addVideoListener(mediaControlPanel);
 		vlcVideoPanel.addVideoListener(trial);
-		vlcVideoPanel.addVideoListener(this);
 
+		//Add media listeners
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
 
-		globalKeyHandler.register(counterPanel);
-		globalKeyHandler.register(actionTimerPanel);
+		//Add key listeners
+		globalKeyHandler.register(instantBehaviourPanel);
+		globalKeyHandler.register(timedBehaviourPanel);
 		
-		mirrorLabel = new JLabel("Mirror / Divider");
-		mirrorLabel.setFont(new Font("Arial", Font.BOLD, 15));
-		mirrorLabel.setHorizontalAlignment(JLabel.CENTER);
-		mirrorLabel.setBackground(Color.BLACK);
-		mirrorLabel.setOpaque(true);
-		mirrorLabel.setForeground(Color.WHITE);
-		
+		//Add the video panel
 		GridBagConstraints videoPanelConstraints = createConstraints(0, 4, 30, 11, GridBagConstraints.BOTH);
 		videoPanelConstraints.weightx = 1;
 		videoPanelConstraints.weighty = 1;
 		videoPanelConstraints.anchor = GridBagConstraints.CENTER;
 		mainPanel.add(vlcVideoPanel, videoPanelConstraints);
 
+		//Add the information panel
 		GridBagConstraints infoPanelConstraints = createConstraints(0, 0, 30, 2, GridBagConstraints.HORIZONTAL);
 		infoPanelConstraints.weightx = 1;
 		mainPanel.add(infoPanel, infoPanelConstraints);
 
+		//Add the details panel
 		mainPanel.add(detailsPanel, createConstraints(0, 2, 30, 2, GridBagConstraints.HORIZONTAL));
 
+		//Add the media control panel
 		mainPanel.add(mediaControlPanel, createConstraints(0, 15, 30, 3, GridBagConstraints.HORIZONTAL));
 
+		//Create and add the mirror label
+		JLabel mirrorLabel = new JLabel("Mirror / Divider");
+		mirrorLabel.setFont(new Font("Arial", Font.BOLD, 15));
+		mirrorLabel.setHorizontalAlignment(JLabel.CENTER);
+		mirrorLabel.setBackground(Color.BLACK);
+		mirrorLabel.setOpaque(true);
+		mirrorLabel.setForeground(Color.WHITE);
 		GridBagConstraints mirrorLabelConstraints = createConstraints(8, 18, 16, 1, GridBagConstraints.HORIZONTAL);
 		mirrorLabelConstraints.weightx = 1;
 		mainPanel.add(mirrorLabel, mirrorLabelConstraints);
 
+		//Add the location panel
 		GridBagConstraints locationPanelConstraints = createConstraints(8, 19, 16, 12, GridBagConstraints.BOTH);
 		locationPanelConstraints.weightx = 1;
-		mainPanel.add(locationTimerPanel, locationPanelConstraints);
+		mainPanel.add(locationPanel, locationPanelConstraints);
 
-		mainPanel.add(statusPanel, createConstraints(0, 31, 30, 1, GridBagConstraints.HORIZONTAL));
+		//Add the status bar
+		mainPanel.add(statusBar, createConstraints(0, 31, 30, 1, GridBagConstraints.HORIZONTAL));
 
-		GridBagConstraints counterPanelConstraints = createConstraints(23, 19, 7, 12, GridBagConstraints.VERTICAL);
-		counterPanelConstraints.anchor = GridBagConstraints.LINE_END;
-		mainPanel.add(counterPanel, counterPanelConstraints);
+		//Add the instant behaviour panel
+		GridBagConstraints instantBehaviourPanelConstraints = createConstraints(23, 19, 7, 12, GridBagConstraints.VERTICAL);
+		instantBehaviourPanelConstraints.anchor = GridBagConstraints.LINE_END;
+		mainPanel.add(instantBehaviourPanel, instantBehaviourPanelConstraints);
 
-		mainPanel.add(actionTimerPanel, createConstraints(0, 19, 7, 12, GridBagConstraints.BOTH)); // 0, 17
+		//Add the timed behaviour panel
+		mainPanel.add(timedBehaviourPanel, createConstraints(0, 19, 7, 12, GridBagConstraints.BOTH)); // 0, 17
 
+		//Prepare frame to be displayed
 		mainPanel.validate();
-
 		frame.getContentPane().add(mainPanel);
 		frame.setVisible(true);
 
 	}
 
+	/**
+	 * Creates the menu bar.
+	 * 
+	 * @return The created menu bar.
+	 */
 	private JMenuBar configureJMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
@@ -223,32 +325,46 @@ public class Main implements VideoListener {
 		return menuBar;
 	}
 
+	/**
+	 * Creates the help menu.
+	 * 
+	 * @return The created menu.
+	 */
 	private JMenu configureHelpMenu() {
 		JMenu menu = new JMenu("Help");
 		
+		//Add option to display version
 		JMenuItem help = new JMenuItem("Version");
 		help.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "Version: 0.2");
+				JOptionPane.showMessageDialog(frame, "Version: 0.3");
 			}});
 		menu.add(help);
+		
 		return menu;
 	}
 
+	/**
+	 * Creates the main menu.
+	 * 
+	 * @return The created menu.
+	 */
 	private JMenu configureProgramMenu() {
-		JMenu menu = new JMenu("Program");
+		JMenu menu = new JMenu("Main");
 
+		//Add the option to reset
 		JMenuItem reset = new JMenuItem("Reset");
 		menu.add(reset);
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				counterPanel.resetAll();
+				instantBehaviourPanel.resetAll();
 				detailsPanel.resetAll();
 				trial.reset();
 			}
 		});
 
+		//Add option to open a video
 		JMenuItem chooseVideo = new JMenuItem("Open video");
 		menu.add(chooseVideo);
 		chooseVideo.addActionListener(new ActionListener() {
@@ -258,6 +374,7 @@ public class Main implements VideoListener {
 			}
 		});
 		
+		//Add option to save a trial
 		JMenuItem save = new JMenuItem("Save");
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -266,6 +383,7 @@ public class Main implements VideoListener {
 		});
 		menu.add(save);
 
+		//Add option to exit the program
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -276,6 +394,9 @@ public class Main implements VideoListener {
 		return menu;
 	}
 
+	/**
+	 * Chooses a file to be saved.
+	 */
 	private void showSaveDialog() {
 		File file = chooseFile("Save cancelled.");
 		if (file != null) {
@@ -283,6 +404,9 @@ public class Main implements VideoListener {
 		}
 	}
 
+	/**
+	 * Chooses a video to be loaded.
+	 */
 	private void showLoadVideoDialog() {
 		File file = chooseFile("Open video cancelled.");
 		if (file != null) {
@@ -290,85 +414,102 @@ public class Main implements VideoListener {
 		}
 	}
 	
+	/**
+	 * Chooses a file.
+	 * 
+	 * @param cancelMessage - the message to output to the status bar if cancelled
+	 * @return The chosen file. Null if nothing chosen.
+	 */
 	private File chooseFile(String cancelMessage){
 		int returnVal = fileChooser.showSaveDialog(frame);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			return fileChooser.getSelectedFile();
 		} else {
-			statusPanel.setMessage(cancelMessage);
+			statusBar.setMessage(cancelMessage);
 			return null;
 		}
 	}
 	
+	/**
+	 * Saves the trial to a spreadsheet.
+	 * 
+	 * @param file - the XLS file to save to
+	 */
 	private void save(File file) {
 		ExcelWriter writer = new ExcelWriter(file);
 		try {
 			List<ValidationError> validationMessages = TrialValidator.validate(trial);
-			
 			if (validationMessages.isEmpty()) {
+				//If valid trial data than save
 				writer.write(trial);
-				statusPanel.setMessage("Saved OK");
+				statusBar.setMessage("Saved OK");
 				SoundMaker.playSave();
 			} else {
-				statusPanel.showErrors(validationMessages);
+				//Otherwise report errors
+				statusBar.showErrors(validationMessages);
 				SoundMaker.playValidationError();
 			}
 		} catch (FileNotFoundException ex) {
+			//Alert user if the file could not be found
 			JOptionPane.showMessageDialog(frame, "Cannot save spreadsheet. Is it opened in another program?");
 		}
 	}
 	
+	/**
+	 * Creates the frame.
+	 * 
+	 * @return The created frame.
+	 */
 	private JFrame configureJFrame() {
+		//Create the frame
 		JFrame frame = new JFrame("Behaviour Coder");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 
+		//Set the icon
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(ClassLoader.getSystemResource("FrameIcon.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		frame.setIconImage(image);
+		
 		return frame;
 	}
 
+	/**
+	 * Tries to set the look and feel to Nimbus
+	 */
 	private void setNimbusLookAndFeel() {
 		try {
+			//Try to set the look and feel to Nimbus
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
 					break;
 				}
 			}
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			setLookAndFeel();
-		}
-	}
-
-	private void setLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+			//Otherwise try a cross platform look and feel
+			try {
+				UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
-
-	@Override
-	public void onVideoLoaded(double videoLength) {}
-
-	@Override
-	public void onVideoPositionChange(long videoPosition) {}
-
-	@Override
-	public void onVideoPercentThroughChange(int videoTime) {}
 	
-	/*
-	 * James's Abstraction Functions
+	/**
+	 * Creates constraints for placing elements in the UI.
+	 * 
+	 * @param x - the x position in the grid
+	 * @param y - the y position in the grid
+	 * @param width - how many cells wide the element will be
+	 * @param height - how many cells high the element will be
+	 * @param fill - the GridBagConstraints value for how the element will expand
+	 * @return The created constraints with the given values.
 	 */
 	private GridBagConstraints createConstraints(int x, int y, int width, int height, int fill){
 		GridBagConstraints cons = new GridBagConstraints();
