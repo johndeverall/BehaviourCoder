@@ -145,8 +145,8 @@ public class Main implements VideoListener {
 		locationTimerPanel = new LocationPanel(trial);
 		counterPanel = new InstantBehaviourPanel(trial,
 				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
-		vlcVideoPanel = new VLCVideoPanel(trial);
-		mediaControlPanel = new MediaControlPanel(trial);
+		vlcVideoPanel = new VLCVideoPanel(trial.getDetails());
+		mediaControlPanel = new MediaControlPanel();
 		infoPanel = new InfoPanel(trial, statusPanel);
 		detailsPanel = new DetailsPanel(trial);
 		fileChooser = new FileChooser(statusPanel);
@@ -363,12 +363,6 @@ public class Main implements VideoListener {
 
 	@Override
 	public void onVideoPositionChange(long videoPosition) {}
-
-	@Override
-	public void onVideoStart() {}
-
-	@Override
-	public void onVideoStop() {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}

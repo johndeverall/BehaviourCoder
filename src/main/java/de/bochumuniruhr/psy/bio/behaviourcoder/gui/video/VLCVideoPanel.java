@@ -7,111 +7,148 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
+/**
+ * Panel for displaying a video using VLC.
+ */
+@SuppressWarnings("serial")
 public class VLCVideoPanel extends JPanel implements TrialListener, MediaControlListener {
-
-	private static final long serialVersionUID = 1607305948565939133L;
 	
+	/**
+	 * The list of listeners.
+	 */
 	private List<VideoListener> videoListeners;
-	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
-	//private Logger logger = Logger.getLogger(this.getClass());
-	private Trial trial;
 	
-	public VLCVideoPanel(Trial trial) { 
-		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-		setLayout(new BorderLayout());
-		add(mediaPlayerComponent, BorderLayout.CENTER);
+	/**
+	 * The component that displays the video.
+	 */
+	private EmbeddedMediaPlayerComponent mediaPlayerComponent;
+	
+	/**
+	 * The details for the trial the video is for.
+	 */
+	private TrialDetails trialDetails;
+	
+	/**
+	 * Creates a video panel.
+	 * 
+	 * @param trialDetails - the details of the trial that loaded videos will be for
+	 */
+	public VLCVideoPanel(TrialDetails trialDetails) { 
 		videoListeners = new ArrayList<VideoListener>();
+		this.trialDetails = trialDetails;
+		
+		//Set the layout
+		setLayout(new BorderLayout());
+		
+		//Create the media component
+		mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
 		mediaPlayerComponent.getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 			
 			@Override
 			public void positionChanged(MediaPlayer mediaPlayer, float newPosition) {
+				//Inform listeners of new position as time and a percentage
 				int iPos = (int)(newPosition * 100);
 				fireVideoPercentThroughChangeEvent(iPos);
 				fireVideoPositionChangeEvent(mediaPlayer.getTime());
 			}
 		});
-		this.trial = trial;
+		add(mediaPlayerComponent, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Loads a video to be shown.
+	 * 
+	 * @param file - the file that is the video to be loaded
+	 */
 	public void openVideo(final File file) {
+		//Load video
 		String video = null;
 		try {
 			video = file.getCanonicalPath();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//Prepare the video to be shown
 		this.setVisible(true);
 		mediaPlayerComponent.getMediaPlayer().prepareMedia(video);	
+		
+		//Inform listeners
 		fireVideoLoadedEvent();
 	}
 	
+	/**
+	 * Adds a listener to this panel.
+	 * @param videoListener - the listener for video events
+	 */
 	public void addVideoListener(VideoListener videoListener) { 
 		this.videoListeners.add(videoListener);
 	}
 		
+	/**
+	 * Informs listeneres that a video has been loaded.
+	 */
 	private void fireVideoLoadedEvent() {
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoLoaded(mediaPlayerComponent.getMediaPlayer().getLength());
 		}
 	}
 	
+	/**
+	 * Informs users that the video is now at a certain position.
+	 * 
+	 * @param iPos - the position in milliseconds
+	 */
 	private void fireVideoPercentThroughChangeEvent(int iPos) { 
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoPercentThroughChange(iPos);
 		}
 	}
 	
+	/**
+	 * Informs users that the video is now at a certain position.
+	 * 
+	 * @param iPos - the position as a percentage
+	 */
 	private void fireVideoPositionChangeEvent(long videoPositionChange) { 
 		for (VideoListener videoListener : videoListeners) { 
 			videoListener.onVideoPositionChange(videoPositionChange);
 		}
 	}
-	
-	public void pause() { 
-		mediaPlayerComponent.getMediaPlayer().pause();
-	}
-	
-	public void play() { 
-		mediaPlayerComponent.getMediaPlayer().play();
-	}
-	
-	public void skip(final long intervalInMiliseconds) { 
-		mediaPlayerComponent.getMediaPlayer().skip(intervalInMiliseconds);
-	}
 
 	@Override
 	public void onPause() {
-		pause();		
+		mediaPlayerComponent.getMediaPlayer().pause();		
 	}
 
 	@Override
 	public void onResume() {
-		play();
+		mediaPlayerComponent.getMediaPlayer().play();
 	}
 
 	@Override
 	public void onStop() {
-		pause();		
+		mediaPlayerComponent.getMediaPlayer().pause();	
 	}
 
 	@Override
 	public void onPlay(boolean play) {
 		if (play) { 
-			play();
+			mediaPlayerComponent.getMediaPlayer().play();
 		} else { 
-			pause();
+			mediaPlayerComponent.getMediaPlayer().pause();
 		}
 	}
 	
 	@Override
 	public void onSkip(final long intervalInMiliseconds) {
-		skip(intervalInMiliseconds);
+		mediaPlayerComponent.getMediaPlayer().skip(intervalInMiliseconds);
 	}
 
 	@Override
@@ -119,12 +156,12 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 
 	@Override
 	public void onStart() {
-		trial.getDetails().setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
+		trialDetails.setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
 	}
 
 	@Override
 	public void onReset() {
-		skip(0);
+		mediaPlayerComponent.getMediaPlayer().skip(0);
 		mediaPlayerComponent.getMediaPlayer().stop();
 	}
 

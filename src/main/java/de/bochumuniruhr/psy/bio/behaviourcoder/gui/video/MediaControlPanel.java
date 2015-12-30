@@ -5,165 +5,160 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 
+/**
+ * Panel for controlling videos displayed by a video panel. Only allows interaction when the trial is not active.
+ */
 @SuppressWarnings("serial")
 public class MediaControlPanel extends JPanel implements TrialListener, VideoListener {
 
+	/**
+	 * The button to start/pause the video
+	 */
 	private PlayPauseButton playPauseButton;
-	private JButton skipForward;
-	private JButton skipBack;
-	private JTextField skipField;
-	private JLabel currentPosition;
-	private List<MediaControlListener> mediaControlListeners;
-	private JSlider seeker = new JSlider();
-	//private Logger logger = Logger.getLogger(this.getClass());
-	private Trial trial;
 	
-	public MediaControlPanel(Trial trial) {
-		this.trial = trial;
+	/**
+	 * The button for skipping forward.
+	 */
+	private JButton skipForward;
+	
+	/**
+	 * The button for skipping backward.
+	 */
+	private JButton skipBack;
+	
+	/**
+	 * The field for choosing how many seconds to skip by.
+	 */
+	private JFormattedTextField skipField;
+	
+	/**
+	 * The display for the current position in the video in seconds.
+	 */
+	private JLabel currentPosition;
+	
+	/**
+	 * The slider to show progress in the video.
+	 */
+	private JSlider seeker;
+	
+	/**
+	 * The list of listeners.
+	 */
+	private List<MediaControlListener> mediaControlListeners;
+	
+	/**
+	 * Creates a media control panel.
+	 */
+	public MediaControlPanel() {
+		mediaControlListeners = new ArrayList<MediaControlListener>();
+		
+		//The font all the labels use
+		Font labelFont = new Font("Arial", Font.BOLD, 20);
 
+		//Set the layout
 		setLayout(new GridBagLayout());
 
+		//Create the play button
 		playPauseButton = new PlayPauseButton(this);
-		playPauseButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-		GridBagConstraints playButtonConstraints = new GridBagConstraints();
-		playButtonConstraints.gridx = 0;
-		playButtonConstraints.gridy = 0;
-		playButtonConstraints.gridwidth = 3;
-		playButtonConstraints.gridheight = 3;
-		playButtonConstraints.weightx = 0.1;
-		playButtonConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(playPauseButton, playButtonConstraints);
+		playPauseButton.setFont(labelFont);
+		add(playPauseButton, createConstraints(0, 0, 3, 3, GridBagConstraints.HORIZONTAL, 0.1));
 		
-		GridBagConstraints currentPositionConstraints = new GridBagConstraints();
-		currentPositionConstraints.gridx = 3;
-		currentPositionConstraints.gridy = 0;
-		currentPositionConstraints.gridwidth = 4;
-		currentPositionConstraints.gridheight = 3;
-		currentPositionConstraints.weightx = 0.1;
-		currentPositionConstraints.fill = GridBagConstraints.HORIZONTAL;
+		//Create the position label
 		currentPosition = new JLabel("0");
-		currentPosition.setFont(new Font("Arial", Font.BOLD, 20));
+		currentPosition.setFont(labelFont);
 		currentPosition.setHorizontalAlignment(JLabel.CENTER);
-		add(currentPosition, currentPositionConstraints);
+		add(currentPosition, createConstraints(3, 0, 4, 3, GridBagConstraints.HORIZONTAL, 0.1));
 
-		GridBagConstraints seekerConstraints = new GridBagConstraints();
-		seekerConstraints.gridx = 7;
-		seekerConstraints.gridy = 0;
-		seekerConstraints.gridwidth = 16;
-		seekerConstraints.gridheight = 3;
-		seekerConstraints.weightx = 1;
-		seekerConstraints.fill = GridBagConstraints.HORIZONTAL;
+		//Create the seeker
 		seeker = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
-		add(seeker, seekerConstraints);
+		add(seeker, createConstraints(7, 0, 16, 3, GridBagConstraints.HORIZONTAL, 1));
 
-		GridBagConstraints skipBackConstraints = new GridBagConstraints();
-		skipBackConstraints.gridx = 23;
-		skipBackConstraints.gridy = 0;
-		skipBackConstraints.gridwidth = 2;
-		skipBackConstraints.gridheight = 3;
+		//Create the button to skip back
 		skipBack = new JButton("<<");
-		skipBack.setFont(new Font("Arial", Font.BOLD, 20));
+		skipBack.setFont(labelFont);
 		skipBack.setEnabled(false);
-		skipBack.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text = skipField.getText();
-				if (isLong(text)) { 
-					fireSkipEvent(Long.parseLong(text) * 1000 * -1);
-				}
-			}
-		});
-		add(skipBack, skipBackConstraints);
+		skipBack.addActionListener(new SkipListener(false));
+		add(skipBack, createConstraints(23, 0, 2, 3, GridBagConstraints.HORIZONTAL, 0));
 		
-		GridBagConstraints skipIntervalConstraints = new GridBagConstraints();
-		skipIntervalConstraints.gridx = 25;
-		skipIntervalConstraints.gridy = 0;
-		skipIntervalConstraints.gridwidth = 3;
-		skipIntervalConstraints.gridheight = 3;
-		skipIntervalConstraints.weightx = 0.1;
-		skipIntervalConstraints.fill = GridBagConstraints.HORIZONTAL;
-		skipField = new JTextField("0");
+		//Create the field to specify the amount to skip by in seconds
+		NumberFormat format = NumberFormat.getIntegerInstance();
+		format.setGroupingUsed(false);
+		skipField = new JFormattedTextField(format);
+		skipField.setFont(labelFont);
 		skipField.setHorizontalAlignment(JLabel.CENTER);
-		skipField.setFont(new Font("Arial", Font.BOLD, 20));
-		add(skipField, skipIntervalConstraints);
-
-		GridBagConstraints skipForwardConstraints = new GridBagConstraints();
-		skipForwardConstraints.gridx = 28;
-		skipForwardConstraints.gridy = 0;
-		skipForwardConstraints.gridwidth = 2;
-		skipForwardConstraints.gridheight = 3;
-		skipForward = new JButton(">>");
-		skipForward.setFont(new Font("Arial", Font.BOLD, 20));
-		skipForward.setEnabled(false);
-		skipForward.addActionListener(new ActionListener() {
+		skipField.setValue(0);
+		skipField.addKeyListener(new KeyAdapter(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text = skipField.getText();
-				if (isLong(text)) { 
-					fireSkipEvent(Long.parseLong(text) * 1000);
+			public void keyReleased(KeyEvent e) {
+				//Coerce the fields value to be an integer
+				try {
+					skipField.commitEdit();
+				} catch (ParseException e1) {
 				}
+				System.out.println(skipField.getValue());
 			}
 		});
-		add(skipForward, skipForwardConstraints);
-		
-		mediaControlListeners = new ArrayList<MediaControlListener>();
+		add(skipField, createConstraints(25, 0, 3, 3, GridBagConstraints.HORIZONTAL, 0.1));
 
+		//Create the button to skip forward
+		skipForward = new JButton(">>");
+		skipForward.setFont(labelFont);
+		skipForward.setEnabled(false);
+		skipForward.addActionListener(new SkipListener(true));
+		add(skipForward, createConstraints(28, 0, 2, 3, GridBagConstraints.HORIZONTAL, 0));
+		
+		//Initially have the controls disabled
 		disableControls();
 	}
 
+	/**
+	 * Adds a listener for media control events.
+	 * 
+	 * @param mediaControlListener - the listener to add
+	 */
 	public void addMediaControlListener(MediaControlListener mediaControlListener) {
 		mediaControlListeners.add(mediaControlListener);
 	}
-	
-	private void fireSkipEvent(long timeInMiliseconds) {
-		for (MediaControlListener mediaControlListener : mediaControlListeners) { 
-			mediaControlListener.onSkip(timeInMiliseconds);
-		}
-	}
 
+	/**
+	 * Changes which buttons are enabled and informs listeners that the video will be played or stopped.
+	 * 
+	 * @param play - whether the video is to be played or stopped. When true the skipping buttons are enabled,
+	 * 		otherwise they are disabled
+	 */
 	protected void firePlayEvent(boolean play) {
 		if (play) { 
+			//If playing allow the video to be skipped
 			skipForward.setEnabled(true);
 			skipBack.setEnabled(true);
-			if (trial.isActive()){
-				trial.resume();
-			}
 		} else { 
+			//Otherwise disable them
 			skipForward.setEnabled(false);
 			skipBack.setEnabled(false);
-			if (trial.isActive()){
-				trial.pause();
-			}
 		}
+		//Infrom the listeners
 		for (MediaControlListener mediaControlListener : mediaControlListeners) {
 			mediaControlListener.onPlay(play);
 		}
 	}
-
-	private static boolean isLong(String s) {
-		try {
-			Long.parseLong(s);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (NullPointerException e) {
-			return false;
-		}
-		// only got here if we didn't return false
-		return true;
-	}
-
+	
+	/**
+	 * Disables the controls.
+	 */
 	private void disableControls() {
 		playPauseButton.setEnabled(false);
 		skipForward.setEnabled(false);
@@ -171,11 +166,36 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 		skipField.setEnabled(false);
 	}
 
+	/**
+	 * Enables the controls.
+	 */
 	private void enableControls() {
 		playPauseButton.setEnabled(true);
-		//skipForward.setEnabled(true);
-		//skipBack.setEnabled(true);
+		skipForward.setEnabled(true);
+		skipBack.setEnabled(true);
 		skipField.setEnabled(true);
+	}
+	
+	/**
+	 * Creates constraints for placing elements in the UI.
+	 * 
+	 * @param x - the x position in the grid
+	 * @param y - the y position in the grid
+	 * @param width - how many cells wide the element will be
+	 * @param height - how many cells high the element will be
+	 * @param fill - the GridBagConstraints value for how the element will expand
+	 * @param weight - the amount that extra space will be given to the element
+	 * @return The created constraints with the given values.
+	 */
+	private GridBagConstraints createConstraints(int x, int y, int width, int height, int fill, double weight){
+		GridBagConstraints cons = new GridBagConstraints();
+		cons.gridx = x;
+		cons.gridy = y;
+		cons.gridheight = height;
+		cons.gridwidth = width;
+		cons.fill = fill;
+		cons.weightx = weight;
+		return cons;
 	}
 
 	@Override
@@ -199,12 +219,6 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 
 	@Override
 	public void onAreaChange(Location name) {}
-
-	@Override
-	public void onVideoStart() {}
-
-	@Override
-	public void onVideoStop() {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {
@@ -231,6 +245,37 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	public void onStart() {
 		disableControls();
 		playPauseButton.setPlaying(true);
+	}
+	
+	/**
+	 * Listener for the skip buttons.
+	 */
+	private class SkipListener implements ActionListener {
+		
+		/**
+		 * The modifier to make the skip positive or negative.
+		 */
+		private int modifier;
+		
+		/**
+		 * Creates a listener that informs the media listeners of a skip.
+		 * @param forwards - whether the skips are forwards or backwards. Forward skips are true.
+		 */
+		SkipListener(boolean forwards){
+			modifier = (forwards) ? 1 : -1;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//Get value
+			Object value = skipField.getValue();
+			long skip = (value instanceof Long) ? (long) value : (long) (int) value;
+			
+			//Inform listeners of the skip in milliseconds
+			for (MediaControlListener mediaControlListener : mediaControlListeners) { 
+				mediaControlListener.onSkip(skip * 1000 * modifier);
+			}
+		}
 	}
 
 }

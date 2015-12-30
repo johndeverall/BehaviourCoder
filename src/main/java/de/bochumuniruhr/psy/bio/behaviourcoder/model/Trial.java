@@ -233,11 +233,5 @@ public class Trial implements VideoListener {
 	public void onVideoPositionChange(long videoPosition) {}
 
 	@Override
-	public void onVideoStart() {}
-
-	@Override
-	public void onVideoStop() {}
-
-	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
 }
