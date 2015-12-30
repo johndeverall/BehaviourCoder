@@ -27,19 +27,19 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.Logger;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyPressHandler;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.InfoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.counter.CounterPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.details.DetailsPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.action.ActionTimerPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.timer.location.LocationTimerPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.InfoPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.details.DetailsPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.instant.InstantBehaviourPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.location.LocationPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed.TimedBehaviourPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.FileChooser;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
@@ -51,9 +51,9 @@ import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 public class Main implements VideoListener {
 
-	private LocationTimerPanel locationTimerPanel;
-	private ActionTimerPanel actionTimerPanel;
-	private CounterPanel counterPanel;
+	private LocationPanel locationTimerPanel;
+	private TimedBehaviourPanel actionTimerPanel;
+	private InstantBehaviourPanel counterPanel;
 	private DetailsPanel detailsPanel;
 	private StatusPanel statusPanel;
 	private FileChooser fileChooser;
@@ -88,7 +88,7 @@ public class Main implements VideoListener {
 		KeyboardFocusManager currentKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		globalKeyHandler = new GlobalKeyPressHandler(currentKeyboardFocusManager, this);
 		
-		trial = new Trial(DEFAULT_TIME_LIMIT, Arrays.asList(new Area("Close"), new Area("Far")),
+		trial = new Trial(DEFAULT_TIME_LIMIT, Arrays.asList(new Location("Close"), new Location("Far")),
 				Arrays.asList("Trial Type", "Rooster ID", "Session Number", "Trial Number", "Section Number", "Mirror?"),
 				Arrays.asList(new Constraint("BM", "NM", "BS", "NS", "WM", "WS"),
 						new Constraint("554", "570", "547", "538", "546", "551", "559", "548", "544", "578", "579", "542", "567"),
@@ -141,9 +141,9 @@ public class Main implements VideoListener {
 		mainPanel.setLayout(new GridBagLayout());
 
 		statusPanel = new StatusPanel(frame);
-		actionTimerPanel = new ActionTimerPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
-		locationTimerPanel = new LocationTimerPanel(trial);
-		counterPanel = new CounterPanel(trial,
+		actionTimerPanel = new TimedBehaviourPanel(trial, Arrays.asList('q', 'w', 'e', 'r'));
+		locationTimerPanel = new LocationPanel(trial);
+		counterPanel = new InstantBehaviourPanel(trial,
 				Arrays.asList('p', 'o', 'i', 'u'), Arrays.asList(';', 'l', 'k', 'j'));
 		vlcVideoPanel = new VLCVideoPanel(trial);
 		mediaControlPanel = new MediaControlPanel(trial);
@@ -160,7 +160,6 @@ public class Main implements VideoListener {
 
 		vlcVideoPanel.addVideoListener(mediaControlPanel);
 		vlcVideoPanel.addVideoListener(trial);
-		vlcVideoPanel.addVideoListener(counterPanel);
 		vlcVideoPanel.addVideoListener(this);
 
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);

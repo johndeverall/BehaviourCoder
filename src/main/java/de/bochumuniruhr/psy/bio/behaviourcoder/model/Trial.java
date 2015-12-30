@@ -15,14 +15,14 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 
 public class Trial implements VideoListener {
 	
-	private List<Area> areas;
+	private List<Location> areas;
 	private List<TimedBehaviour> timed;
 	private List<InstantBehaviour> instant;
 	private TrialDetails details;
 	
-	private Area beforePause;
-	private Area currentArea;
-	private Map<Area, StopWatch> areaTimes;
+	private Location beforePause;
+	private Location currentArea;
+	private Map<Location, StopWatch> areaTimes;
 	private int areaChanges;
 
 	private StopWatch time;
@@ -32,14 +32,14 @@ public class Trial implements VideoListener {
 	private List<TrialListener> listeners;
 	
 	
-	public Trial(long duration, List<Area> areas, List<String> detailNames, List<Constraint> detailConstraints){
+	public Trial(long duration, List<Location> areas, List<String> detailNames, List<Constraint> detailConstraints){
 		details = new TrialDetails(duration, detailNames, detailConstraints);
 		this.areas = areas;
 		timed = new ArrayList<TimedBehaviour>();
 		instant = new ArrayList<InstantBehaviour>();
 		areaChanges = 0;
 		time = new StopWatch();
-		areaTimes = new HashMap<Area, StopWatch>();
+		areaTimes = new HashMap<Location, StopWatch>();
 		listeners = new ArrayList<TrialListener>();
 		ready = false;
 		
@@ -103,7 +103,7 @@ public class Trial implements VideoListener {
 		return time.getTime();
 	}
 	
-	public long getAreaTime(Area area){
+	public long getAreaTime(Location area){
 		if (areaTimes.containsKey(area)){
 			return areaTimes.get(area).getTime();
 		} 
@@ -123,7 +123,7 @@ public class Trial implements VideoListener {
 		listeners.add(listener);
 	}
 	
-	public void setCurrentArea(Area area){
+	public void setCurrentArea(Location area){
 		if (area != null && !time.isStarted()) {
 			start();
 		} else if (area != null && time.isSuspended()){
@@ -188,7 +188,7 @@ public class Trial implements VideoListener {
 		return details;
 	}
 	
-	public Area getCurrentArea(){
+	public Location getCurrentArea(){
 		return currentArea;
 	}
 	
@@ -196,7 +196,7 @@ public class Trial implements VideoListener {
 		return areaChanges;
 	}
 	
-	public List<Area> getAreas(){
+	public List<Location> getAreas(){
 		return areas;
 	}
 	

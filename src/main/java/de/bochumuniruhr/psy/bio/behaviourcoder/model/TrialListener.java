@@ -2,7 +2,7 @@ package de.bochumuniruhr.psy.bio.behaviourcoder.model;
 
 public interface TrialListener {
 	
-	public void onAreaChange(Area newArea);
+	public void onAreaChange(Location newArea);
 
 	public void onStart();
 	

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
@@ -67,18 +67,18 @@ public class ExcelWriter {
 				}
 				
 				for (InstantBehaviour instant : trial.getInstantBehaviours()){
-					for (Area area : trial.getAreas()){
+					for (Location area : trial.getAreas()){
 						header.add((instant.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
 				
 				for (TimedBehaviour timed : trial.getTimedBehaviours()){
-					for (Area area : trial.getAreas()){
+					for (Location area : trial.getAreas()){
 						header.add((timed.getName() + "_" + area.getName()).replaceAll("\\s+", "_"));
 					}
 				}
 				
-				for (Area area : trial.getAreas()){
+				for (Location area : trial.getAreas()){
 					header.add(area.getName().replaceAll("\\s+", "_"));
 				}
 				
@@ -144,7 +144,7 @@ public class ExcelWriter {
 			
 			//Number of occurrences of each behaviour in each area
 			for (InstantBehaviour instant : trial.getInstantBehaviours()){
-				for (Area area : trial.getAreas()){
+				for (Location area : trial.getAreas()){
 					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(area));
 					sheet.addCell(num);
 					++column;
@@ -153,7 +153,7 @@ public class ExcelWriter {
 
 			//Time that each behaviour occurred in each area
 			for (TimedBehaviour timed : trial.getTimedBehaviours()){
-				for (Area area : trial.getAreas()){
+				for (Location area : trial.getAreas()){
 					Number num = new Number(column, nextEmptyRow, timed.getDuration(area));
 					sheet.addCell(num);
 					++column;
@@ -161,7 +161,7 @@ public class ExcelWriter {
 			}
 			
 			//Time for each area
-			for (Area area : trial.getAreas()){
+			for (Location area : trial.getAreas()){
 				//Dividing by 1000 to get seconds
 				Number num = new Number(column, nextEmptyRow, trial.getAreaTime(area) / 1000.0);
 				sheet.addCell(num);

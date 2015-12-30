@@ -36,7 +36,7 @@ public class InstantBehaviour extends Behaviour {
 		occurrences.clear();
 	}
 	
-	public int getNumberOfOccurrences(Area area){
+	public int getNumberOfOccurrences(Location area){
 		int count = 0;
 		for (Occurrence occ : occurrences){
 			if (occ.area.equals(area)){
@@ -47,10 +47,10 @@ public class InstantBehaviour extends Behaviour {
 	}
 	
 	public class Occurrence {
-		public final Area area;
+		public final Location area;
 		public final long time;
 
-		private Occurrence(Area area, long time){
+		private Occurrence(Location area, long time){
 			this.area = area;
 			this.time = time;
 		}

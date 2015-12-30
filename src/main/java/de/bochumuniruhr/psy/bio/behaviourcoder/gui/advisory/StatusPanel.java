@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 
@@ -74,7 +74,7 @@ public class StatusPanel extends JPanel implements TrialListener {
 	}
 
 	@Override
-	public void onAreaChange(Area newArea) {}
+	public void onAreaChange(Location newArea) {}
 
 	@Override
 	public void onStop() {

@@ -41,7 +41,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 		return duration;
 	}
 	
-	public double getDuration(Area area){
+	public double getDuration(Location area){
 		double duration = 0;
 		for (Occurrence o : occurrences){
 			if (o.area.equals(area)){
@@ -60,11 +60,11 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	}
 	
 	public class Occurrence {
-		public final Area area;
+		public final Location area;
 		private long start;
 		private long end;
 
-		private Occurrence(Area area, long start){
+		private Occurrence(Location area, long start){
 			this.area = area;
 			this.start = start;
 			end = -1;
@@ -92,7 +92,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	}
 
 	@Override
-	public void onAreaChange(Area newArea) {
+	public void onAreaChange(Location newArea) {
 		if (current != null && newArea != null && !current.area.equals(newArea)){
 			long time = trial.getCurrentTime();
 			current.setEnd(time);

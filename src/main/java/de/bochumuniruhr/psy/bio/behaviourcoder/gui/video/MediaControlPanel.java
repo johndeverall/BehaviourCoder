@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 
@@ -198,7 +198,7 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	}
 
 	@Override
-	public void onAreaChange(Area name) {}
+	public void onAreaChange(Location name) {}
 
 	@Override
 	public void onVideoStart() {}

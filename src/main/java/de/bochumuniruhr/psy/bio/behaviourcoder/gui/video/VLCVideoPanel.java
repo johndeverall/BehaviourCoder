@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Area;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -115,7 +115,7 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	}
 
 	@Override
-	public void onAreaChange(Area name) {}
+	public void onAreaChange(Location name) {}
 
 	@Override
 	public void onStart() {
