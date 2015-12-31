@@ -20,9 +20,10 @@ public class InstantBehaviour extends Behaviour {
 	 * @param name - the name of the behaviour
 	 * @param color - the colour of the behaviour
 	 * @param trial - the trial of the behaviour
+	 * @param associateWithLocation - whether the behaviour should associate occurrences
 	 */
-	public InstantBehaviour(String name, Color color, Trial trial) {
-		super(name, color, trial);
+	public InstantBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
+		super(name, color, trial, associateWithLocation);
 		occurrences = new ArrayList<Occurrence>();
 	}
 	

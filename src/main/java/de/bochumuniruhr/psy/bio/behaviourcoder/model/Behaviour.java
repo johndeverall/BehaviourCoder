@@ -23,16 +23,23 @@ public abstract class Behaviour {
 	protected Trial trial;
 	
 	/**
+	 * Whether the the behaviour should be use location to distinguish occurrences.
+	 */
+	protected boolean associateWithLocation;
+	
+	/**
 	 * Creates a behaviour.
 	 * 
 	 * @param name - the name of the behaviour
 	 * @param color - the colour of the behaviour
 	 * @param trial - the trial the behaviour belongs to
+	 * @param associateWithLocation - whether the behaviour should associate occurrences with locations
 	 */
-	public Behaviour(String name, Color color, Trial trial){
+	public Behaviour(String name, Color color, Trial trial, boolean associateWithLocation){
 		this.name = name;
 		this.color = color;
 		this.trial = trial;
+		this.associateWithLocation = associateWithLocation;
 	}
 	
 	/**
@@ -51,5 +58,14 @@ public abstract class Behaviour {
 	 */
 	public Color getColor(){
 		return color;
+	}
+	
+	/**
+	 * Gets whether this behaviour uses location to distinguish occurrences.
+	 * 
+	 * @return Whether occurrences are associated with locations.
+	 */
+	public boolean isAssociatedWithLocation(){
+		return associateWithLocation;
 	}
 }

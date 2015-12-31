@@ -20,15 +20,22 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	private Occurrence current;
 	
 	/**
+	 * The number of times started.
+	 */
+	private int timesStarted;
+	
+	/**
 	 * Creates a timed behaviour.
 	 * 
 	 * @param name - the name of the behaviour
 	 * @param color - the colour of the behaviour
 	 * @param trial - the trial of the behaviour
+	 * @param associateWithLocation - whether the behaviour should associate occurrences
 	 */
-	public TimedBehaviour(String name, Color color, Trial trial) {
-		super(name, color, trial);
+	public TimedBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
+		super(name, color, trial, associateWithLocation);
 		occurrences = new ArrayList<Occurrence>();
+		timesStarted = 0;
 	}
 	
 	/**
@@ -37,6 +44,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	public void behaviourStarted(){
 		current = new Occurrence(trial.getCurrentLocation(), trial.getCurrentTime());
 		occurrences.add(current);
+		++timesStarted;
 	}
 	
 	/**
@@ -54,6 +62,16 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	 */
 	public List<Occurrence> getOccurences(){
 		return occurrences;
+	}
+	
+	/**
+	 * Gets the number of occurrences.
+	 * 
+	 * @return The number of occurrences. Differs from the size of the list of occurrences
+	 * 		as this number does not include when the location changes during an occurrence.
+	 */
+	public int getNumberOfOccurrences(){
+		return timesStarted;
 	}
 	
 	/**
@@ -170,13 +188,16 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 
 	@Override
 	public void onLocationChange(Location newLocation) {
-		//Create a new occurrence if the location has changed to a different location
-		if (current != null && newLocation != null 
-				&& !current.location.equals(newLocation)){
-			long time = trial.getCurrentTime();
-			current.setEnd(time);
-			current = new Occurrence(newLocation, time);
-			occurrences.add(current);
+		if (associateWithLocation){
+			//Create a new occurrence if the location has changed to a different location.
+			//This only applies when occurrences are associated with locations.
+			if (current != null && newLocation != null 
+					&& !current.location.equals(newLocation)){
+				long time = trial.getCurrentTime();
+				current.setEnd(time);
+				current = new Occurrence(newLocation, time);
+				occurrences.add(current);
+			}
 		}
 	}
 	

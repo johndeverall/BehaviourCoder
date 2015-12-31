@@ -87,14 +87,22 @@ public class ExcelWriter {
 				}
 				//Add the instant behaviours with each location to the header
 				for (InstantBehaviour instant : trial.getInstantBehaviours()){
-					for (Location location : trial.getLocations()){
-						header.add((instant.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
+					if (instant.isAssociatedWithLocation()){
+						for (Location location : trial.getLocations()){
+							header.add((instant.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
+						}
+					} else {
+						header.add(instant.getName().replaceAll("\\s+", "_"));
 					}
 				}
 				//Add the timed behaviours with each location to the header
 				for (TimedBehaviour timed : trial.getTimedBehaviours()){
-					for (Location location : trial.getLocations()){
-						header.add((timed.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
+					if (timed.isAssociatedWithLocation()){
+						for (Location location : trial.getLocations()){
+							header.add((timed.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
+						}
+					} else {
+						header.add(timed.getName().replaceAll("\\s+", "_"));
 					}
 				}
 				//Add the locations to the header
@@ -166,16 +174,28 @@ public class ExcelWriter {
 			}
 			//Number of occurrences of each behaviour in each location
 			for (InstantBehaviour instant : trial.getInstantBehaviours()){
-				for (Location location : trial.getLocations()){
-					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(location));
+				if (instant.isAssociatedWithLocation()) {
+					for (Location location : trial.getLocations()){
+						Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(location));
+						sheet.addCell(num);
+						++column;
+					}
+				} else {
+					Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences());
 					sheet.addCell(num);
 					++column;
 				}
 			}
 			//Time that each behaviour occurred in each location
 			for (TimedBehaviour timed : trial.getTimedBehaviours()){
-				for (Location location : trial.getLocations()){
-					Number num = new Number(column, nextEmptyRow, timed.getDuration(location));
+				if (timed.isAssociatedWithLocation()){
+					for (Location location : trial.getLocations()){
+						Number num = new Number(column, nextEmptyRow, timed.getDuration(location));
+						sheet.addCell(num);
+						++column;
+					}
+				} else {
+					Number num = new Number(column, nextEmptyRow, timed.getTotalDuration());
 					sheet.addCell(num);
 					++column;
 				}

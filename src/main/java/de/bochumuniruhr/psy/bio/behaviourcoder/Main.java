@@ -27,6 +27,8 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.log4j.Logger;
+
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.FileChooser;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyPressHandler;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
@@ -79,11 +81,9 @@ public class Main {
 	private StatusPanel statusBar;
 	
 	/**
-	 * TODO: Split into two choosers.
-	 * 
 	 * The file chooser to select videos and save files.
 	 */
-	private JFileChooser fileChooser;
+	private FileChooser fileChooser;
 	
 	/**
 	 * The listener for all key presses.
@@ -158,16 +158,9 @@ public class Main {
 
 	/**
 	 * Saves a file. 
-	 * 
-	 * TODO: Fix so it doesn't try to overwrite video file.
 	 */
 	public void save() {
-		File file = fileChooser.getSelectedFile();
-		if (file == null) {
-			showSaveDialog();
-		} else {
-			save(file);
-		}
+		showSaveDialog();
 	}
 	
 	/**
@@ -183,15 +176,15 @@ public class Main {
 						new Constraint(), new Constraint(), new Constraint(),
 						new Constraint("0", "1")));
 		
-		trial.addInstantBehaviour(new InstantBehaviour("Peck", Color.YELLOW, trial));
-		trial.addInstantBehaviour(new InstantBehaviour("Hackles", Color.GREEN, trial));
-		trial.addInstantBehaviour(new InstantBehaviour("Attack", Color.RED, trial));
-		trial.addInstantBehaviour(new InstantBehaviour("Crouch", Color.CYAN, trial));
+		trial.addInstantBehaviour(new InstantBehaviour("Peck", Color.YELLOW, trial, true));
+		trial.addInstantBehaviour(new InstantBehaviour("Hackles", Color.GREEN, trial, true));
+		trial.addInstantBehaviour(new InstantBehaviour("Attack", Color.RED, trial, true));
+		trial.addInstantBehaviour(new InstantBehaviour("Crouch", Color.CYAN, trial, true));
 		
-		trial.addTimedBehaviour(new TimedBehaviour("Following", null, trial));
-		trial.addTimedBehaviour(new TimedBehaviour("Facing Away", null, trial));
-		trial.addTimedBehaviour(new TimedBehaviour("Grooming Mark", null, trial));
-		trial.addTimedBehaviour(new TimedBehaviour("Grooming Other", null, trial));
+		trial.addTimedBehaviour(new TimedBehaviour("Following", null, trial, true));
+		trial.addTimedBehaviour(new TimedBehaviour("Facing Away", null, trial, true));
+		trial.addTimedBehaviour(new TimedBehaviour("Grooming Mark", null, trial, true));
+		trial.addTimedBehaviour(new TimedBehaviour("Grooming Other", null, trial, true));
 	}
 
 	/**
@@ -236,7 +229,7 @@ public class Main {
 		detailsPanel = new DetailsPanel(trial);
 		
 		//Create the file chooser
-		fileChooser = new JFileChooser();
+		fileChooser = new FileChooser(frame);
 
 		//Add trial listeners
 		trial.addListener(vlcVideoPanel);
@@ -400,36 +393,25 @@ public class Main {
 	 * Chooses a file to be saved.
 	 */
 	private void showSaveDialog() {
-		File file = chooseFile("Save cancelled.");
+		File file = fileChooser.chooseSpreadsheet();
+
 		if (file != null) {
 			save(file);
+		} else {
+			statusBar.setMessage("Save cancelled.");
 		}
 	}
 
 	/**
 	 * Chooses a video to be loaded.
 	 */
-	private void showLoadVideoDialog() {
-		File file = chooseFile("Open video cancelled.");
+	private void showLoadVideoDialog() {	
+		File file = fileChooser.chooseVideo();
+
 		if (file != null) {
 			vlcVideoPanel.openVideo(file);
-		}
-	}
-	
-	/**
-	 * Chooses a file.
-	 * 
-	 * @param cancelMessage - the message to output to the status bar if cancelled
-	 * @return The chosen file. Null if nothing chosen.
-	 */
-	private File chooseFile(String cancelMessage){
-		int returnVal = fileChooser.showSaveDialog(frame);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			return fileChooser.getSelectedFile();
 		} else {
-			statusBar.setMessage(cancelMessage);
-			return null;
+			statusBar.setMessage("Open video  cancelled.");
 		}
 	}
 	
