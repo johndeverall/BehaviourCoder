@@ -47,6 +47,11 @@ public class Trial implements VideoListener {
 	private Location currentLocation;
 	
 	/**
+	 * The list of transitions.
+	 */
+	private List<LocationTransition> transitions;
+	
+	/**
 	 * The map of locations to the stop watches tracking how long they were current.
 	 */
 	private Map<Location, StopWatch> locationTimes;
@@ -89,7 +94,7 @@ public class Trial implements VideoListener {
 		locationTimes = new HashMap<Location, StopWatch>();
 		listeners = new ArrayList<TrialListener>();
 		ready = false;
-		
+		transitions = new ArrayList<LocationTransition>();
 		setupTimeLimitCheck();
 	}
 	
@@ -128,25 +133,6 @@ public class Trial implements VideoListener {
 				locationTimes.get(currentLocation).resume();
 			}
 			fireOnResume();
-		}
-	}
-	
-	/**
-	 * Resets this trial to its initial state.
-	 */
-	public void reset() {
-		for (StopWatch watch : locationTimes.values()){
-			watch.stop();
-		}
-		locationTimes.clear();
-		time.reset();
-		ready = false;
-		for (InstantBehaviour behaviour : instant){
-			behaviour.reset();
-		}
-		
-		for (TrialListener listener : listeners){
-			listener.onReset();
 		}
 	}
 	
@@ -243,6 +229,13 @@ public class Trial implements VideoListener {
 				fireOnResume();
 			}
 			
+			//Record the transition
+			if (currentLocation != null && location != null){
+				transitions.add(new LocationTransition(currentLocation, location, time.getTime()));
+			} else if (currentLocation == null && beforePause != location && beforePause != null){
+				transitions.add(new LocationTransition(beforePause, location, time.getTime()));
+			}
+			
 			//If the location is a not the same as before a pause
 			if (location != null && (currentLocation != null || beforePause != location)){
 				//Then count it as a transition
@@ -296,6 +289,15 @@ public class Trial implements VideoListener {
 	}
 	
 	/**
+	 * Gets the list of transitions between locations.
+	 * 
+	 * @return The list of transitions.
+	 */
+	public List<LocationTransition> getTransitions(){
+		return transitions;
+	}
+	
+	/**
 	 * Gets the number of changes to the location.
 	 * 
 	 * @return The number of transitions between locations.
@@ -338,6 +340,25 @@ public class Trial implements VideoListener {
 	 */
 	public boolean isReady() {
 		return ready;
+	}
+	
+	/**
+	 * Resets this trial to its initial state.
+	 */
+	public void reset() {
+		for (StopWatch watch : locationTimes.values()){
+			watch.stop();
+		}
+		locationTimes.clear();
+		time.reset();
+		ready = false;
+		for (InstantBehaviour behaviour : instant){
+			behaviour.reset();
+		}
+		
+		for (TrialListener listener : listeners){
+			listener.onReset();
+		}
 	}
 	
 	/**
@@ -401,4 +422,37 @@ public class Trial implements VideoListener {
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
+	
+	/**
+	 * Represents a transition from one location to another.
+	 */
+	public class LocationTransition {
+		/**
+		 * The
+		 */
+		public final Location from;
+		
+		/**
+		 * The location transitioned to.
+		 */
+		public final Location to;
+		
+		/**
+		 * When the transition occurred in milliseconds.
+		 */
+		public final long time;
+		
+		/**
+		 * Creates a transition between two locations.
+		 * 
+		 * @param from - the location being transitioned from
+		 * @param to - the location being transitioned to
+		 * @param time - the time of the transition
+		 */
+		private LocationTransition(Location from, Location to, long time){
+			this.from = from;
+			this.to = to;
+			this.time = time;
+		}
+	}
 }
