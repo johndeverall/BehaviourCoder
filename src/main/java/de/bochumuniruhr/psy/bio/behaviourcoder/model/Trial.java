@@ -346,16 +346,30 @@ public class Trial implements VideoListener {
 	 * Resets this trial to its initial state.
 	 */
 	public void reset() {
+		//Stop the watches for each location
 		for (StopWatch watch : locationTimes.values()){
 			watch.stop();
 		}
+		//Reset all fields to their initial state
 		locationTimes.clear();
+		transitions.clear();
 		time.reset();
 		ready = false;
+		currentLocation = null;
+		beforePause = null;
+		locationChanges = 0;
+		
+		//Reset details
+		details.setDate(null);
+		for (String detail : details.getDetailNames()){
+			details.setDetail(detail, "");
+		}
+		
+		//Reset instant behaviours
 		for (InstantBehaviour behaviour : instant){
 			behaviour.reset();
 		}
-		
+		//Inform users of the reset
 		for (TrialListener listener : listeners){
 			listener.onReset();
 		}

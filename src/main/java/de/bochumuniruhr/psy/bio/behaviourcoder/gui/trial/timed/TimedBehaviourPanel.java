@@ -7,14 +7,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 
 /**
  * Panel for holding the buttons that interact with timed behaviours.
  */
 @SuppressWarnings("serial")
-public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener {
+public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, TrialListener {
 	
 	/**
 	 * List of buttons.
@@ -38,6 +40,7 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener {
 		for (int i = 0; i < behaviours.size(); ++i){
 			TimedBehaviourButton button = new TimedBehaviourButton(trial, behaviours.get(i),
 					activationKeys.get(i));
+			button.setEnabled(false);
 			buttons.add(button);
 			add(button);
 		}
@@ -70,4 +73,35 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener {
 			button.keyPressed(key);
 		}
 	}
+	
+	@Override
+	public void onReset() {
+		for (TimedBehaviourButton button : buttons){
+			button.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void onStart() {
+		for (TimedBehaviourButton button : buttons){
+			button.setEnabled(true);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		for (TimedBehaviourButton button : buttons){
+			button.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void onPause() {}
+
+	@Override
+	public void onResume() {}
+
+	@Override
+	public void onLocationChange(Location newLocation) {}
+
 }

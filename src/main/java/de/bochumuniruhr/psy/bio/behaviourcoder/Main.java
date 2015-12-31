@@ -237,10 +237,13 @@ public class Main {
 		trial.addListener(infoPanel);
 		trial.addListener(locationPanel);
 		trial.addListener(statusBar);
+		trial.addListener(instantBehaviourPanel);
+		trial.addListener(timedBehaviourPanel);
 
 		//Add video listeners
 		vlcVideoPanel.addVideoListener(mediaControlPanel);
 		vlcVideoPanel.addVideoListener(trial);
+		vlcVideoPanel.addVideoListener(locationPanel);
 
 		//Add media listeners
 		mediaControlPanel.addMediaControlListener(vlcVideoPanel);
@@ -353,7 +356,6 @@ public class Main {
 		menu.add(reset);
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				instantBehaviourPanel.resetAll();
 				detailsPanel.resetAll();
 				trial.reset();
 			}

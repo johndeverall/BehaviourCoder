@@ -96,8 +96,10 @@ public class DetailsPanel extends JPanel {
 	public void resetAll() {
 		for (DetailField field : fields){
 			field.reset();
+			field.setBackground(Color.PINK);
 		}		
 		datePicker.getModel().setValue(null);
+		datePicker.setBackground(Color.PINK);
 	}
 
 }

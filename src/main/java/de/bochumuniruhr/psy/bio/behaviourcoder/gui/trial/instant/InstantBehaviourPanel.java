@@ -6,13 +6,15 @@ import java.util.List;
 import javax.swing.JPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 
 /**
  * Panel that contains the buttons for interacting with instant behaviours.
  */
 @SuppressWarnings("serial")
-public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener {
+public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener, TrialListener {
 	
 	/**
 	 * The list of buttons
@@ -37,17 +39,9 @@ public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener {
 		for (int i = 0; i < behaviours.size(); ++i){
 			InstantBehaviourButton button = new InstantBehaviourButton(trial, behaviours.get(i),
 					increment.get(i), decrememt.get(i));
+			button.setEnabled(false);
 			buttons.add(button);
 			add(button);
-		}
-	}
-
-	/**
-	 * Resets all the buttons in this panel to their initial state.
-	 */
-	public void resetAll() {
-		for (InstantBehaviourButton button : buttons){
-			button.reset();
 		}
 	}
 
@@ -58,4 +52,36 @@ public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener {
 			button.keyPressed(key);
 		}
 	}
+	
+	@Override
+	public void onReset() {
+		for (InstantBehaviourButton button : buttons){
+			button.reset();
+			button.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void onStart() {
+		for (InstantBehaviourButton button : buttons){
+			button.setEnabled(true);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		for (InstantBehaviourButton button : buttons){
+			button.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void onPause() {}
+
+	@Override
+	public void onResume() {}
+
+	@Override
+	public void onLocationChange(Location newLocation) {}
+
 }

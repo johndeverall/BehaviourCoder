@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
@@ -14,7 +15,7 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
  * Panel for choosing the current location for a trial.
  */
 @SuppressWarnings("serial")
-public class LocationPanel extends JPanel implements TrialListener {
+public class LocationPanel extends JPanel implements TrialListener, VideoListener {
 
 	/**
 	 * The list of buttons.
@@ -35,6 +36,7 @@ public class LocationPanel extends JPanel implements TrialListener {
 		//Create the buttons
 		for (Location a : trial.getLocations()){
 			LocationButton button = new LocationButton(trial, a);
+			button.setEnabled(false);
 			buttons.add(button);
 			add(button);
 		}
@@ -74,6 +76,13 @@ public class LocationPanel extends JPanel implements TrialListener {
 	public void onReset() {
 		//Re-enable the buttons on reset to allow the trial to begin
 		for (LocationButton button : buttons) { 
+			button.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void onVideoLoaded(double videoLength) {
+		for (LocationButton button : buttons) { 
 			button.setEnabled(true);
 		}
 	}
@@ -89,4 +98,10 @@ public class LocationPanel extends JPanel implements TrialListener {
 
 	@Override
 	public void onStart() {}
+
+	@Override
+	public void onVideoPositionChange(long videoPosition) {}
+
+	@Override
+	public void onVideoPercentThroughChange(int videoTime) {}
 }
