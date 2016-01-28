@@ -49,7 +49,7 @@ public class DetailField extends JTextField {
 		});
 		
 		//Set the styling
-		setFont(new Font("Arial", Font.PLAIN, 30));
+		setFont(new Font("Arial", Font.PLAIN, 14));
 	}
 
 	/**

@@ -73,7 +73,7 @@ public class FileChooser extends JFileChooser {
 	public File chooseSpreadsheet() {
 		removeChoosableFileFilter(videoFilter);
 		addChoosableFileFilter(spreadsheetFilter);
-		int returnVal = showSaveDialog(frame);
+		int returnVal = showOpenDialog(frame);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			return getSelectedFile();

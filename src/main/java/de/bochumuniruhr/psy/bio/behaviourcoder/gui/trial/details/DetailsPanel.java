@@ -45,7 +45,7 @@ public class DetailsPanel extends JPanel {
 		JLabel label = new JLabel("Date:");
 		label.setToolTipText("Date of the trial");
 		label.setHorizontalAlignment(JLabel.CENTER);
-		label.setFont(new Font("Arial", Font.BOLD, 20));
+		label.setFont(new Font("Arial", Font.BOLD, 14));
 		add (label);
 		
 		//Create the date picker
@@ -67,7 +67,7 @@ public class DetailsPanel extends JPanel {
 			//Create the label
 			label = new JLabel(detail + ":");
 			label.setHorizontalAlignment(JLabel.CENTER);
-			label.setFont(new Font("Arial", Font.BOLD, 20));
+			label.setFont(new Font("Arial", Font.BOLD, 14));
 			add(label);
 			
 			//Create the field
