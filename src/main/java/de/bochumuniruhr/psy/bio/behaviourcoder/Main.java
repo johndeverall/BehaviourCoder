@@ -144,9 +144,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		//TODO: Create cross platform solution
-		System.setProperty("jna.library.path", "C:\\Program Files\\VideoLAN\\VLC\\");
+		//System.setProperty("jna.library.path", "C:\\Program Files\\VideoLAN\\VLC\\");
 		
-		final boolean found = new NativeDiscovery().discover();
+		final boolean found = new NativeDiscovery(new BundledVLCLibsDiscoveryStrategy()).discover();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new Main(found);
