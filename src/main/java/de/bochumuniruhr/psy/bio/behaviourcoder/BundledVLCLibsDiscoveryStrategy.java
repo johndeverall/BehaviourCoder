@@ -22,8 +22,8 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 	/**
 	 * Mac filename patterns to search for.
 	 */
-	private static final Pattern[] MAC_FILENAME_PATTERNS = new Pattern[] { Pattern.compile("libvlc\\.dylib"),
-			Pattern.compile("libvlccore\\.dylib") };
+	private static final Pattern[] MAC_FILENAME_PATTERNS = new Pattern[] { Pattern.compile(".*libvlc\\.dylib"),
+			Pattern.compile(".*libvlccore\\.dylib") };
 
 	@Override
 	protected Pattern[] getFilenamePatterns() {
@@ -88,6 +88,8 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 		else {
 			throw new UnsupportedOperationException("Platform " + osName + ":" + osArch + " not supported");
 		}
+		
+		//Users/johndeverall/BehaviourCoder/src/main/resources/lib/mac
 	}
 
 }
