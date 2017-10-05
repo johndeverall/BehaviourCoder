@@ -1,4 +1,4 @@
-# BehaviourCoder
+# An easy and simple visual behaviour coder
 
 This software is a visual behaviour coder that allows researchers, consultants or educators to observe and analize behaviour from pre-recorded videos.
 
@@ -10,7 +10,7 @@ This software is licensed under the LGPL.
 
 ## Supported platforms
 
-Currently only windows and linux platforms are supported. MacOS X support is coming. Android is not currently supported.
+Currently only windows and linux platforms are supported. MacOS X support is coming. Android is not currently supported. Funding sppeds up the introduction of new features and platform support dramatically.
 
 ## Installation instructions
 
@@ -18,11 +18,11 @@ Currently only windows and linux platforms are supported. MacOS X support is com
 
 2. Double click on the download file and the application should start. 
 
-### Troubleshooting
+#### Troubleshooting
 
 If the application does not start immediately, you may need to [install java](https://java.com/en/download/). 
 
-In the case of other issues, please contact [Dr Alexis Garland](dralexisgarland@gmail.com).
+In the case of other issues, please contact [Dr Alexis Garland](mailto:dralexisgarland@gmail.com).
 
 
 
