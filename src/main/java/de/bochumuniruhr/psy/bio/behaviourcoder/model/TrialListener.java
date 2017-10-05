@@ -10,32 +10,32 @@ public interface TrialListener {
 	 * 
 	 * @param newLocation - the new location of the subject
 	 */
-	public void onLocationChange(Location newLocation);
+	public void onTrialLocationChange(Location newLocation);
 
 	/**
 	 * Called when the trial has started.
 	 */
-	public void onStart();
+	public void onTrialStart();
 	
 	/**
 	 * Called when the trial has stopped.
 	 */
-	public void onStop();
+	public void onTrialStop();
 	
 	/**
 	 * Called when the trial has paused.
 	 */
-	public void onPause();
+	public void onTrialPause();
 	
 	/**
 	 * Called when the trial has resumed.
 	 */
-	public void onResume();
+	public void onTrialResume();
 	
 	/**
 	 * Called when the trial has reset.
 	 * All listeners must also reset to their initial state when this is called.
 	 */
-	public void onReset();
+	public void onTrialReset();
 	
 }

@@ -75,33 +75,33 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, Tr
 	}
 	
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		for (TimedBehaviourButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
 
 	@Override
-	public void onStart() {
+	public void onTrialStart() {
 		for (TimedBehaviourButton button : buttons){
 			button.setEnabled(true);
 		}
 	}
 
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		for (TimedBehaviourButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
 
 	@Override
-	public void onPause() {}
+	public void onTrialPause() {}
 
 	@Override
-	public void onResume() {}
+	public void onTrialResume() {}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 }

@@ -38,6 +38,10 @@ public class LocationButton extends JButton {
 	 * @param locationToToggle - the location to toggle whether it's the current location
 	 */
 	public LocationButton(Trial trialSession, Location locationToToggle) { 
+		initialize(trialSession, locationToToggle);
+	}
+
+	private void initialize(Trial trialSession, Location locationToToggle) {
 		trial = trialSession;
 		location = locationToToggle;
 		decimalFormatter = new DecimalFormat("0.00");

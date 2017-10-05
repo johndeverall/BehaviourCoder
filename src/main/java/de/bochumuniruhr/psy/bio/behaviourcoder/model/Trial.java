@@ -95,19 +95,21 @@ public class Trial implements VideoListener {
 		listeners = new ArrayList<TrialListener>();
 		ready = false;
 		transitions = new ArrayList<LocationTransition>();
-		setupTimeLimitCheck();
+		//setupTimeLimitCheck();
 	}
 	
 	/**
 	 * Starts this trial if ready.
 	 */
-	public void start() {
+	public boolean start() {
 		if (ready){
 			time.start();
-			for (TrialListener ls : listeners){
-				ls.onStart();
+			for (TrialListener trialListener : listeners){
+				trialListener.onTrialStart();
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -265,7 +267,7 @@ public class Trial implements VideoListener {
 			
 			//Inform listeners of the change of location
 			for (TrialListener t : listeners){
-				t.onLocationChange(location);
+				t.onTrialLocationChange(location);
 			}
 		}
 	}
@@ -346,11 +348,11 @@ public class Trial implements VideoListener {
 	 * Resets this trial to its initial state.
 	 */
 	public void reset() {
-		//Stop the watches for each location
+		// Stop the watches for each location
 		for (StopWatch watch : locationTimes.values()){
 			watch.stop();
 		}
-		//Reset all fields to their initial state
+		// Reset all fields to their initial state
 		locationTimes.clear();
 		transitions.clear();
 		time.reset();
@@ -359,19 +361,19 @@ public class Trial implements VideoListener {
 		beforePause = null;
 		locationChanges = 0;
 		
-		//Reset details
+		// Reset details
 		details.setDate(null);
 		for (String detail : details.getDetailNames()){
 			details.setDetail(detail, "");
 		}
 		
-		//Reset instant behaviours
+		// Reset instant behaviours
 		for (InstantBehaviour behaviour : instant){
 			behaviour.reset();
 		}
-		//Inform users of the reset
+		// Inform listeners of the reset
 		for (TrialListener listener : listeners){
-			listener.onReset();
+			listener.onTrialReset();
 		}
 	}
 	
@@ -379,8 +381,8 @@ public class Trial implements VideoListener {
 	 * Inform listeners that this trial has paused.
 	 */
 	private void fireOnPause(){
-		for (TrialListener ls : listeners){
-			ls.onPause();
+		for (TrialListener listener : listeners){
+			listener.onTrialPause();
 		}
 	}
 	
@@ -388,8 +390,8 @@ public class Trial implements VideoListener {
 	 * Inform listeners that this trial has resumed.
 	 */
 	private void fireOnResume(){
-		for (TrialListener ls : listeners){
-			ls.onResume();
+		for (TrialListener listener : listeners){
+			listener.onTrialResume();
 		}
 	}
 	
@@ -397,24 +399,24 @@ public class Trial implements VideoListener {
 	 * Setup the clock to check for when the trial ends.
 	 */
 	private void setupTimeLimitCheck() { 
-		//Create the task to check whether the trial has ended
+		// Create the task to check whether the trial has ended
 		TimerTask clockCheck = new TimerTask() {
 			@Override
 			public void run() {
-				//If time has ran out when the trial was ready
+				// If time has ran out when the trial was ready
 				if (time.getTime() > details.getDuration() * 1000 && ready){
-					//Stop the trial
+					// Stop the trial
 					ready = false;
 					
-					//Suspend the current timers (note not stop so getTime etc still work)
+					// Suspend the current timers (note not stop so getTime etc still work)
 					time.suspend();
 					if (currentLocation != null){
 						locationTimes.get(currentLocation).suspend();
 					}
 					
-					//Inform listeners of the end
-					for (TrialListener lis : listeners){
-						lis.onStop();
+					// Inform listeners of the end
+					for (TrialListener trialListener : listeners){
+						trialListener.onTrialStop();
 					}
 					SoundMaker.playTimesUp();
 				}
@@ -468,5 +470,21 @@ public class Trial implements VideoListener {
 			this.to = to;
 			this.time = time;
 		}
+	}
+
+	@Override
+	public void onVideoFinished() {
+		ready = false;
+		
+		if (currentLocation != null){
+			locationTimes.get(currentLocation).suspend();
+		}
+		
+		// Inform listeners of the end
+		for (TrialListener trialListener : listeners){
+			trialListener.onTrialStop();
+		}
+		SoundMaker.playTimesUp();
+		time.suspend();
 	}
 }

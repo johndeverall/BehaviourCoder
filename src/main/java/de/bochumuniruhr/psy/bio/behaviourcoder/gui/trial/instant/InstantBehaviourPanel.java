@@ -54,7 +54,7 @@ public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener, 
 	}
 	
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		for (InstantBehaviourButton button : buttons){
 			button.reset();
 			button.setEnabled(false);
@@ -62,26 +62,26 @@ public class InstantBehaviourPanel extends JPanel implements GlobalKeyListener, 
 	}
 
 	@Override
-	public void onStart() {
+	public void onTrialStart() {
 		for (InstantBehaviourButton button : buttons){
 			button.setEnabled(true);
 		}
 	}
 
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		for (InstantBehaviourButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
 
 	@Override
-	public void onPause() {}
+	public void onTrialPause() {}
 
 	@Override
-	public void onResume() {}
+	public void onTrialResume() {}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 }

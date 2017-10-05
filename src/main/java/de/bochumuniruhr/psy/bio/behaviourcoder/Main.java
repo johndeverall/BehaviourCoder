@@ -1,7 +1,5 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
@@ -14,7 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -282,7 +279,7 @@ public class Main {
 		}
 	
 		//Create and add the mirror label
-		JLabel mirrorLabel = new JLabel("Mirror / Divider");
+		/*JLabel mirrorLabel = new JLabel("Mirror / Divider");
 		mirrorLabel.setFont(new Font("Arial", Font.BOLD, 15));
 		mirrorLabel.setHorizontalAlignment(JLabel.CENTER);
 		mirrorLabel.setBackground(Color.BLACK);
@@ -290,7 +287,7 @@ public class Main {
 		mirrorLabel.setForeground(Color.WHITE);
 		GridBagConstraints mirrorLabelConstraints = createConstraints(8, 18, 16, 1, GridBagConstraints.HORIZONTAL);
 		mirrorLabelConstraints.weightx = 1;
-		mainPanel.add(mirrorLabel, mirrorLabelConstraints);
+		mainPanel.add(mirrorLabel, mirrorLabelConstraints);*/
 	
 		//Add the status bar
 		mainPanel.add(statusBar, createConstraints(0, 31, 30, 1, GridBagConstraints.HORIZONTAL));
@@ -371,7 +368,7 @@ public class Main {
 					
 					ExcelWriter writer = new ExcelWriter(file);
 					
-					Config config = writer.load();
+					ExcelWriter.Config config = writer.load();
 					trial = config.trial;
 					
 					setupUI(config.timedKeys, config.incInstantKeys, config.decInstantKeys);
