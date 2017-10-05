@@ -7,14 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +27,10 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 @SuppressWarnings("serial")
 public class TrialCreationFrame extends JFrame {
 
+	private static final String EXPERIMENT_TRIAL_DETAILS = "Experiment Trial Details: Subject, Identifying Information, Family Group, Context, etc.";
+	private static final String COUNT_A_BEHAVIOUR = "Count a behaviour";
+	private static final String LOCATIONS = "Locations";
+	private static final String TIME_A_BEHAVIOUR = "Time a behaviour";
 	private final JPanel panel;
 	private Map<String, JComboBox<String>> boxes;
 	private Map<String, JButton[]> components;
@@ -56,7 +57,7 @@ public class TrialCreationFrame extends JFrame {
 		details = new HashMap<String, Detail>();
 		final TrialCreationFrame that = this;
 		
-		createConfigGroup("Locations", 0, new ActionListener() {
+		createConfigGroup(LOCATIONS, 0, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String s = (String) JOptionPane.showInputDialog(
@@ -65,12 +66,12 @@ public class TrialCreationFrame extends JFrame {
 	                    "Create Location",
 	                    JOptionPane.PLAIN_MESSAGE);
 				if (s != null && !s.equals("")){
-					JComboBox<String> box = boxes.get("Locations");
+					JComboBox<String> box = boxes.get(LOCATIONS);
 					box.addItem(s);
 					box.setSelectedIndex(box.getItemCount()-1);
 					
 					if (box.getItemCount() == 1){
-						for (JButton button : components.get("Locations")){
+						for (JButton button : components.get(LOCATIONS)){
 							button.setEnabled(true);
 						}
 					}
@@ -84,9 +85,9 @@ public class TrialCreationFrame extends JFrame {
 						"Location Name",
 		                "Edit Location",
 		                JOptionPane.PLAIN_MESSAGE,
-		                null, null, boxes.get("Locations").getSelectedItem());
+		                null, null, boxes.get(LOCATIONS).getSelectedItem());
 				if (s != null && !s.equals("")){
-					JComboBox<String> box = boxes.get("Locations");
+					JComboBox<String> box = boxes.get(LOCATIONS);
 					int i = box.getSelectedIndex();
 					box.removeItemAt(i);
 					box.insertItemAt(s, i);
@@ -95,7 +96,7 @@ public class TrialCreationFrame extends JFrame {
 			}
 		}, cons);
 		
-		createConfigGroup("Timed Behaviours", 2, new ActionListener() {
+		createConfigGroup(TIME_A_BEHAVIOUR, 2, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
@@ -107,13 +108,13 @@ public class TrialCreationFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
 				that.setEnabled(false);
-				BehaviourDetails details = timed.get(boxes.get("Timed Behaviours").getSelectedItem());
+				BehaviourDetails details = timed.get(boxes.get(TIME_A_BEHAVIOUR).getSelectedItem());
 				new BehaviourConfigFrame(that, false, details.name, details.associateLocations,
 						details.color, details.keys);
 			}
 		}, cons);
 		
-		createConfigGroup("Instant Behaviours", 4, new ActionListener() {
+		createConfigGroup(COUNT_A_BEHAVIOUR, 4, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
@@ -125,13 +126,13 @@ public class TrialCreationFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
 				that.setEnabled(false);
-				BehaviourDetails details = instant.get(boxes.get("Instant Behaviours").getSelectedItem());
+				BehaviourDetails details = instant.get(boxes.get(COUNT_A_BEHAVIOUR).getSelectedItem());
 				new BehaviourConfigFrame(that, true, details.name, details.associateLocations,
 						details.color, details.keys);
 			}
 		}, cons);
 		
-		createConfigGroup("Details", 6, new ActionListener() {
+		createConfigGroup(EXPERIMENT_TRIAL_DETAILS, 6, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
@@ -143,7 +144,7 @@ public class TrialCreationFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				that.setAlwaysOnTop(false);
 				that.setEnabled(false);
-				Detail det = details.get(boxes.get("Details").getSelectedItem());
+				Detail det = details.get(boxes.get(EXPERIMENT_TRIAL_DETAILS).getSelectedItem());
 				new DetailsConfigFrame(that, det.name, det.cons);
 			}
 		}, cons);
@@ -168,9 +169,9 @@ public class TrialCreationFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Location> locs = new ArrayList<Location>();
-				JComboBox<String> locations = boxes.get("Locations");
-				JComboBox<String> ins = boxes.get("Instant Behaviours");
-				JComboBox<String> tim = boxes.get("Timed Behaviours");
+				JComboBox<String> locations = boxes.get(LOCATIONS);
+				JComboBox<String> ins = boxes.get(COUNT_A_BEHAVIOUR);
+				JComboBox<String> tim = boxes.get(TIME_A_BEHAVIOUR);
 				for (int i = 0; i < locations.getItemCount(); ++i){
 					locs.add(new Location(locations.getItemAt(i)));
 				}
@@ -186,7 +187,7 @@ public class TrialCreationFrame extends JFrame {
 					locations.setBackground(Color.PINK);
 					return;
 				} else if (dets.size() == 0) {
-					boxes.get("Details").setBackground(Color.PINK);
+					boxes.get(EXPERIMENT_TRIAL_DETAILS).setBackground(Color.PINK);
 					return;
 				} else if (ins.getItemCount() == 0){
 					ins.setBackground(Color.PINK);
@@ -295,7 +296,7 @@ public class TrialCreationFrame extends JFrame {
 		setEnabled(true);
 		JComboBox<String> box;
 		if (isInstant){
-			box = boxes.get("Instant Behaviours");
+			box = boxes.get(COUNT_A_BEHAVIOUR);
 			if (!instant.containsKey(name)){
 				box.addItem(name);
 				box.setSelectedItem(name);
@@ -303,12 +304,12 @@ public class TrialCreationFrame extends JFrame {
 			instant.put(name, new BehaviourDetails(name, associate, color, keys));
 			
 			if (box.getItemCount() == 1){
-				for (JButton button : components.get("Instant Behaviours")){
+				for (JButton button : components.get(COUNT_A_BEHAVIOUR)){
 					button.setEnabled(true);
 				}
 			}
 		} else {
-			box = boxes.get("Timed Behaviours");
+			box = boxes.get(TIME_A_BEHAVIOUR);
 			if (!timed.containsKey(name)){
 				box.addItem(name);
 				box.setSelectedItem(name);
@@ -316,7 +317,7 @@ public class TrialCreationFrame extends JFrame {
 			timed.put(name, new BehaviourDetails(name, associate, color, keys));
 			
 			if (box.getItemCount() == 1){
-				for (JButton button : components.get("Timed Behaviours")){
+				for (JButton button : components.get(TIME_A_BEHAVIOUR)){
 					button.setEnabled(true);
 				}
 			}
@@ -327,7 +328,7 @@ public class TrialCreationFrame extends JFrame {
 		setAlwaysOnTop(true);
 		setEnabled(true);
 		JComboBox<String> box;
-		box = boxes.get("Details");
+		box = boxes.get(EXPERIMENT_TRIAL_DETAILS);
 		if (!details.containsKey(name)){
 			box.addItem(name);
 			box.setSelectedItem(name);
@@ -335,7 +336,7 @@ public class TrialCreationFrame extends JFrame {
 		details.put(name, new Detail(name, list));
 		
 		if (box.getItemCount() == 1){
-			for (JButton button : components.get("Details")){
+			for (JButton button : components.get(EXPERIMENT_TRIAL_DETAILS)){
 				button.setEnabled(true);
 			}
 		}

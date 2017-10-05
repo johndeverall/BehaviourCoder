@@ -70,9 +70,10 @@ public class FileChooser extends JFileChooser {
 	/**
 	 * Chooses a file to be saved.
 	 */
-	public File chooseSpreadsheet() {
+	public File chooseSpreadsheet(String approveButtonText) {
 		removeChoosableFileFilter(videoFilter);
 		addChoosableFileFilter(spreadsheetFilter);
+		setApproveButtonText(approveButtonText);
 		int returnVal = showOpenDialog(frame);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
