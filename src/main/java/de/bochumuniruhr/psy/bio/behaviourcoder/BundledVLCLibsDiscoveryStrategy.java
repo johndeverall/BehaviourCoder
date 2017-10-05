@@ -23,7 +23,7 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 	 * Mac filename patterns to search for.
 	 */
 	private static final Pattern[] MAC_FILENAME_PATTERNS = new Pattern[] { Pattern.compile("libvlc\\.dylib"),
-			Pattern.compile("libvlccore\\.dylib") };
+			Pattern.compile("libvlccore\\.dylib")};
 
 	@Override
 	protected Pattern[] getFilenamePatterns() {
