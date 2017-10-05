@@ -10,7 +10,7 @@ This software is licensed under the LGPL.
 
 ## Supported platforms
 
-Currently only windows and linux platforms are supported. MacOS X support is coming. Android is not currently supported. Funding sppeds up the introduction of new features and platform support dramatically.
+Currently only windows and linux platforms are supported. MacOS X support is coming. Android is not currently supported. Funding speeds up the introduction of new features and platform support dramatically.
 
 ## Installation instructions
 
