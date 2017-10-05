@@ -187,7 +187,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {
+	public void onTrialLocationChange(Location newLocation) {
 		if (associateWithLocation){
 			//Create a new occurrence if the location has changed to a different location.
 			//This only applies when occurrences are associated with locations.
@@ -202,7 +202,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	}
 	
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		if (current != null){
 			current.setEnd(trial.getCurrentTime());
 			current = null;
@@ -210,16 +210,16 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	}
 
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		occurrences = new ArrayList<Occurrence>();
 	}
 
 	@Override
-	public void onStart() {}
+	public void onTrialStart() {}
 
 	@Override
-	public void onPause() {}
+	public void onTrialPause() {}
 
 	@Override
-	public void onResume() {}
+	public void onTrialResume() {}
 }

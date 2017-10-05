@@ -25,4 +25,9 @@ public interface VideoListener {
 	 * @param videoTime - the position in the video as a percentage
 	 */
 	public void onVideoPercentThroughChange(int videoTime);
+	
+	/**
+	 * Called when the video has finished playing.
+	 */
+	public void onVideoFinished();
 }

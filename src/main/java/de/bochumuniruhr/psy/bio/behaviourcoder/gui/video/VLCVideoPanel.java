@@ -12,6 +12,7 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+//import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
 /**
  * Panel for displaying a video using VLC.
@@ -57,6 +58,12 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 				fireVideoPercentThroughChangeEvent(iPos);
 				fireVideoPositionChangeEvent(mediaPlayer.getTime());
 			}
+			
+			@Override
+			public void finished(MediaPlayer mediaPlayer) {
+				fireOnVideoFinishedEvent();
+			}
+			
 		});
 		add(mediaPlayerComponent, BorderLayout.CENTER);
 	}
@@ -112,6 +119,15 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	}
 	
 	/**
+	 * Informs listeners that the video has now finished playing.
+	 */
+	private void fireOnVideoFinishedEvent() {
+		for (VideoListener videoListener : videoListeners) { 
+			videoListener.onVideoFinished();
+		}
+	}
+	
+	/**
 	 * Informs users that the video is now at a certain position.
 	 * 
 	 * @param iPos - the position as a percentage
@@ -123,17 +139,17 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	}
 
 	@Override
-	public void onPause() {
+	public void onTrialPause() {
 		mediaPlayerComponent.getMediaPlayer().pause();		
 	}
 
 	@Override
-	public void onResume() {
+	public void onTrialResume() {
 		mediaPlayerComponent.getMediaPlayer().play();
 	}
 
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		mediaPlayerComponent.getMediaPlayer().pause();	
 	}
 
@@ -152,17 +168,17 @@ public class VLCVideoPanel extends JPanel implements TrialListener, MediaControl
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 	@Override
-	public void onStart() {
+	public void onTrialStart() {
 		trialDetails.setVideoTimeOffset(mediaPlayerComponent.getMediaPlayer().getTime() / 1000.0);
 	}
 
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		mediaPlayerComponent.getMediaPlayer().skip(0);
 		mediaPlayerComponent.getMediaPlayer().stop();
 	}
-
+	
 }

@@ -209,7 +209,7 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	}
 
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		skipField.setText("0");
 		disableControls();
 		playPauseButton.reset();
@@ -218,7 +218,7 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {
@@ -226,23 +226,23 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 	}
 
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		enableControls();
 		playPauseButton.setPlaying(false);
 	}
 
 	@Override
-	public void onPause() {
+	public void onTrialPause() {
 		playPauseButton.setPlaying(false);
 	}
 
 	@Override
-	public void onResume() {
+	public void onTrialResume() {
 		playPauseButton.setPlaying(true);
 	}
 
 	@Override
-	public void onStart() {
+	public void onTrialStart() {
 		disableControls();
 		playPauseButton.setPlaying(true);
 	}
@@ -277,5 +277,8 @@ public class MediaControlPanel extends JPanel implements TrialListener, VideoLis
 			}
 		}
 	}
+
+	@Override
+	public void onVideoFinished() {}
 
 }

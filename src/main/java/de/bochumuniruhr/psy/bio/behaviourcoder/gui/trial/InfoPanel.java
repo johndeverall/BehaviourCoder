@@ -126,27 +126,27 @@ public class InfoPanel extends JPanel implements TrialListener {
 	}
 	
 	@Override
-	public void onReset() {
+	public void onTrialReset() {
 		totalTime.setText("Time: 0.00");
 		timeLimit.setValue(trial.getDetails().getDuration());
 		transitions.setText("Location Changes: 0");
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {
+	public void onTrialLocationChange(Location newLocation) {
 		transitions.setText("Location Changes: " + trial.getNumberOfLocationChanges());
 	}
 
 	@Override
-	public void onStart() {}
+	public void onTrialStart() {}
 
 	@Override
-	public void onStop() {}
+	public void onTrialStop() {}
 
 	@Override
-	public void onPause() {}
+	public void onTrialPause() {}
 
 	@Override
-	public void onResume() {}
+	public void onTrialResume() {}
 
 }

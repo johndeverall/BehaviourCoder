@@ -69,30 +69,30 @@ public class StatusPanel extends JPanel implements TrialListener {
 	}
 	
 	@Override
-	public void onReset(){
+	public void onTrialReset(){
 		setMessage("Stopped");
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 	@Override
-	public void onStop() {
+	public void onTrialStop() {
 		setMessage("Trial finished");
 	}
 	
 	@Override
-	public void onPause() {
+	public void onTrialPause() {
 		setMessage("Trial suspended");
 	}
 
 	@Override
-	public void onResume() {
+	public void onTrialResume() {
 		setMessage("Trial in progress");
 	}
 
 	@Override
-	public void onStart() {
+	public void onTrialStart() {
 		setMessage("Trial in progress");
 	}
 }

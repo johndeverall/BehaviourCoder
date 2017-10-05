@@ -53,28 +53,29 @@ public class LocationPanel extends JPanel implements TrialListener, VideoListene
 		TimerTask clockRedrawer = new TimerTask() {
 			@Override
 			public void run() {
+				
 				//Update all the buttons
 				for (LocationButton button : buttons){
 					button.updateText();
 				}
 			} 
 		};
-		//Create the timer with the buttons updated every 10 milliseconds.
+		// Create the timer with the buttons updated every 10 milliseconds.
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(clockRedrawer, 0, 10);
 	}
 	
 	@Override
-	public void onStop() {
-		//Disable the buttons when the trial has finished
+	public void onTrialStop() {
+		// Disable the buttons when the trial has finished
 		for (LocationButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
 	
 	@Override
-	public void onReset() {
-		//Re-enable the buttons on reset to allow the trial to begin
+	public void onTrialReset() {
+		// Re-enable the buttons on reset to allow the trial to begin
 		for (LocationButton button : buttons) { 
 			button.setEnabled(false);
 		}
@@ -88,20 +89,24 @@ public class LocationPanel extends JPanel implements TrialListener, VideoListene
 	}
 
 	@Override
-	public void onLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {}
 
 	@Override
-	public void onPause() {}
+	public void onTrialPause() {}
 
 	@Override
-	public void onResume() {}
+	public void onTrialResume() {}
 
 	@Override
-	public void onStart() {}
+	public void onTrialStart() {}
 
 	@Override
 	public void onVideoPositionChange(long videoPosition) {}
 
 	@Override
 	public void onVideoPercentThroughChange(int videoTime) {}
+
+	@Override
+	public void onVideoFinished() {}
+
 }
