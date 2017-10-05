@@ -22,17 +22,14 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 	/**
 	 * Mac filename patterns to search for.
 	 */
-	private static final Pattern[] MAC_FILENAME_PATTERNS = new Pattern[] { Pattern.compile("libvlc\\.dylib"),
-			Pattern.compile("libvlccore\\.dylib")};
+	private static final Pattern[] MAC_FILENAME_PATTERNS = new Pattern[] { Pattern.compile(".*libvlc\\.dylib"),
+			Pattern.compile(".*libvlccore\\.dylib") };
 
 	@Override
 	protected Pattern[] getFilenamePatterns() {
 
 		String osArch = System.getProperty("os.arch");
 		String osName = System.getProperty("os.name").toLowerCase();
-		String osTempDirectory = System.getProperty("java.io.tmpdir");
-		String name;
-		String path;
 
 		if (osName.startsWith("win")) {
 			return WINDOWS_FILENAME_PATTERNS;
@@ -61,7 +58,6 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 		String osArch = System.getProperty("os.arch");
 		String osName = System.getProperty("os.name").toLowerCase();
 		String currentWorkingDirectory = System.getProperty("user.dir");
-		//C:\code\BehaviourCoder\src\main\resources\lib
 		String basePath = currentWorkingDirectory + "/src/main/resources/lib/";
 		
 		if (osName.startsWith("win")) {
@@ -88,6 +84,7 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 		else {
 			throw new UnsupportedOperationException("Platform " + osName + ":" + osArch + " not supported");
 		}
+		
 	}
 
 }
