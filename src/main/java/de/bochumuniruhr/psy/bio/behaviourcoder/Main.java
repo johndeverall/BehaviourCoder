@@ -38,7 +38,6 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed.TimedBehaviourPan
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
-import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter.Config;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.TrialValidator;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
@@ -539,6 +538,9 @@ public class Main {
 		File file = fileChooser.chooseSpreadsheet("Save experiment configuration");
 
 		if (file != null) {
+			if (!file.getName().endsWith(".xls")) { 
+				file = new File(file.getName() + ".xls");
+			}
 			trialFile = file;
 			ExcelWriter writer = new ExcelWriter(file);
 			writer.setup(trial, insIncKeys, insDecKeys, timKeys);
