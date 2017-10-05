@@ -135,7 +135,9 @@ public class Main {
 	private boolean unsaved;
 
 	public static void main(String[] args) {
+
 		String osName = System.getProperty("os.name").toLowerCase();
+
 		
 		if (osName.startsWith("win")) { 
 		final boolean found = new NativeDiscovery(new BundledVLCLibsDiscoveryStrategy()).discover();
