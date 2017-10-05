@@ -11,11 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -24,7 +21,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -46,11 +42,7 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter.Config;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.TrialValidator;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
 import uk.co.caprica.vlcj.binding.LibVlc;
@@ -143,15 +135,25 @@ public class Main {
 	private boolean unsaved;
 
 	public static void main(String[] args) {
-		//TODO: Create cross platform solution
-		//System.setProperty("jna.library.path", "C:\\Program Files\\VideoLAN\\VLC\\");
+
+		String osName = System.getProperty("os.name").toLowerCase();
+
 		
-		final boolean found = new NativeDiscovery().discover();
+		if (osName.startsWith("win")) { 
+		final boolean found = new NativeDiscovery(new BundledVLCLibsDiscoveryStrategy()).discover();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new Main(found);
 			}
 		});
+		} else { 
+			final boolean found = new NativeDiscovery().discover();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new Main(found);
+				}
+			});
+		}
 	}
 
 	/**
@@ -350,7 +352,7 @@ public class Main {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false); 
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		//Add the option to reset
-		JMenuItem newTrial = new JMenuItem("New Trial");
+		JMenuItem newTrial = new JMenuItem("Setup new experiment");
 		menu.add(newTrial);
 		newTrial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -358,11 +360,11 @@ public class Main {
 			}
 		});
 		
-		JMenuItem loadTrial = new JMenuItem("Load Trial");
+		JMenuItem loadTrial = new JMenuItem("Load experiment settings");
 		menu.add(loadTrial);
 		loadTrial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				File file = fileChooser.chooseSpreadsheet();
+				File file = fileChooser.chooseSpreadsheet("Load");
 
 				if (file != null) {
 					trialFile = file;
@@ -382,7 +384,7 @@ public class Main {
 		menu.addSeparator();
 
 		//Add option to open a video
-		JMenuItem newSession = new JMenuItem("New Session");
+		JMenuItem newSession = new JMenuItem("Open new video for analysis");
 		menu.add(newSession);
 		newSession.addActionListener(new ActionListener() {
 			@Override
@@ -411,7 +413,7 @@ public class Main {
 			}
 		});
 		
-		JMenuItem restartSession = new JMenuItem("Restart Session");
+		JMenuItem restartSession = new JMenuItem("Restart analysis");
 		menu.add(restartSession);
 		restartSession.addActionListener(new ActionListener() {
 			@Override
@@ -435,7 +437,7 @@ public class Main {
 		});
 		
 		//Add option to save a trial
-		JMenuItem save = new JMenuItem("Save");
+		JMenuItem save = new JMenuItem("Save data");
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				save(trialFile);
@@ -537,7 +539,7 @@ public class Main {
 	}
 	
 	public void onTrialCreate(Trial trial, List<Character> insIncKeys, List<Character> insDecKeys, List<Character> timKeys) {	
-		File file = fileChooser.chooseSpreadsheet();
+		File file = fileChooser.chooseSpreadsheet("Save experiment configuration");
 
 		if (file != null) {
 			trialFile = file;
