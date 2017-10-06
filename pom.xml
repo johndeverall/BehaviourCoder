@@ -67,7 +67,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>BehaviourCoder_${git.commit.id.describe-short}_${git.build.time}</finalName>
+		<finalName>BehaviourCoder_${git.build.time}_${git.commit.id.describe-short}</finalName>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
