@@ -7,9 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Properties;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -327,7 +333,18 @@ public class Main {
 		help.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(frame, "Version: 0.3");
+				Properties properties = new Properties();
+				try {
+					InputStream propertyStream = this.getClass().getResourceAsStream("/git.properties");
+					properties.load(propertyStream);
+					propertyStream.close();
+				} catch (IOException e1) {
+						log.error(e1.getMessage());
+				}
+				
+				String version = properties.getProperty("git.commit.id.describe-short");			
+				String buildTime = properties.getProperty("git.build.time");
+				JOptionPane.showMessageDialog(frame, "Version: " + version + System.lineSeparator() + "Release date: " + buildTime);
 			}});
 		menu.add(help);
 		
