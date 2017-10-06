@@ -67,7 +67,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>BehaviourCoder_${git.commit.id.describe-short}</finalName>
+		<finalName>BehaviourCoder_${git.commit.id.describe-short}_${git.build.time}</finalName>
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
@@ -89,6 +89,8 @@
 				<configuration>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<injectAllReactorProjects>true</injectAllReactorProjects>
+					<dateFormat>yyyy-MM-dd-HHmmss</dateFormat>
+                    <dateFormatTimeZone>UTC</dateFormatTimeZone>
 				</configuration>
 			</plugin>
 			<plugin>
