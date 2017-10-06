@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <timestamp key="TIMESTAMP" datepattern="HHmmss"></timestamp>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${user.home}/vlcj-${TIMESTAMP}.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%-36(%d{HH:mm:ss.SSS} [%thread]) %-5level %72logger{72} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-36(%d{HH:mm:ss.SSS} [%thread]) %-5level %72logger{72} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="ch" level="ERROR"></logger>
+    <logger name="org" level="ERROR"></logger>
+    <logger name="com" level="ERROR"></logger>
+
+    <logger name="uk.co.caprica.vlcj" level="DEBUG"></logger>
+    
+    <root level="debug">
+        <appender-ref ref="CONSOLE"></appender-ref>
+        <appender-ref ref="FILE"></appender-ref>
+    </root>
+
+</configuration>

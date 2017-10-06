@@ -41,12 +41,14 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.TrialValidator;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.validation.ValidationError;
+import lombok.extern.slf4j.Slf4j;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
 /**
  * Main class for BehaviourCoder, constructs the entire GUI.
  */
+@Slf4j
 public class Main {
 
 	/**
@@ -103,11 +105,6 @@ public class Main {
 	 * Whether VLC was found.
 	 */
 	private boolean foundVlc;
-	
-	/**
-	 * The logger for this class.
-	 */
-	private Logger logger = Logger.getLogger(this.getClass());
 	
 	/**
 	 * The current trial.
@@ -180,10 +177,10 @@ public class Main {
 	private void setupUI(List<Character> timedTriggerKeys, List<Character> instantIncrementKeys, List<Character> instantDecrementKeys) {
 		setupUIComponents(timedTriggerKeys, instantIncrementKeys, instantDecrementKeys);
 		if (foundVlc) { 
-			logger.info("Found VLC version: " + LibVlc.INSTANCE.libvlc_get_version());
+			log.info("Found VLC version: " + LibVlc.INSTANCE.libvlc_get_version());
 		} else { 
 			JOptionPane.showMessageDialog(frame, "VLC not found automatically. Please choose the VLC library from the menu.");
-			logger.info("VLC not found");
+			log.info("VLC not found");
 		}
 	}
 
