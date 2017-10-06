@@ -7,7 +7,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.7</java.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.2.3</logback.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<dependencies>
@@ -31,11 +33,7 @@
 			<artifactId>vlcj</artifactId>
 			<version>3.9.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.lable.rfc3881.auditlogger.adapter</groupId>
-			<artifactId>slf4j</artifactId>
-			<version>1.3</version>
-		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -43,14 +41,56 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- <dependency> <groupId>javax.media</groupId> <artifactId>jmf</artifactId> 
-			<version>2.1.1e</version> </dependency> -->
-		<!--<dependency> <groupId>nz.co.thescene</groupId> <artifactId>thescene-emailing</artifactId> 
-			<version>0.0.1-SNAPSHOT</version> </dependency> -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.18</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+
+					<verbose>true</verbose>
+
+					<generateGitPropertiesFilename>
+						${project.build.outputDirectory}/git.properties
+					</generateGitPropertiesFilename>
+
+					<prefix>git</prefix>
+
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
