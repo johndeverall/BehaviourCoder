@@ -56,18 +56,16 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>2.2.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
-					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-
-					<verbose>true</verbose>
-
-					<generateGitPropertiesFilename>
-						${project.build.outputDirectory}/git.properties
-					</generateGitPropertiesFilename>
-
-					<prefix>git</prefix>
-
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 				</configuration>
 			</plugin>
 			<plugin>
