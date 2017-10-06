@@ -89,7 +89,7 @@
 				<configuration>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<injectAllReactorProjects>true</injectAllReactorProjects>
-					<dateFormat>yyyy-MM-dd-HHmmss</dateFormat>
+					<dateFormat>yyyy-MM-dd_HHmmss</dateFormat>
                     <dateFormatTimeZone>UTC</dateFormatTimeZone>
 				</configuration>
 			</plugin>

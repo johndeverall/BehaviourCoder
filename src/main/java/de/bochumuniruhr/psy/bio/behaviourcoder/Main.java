@@ -342,8 +342,9 @@ public class Main {
 						log.error(e1.getMessage());
 				}
 				
-				String version = properties.getProperty("git.commit.id.describe-short");			
+				String commitHash = properties.getProperty("git.commit.id.describe-short");			
 				String buildTime = properties.getProperty("git.build.time");
+				String version = buildTime + "_" + commitHash;
 				JOptionPane.showMessageDialog(frame, "Version: " + version + System.lineSeparator() + "Release date: " + buildTime);
 			}});
 		menu.add(help);
