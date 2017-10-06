@@ -118,11 +118,6 @@ public class Main {
 	private Trial trial;
 
 	/**
-	 * The default time limit for a trial.
-	 */
-	private int DEFAULT_TIME_LIMIT = 120;
-
-	/**
 	 * The main window
 	 */
 	private JFrame frame;
@@ -345,7 +340,7 @@ public class Main {
 				String commitHash = properties.getProperty("git.commit.id.describe-short");			
 				String buildTime = properties.getProperty("git.build.time");
 				String version = buildTime + "_" + commitHash;
-				JOptionPane.showMessageDialog(frame, "Version: " + version + System.lineSeparator() + "Release date: " + buildTime);
+				JOptionPane.showMessageDialog(frame, "Version: " + version + System.lineSeparator() + "Behaviour Coder Release date: " + buildTime + System.lineSeparator() + "VLC Media player: " + LibVlc.INSTANCE.libvlc_get_version());
 			}});
 		menu.add(help);
 		
@@ -395,16 +390,16 @@ public class Main {
 		menu.addSeparator();
 
 		//Add option to open a video
-		JMenuItem newSession = new JMenuItem("Open new video for analysis");
-		menu.add(newSession);
-		newSession.addActionListener(new ActionListener() {
+		JMenuItem newAnalysis = new JMenuItem("Open new video for analysis");
+		menu.add(newAnalysis);
+		newAnalysis.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (unsaved) {
-					int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to start a new session and lose your current data?", "New Session",
+					int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to open a new video and lose your current data?", "Open a new video",
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if (result == JOptionPane.NO_OPTION){
-						statusBar.setMessage("New session cancelled.");
+						statusBar.setMessage("New analysis cancelled.");
 						return;
 					}
 				}
@@ -417,23 +412,23 @@ public class Main {
 					video = file;
 					vlcVideoPanel.openVideo(video);
 					unsaved = true;
-					statusBar.setMessage("New session started.");
+					statusBar.setMessage("New analysis started.");
 				} else {
-					statusBar.setMessage("New session cancelled.");
+					statusBar.setMessage("New analysis cancelled.");
 				}
 			}
 		});
 		
-		JMenuItem restartSession = new JMenuItem("Restart analysis");
-		menu.add(restartSession);
-		restartSession.addActionListener(new ActionListener() {
+		JMenuItem restartAnalysis = new JMenuItem("Restart analysis");
+		menu.add(restartAnalysis);
+		restartAnalysis.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (unsaved) {
-					int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to restart and lose your current data?", "Restart Session",
+					int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to restart your analysis and lose your current data?", "Restart Analysis",
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 					if (result == JOptionPane.NO_OPTION){
-						statusBar.setMessage("Session restart cancelled.");
+						statusBar.setMessage("Analysis restart cancelled.");
 						return;
 					}
 				}
@@ -443,7 +438,7 @@ public class Main {
 				if (video != null) {
 					vlcVideoPanel.openVideo(video);
 				}
-				statusBar.setMessage("Session restarted.");
+				statusBar.setMessage("Analysis restarted.");
 			}
 		});
 		

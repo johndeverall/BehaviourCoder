@@ -10,8 +10,11 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -20,7 +23,7 @@ import net.sourceforge.jdatepicker.impl.UtilDateModel;
  * Panel that contains the fields for specifying the details of a trial.
  */
 @SuppressWarnings("serial")
-public class DetailsPanel extends JPanel {
+public class DetailsPanel extends JPanel implements TrialListener {
 	
 	/**
 	 * The picker for the date.
@@ -39,6 +42,7 @@ public class DetailsPanel extends JPanel {
 	 */
 	public DetailsPanel(Trial trial) { 
 		final TrialDetails details = trial.getDetails();
+		trial.addListener(this);
 		setLayout(new GridLayout(1, details.getDetailNames().size() * 2 + 2));
 
 		//Create the label for the date picker
@@ -101,5 +105,25 @@ public class DetailsPanel extends JPanel {
 		datePicker.getModel().setValue(null);
 		datePicker.setBackground(Color.PINK);
 	}
+
+	@Override
+	public void onTrialReset() {
+		this.resetAll();
+	}
+
+	@Override
+	public void onTrialLocationChange(Location newLocation) {}
+	
+	@Override
+	public void onTrialStart() {}
+
+	@Override
+	public void onTrialStop() {}
+
+	@Override
+	public void onTrialPause() {}
+
+	@Override
+	public void onTrialResume() {}
 
 }

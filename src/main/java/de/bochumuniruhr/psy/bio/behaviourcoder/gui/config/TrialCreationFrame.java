@@ -38,6 +38,12 @@ public class TrialCreationFrame extends JFrame {
 	private Map<String, BehaviourDetails> instant;
 	private Map<String, Detail> details;
 	
+
+	/**
+	 * The default time limit for a trial.
+	 */
+	private int DEFAULT_TIME_LIMIT = 120;
+	
 	public TrialCreationFrame(final JFrame parent, final Main main) {
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints cons = new GridBagConstraints();
@@ -197,21 +203,21 @@ public class TrialCreationFrame extends JFrame {
 					return;
 				}
 				
-				Trial t = new Trial(12000, locs, dets, cons);
+				Trial trial = new Trial(DEFAULT_TIME_LIMIT, locs, dets, cons);
 				
 				List<Character> insIncKeys = new ArrayList<Character>();
 				List<Character> insDecKeys = new ArrayList<Character>();
 				List<Character> timKeys = new ArrayList<Character>();
 				for (int i = 0; i < ins.getItemCount(); ++i){
 					BehaviourDetails bd = instant.get(ins.getItemAt(i));
-					t.addInstantBehaviour(new InstantBehaviour(bd.name, bd.color, t, bd.associateLocations));
+					trial.addInstantBehaviour(new InstantBehaviour(bd.name, bd.color, trial, bd.associateLocations));
 					insIncKeys.add(bd.keys[0]);
 					insDecKeys.add(bd.keys[1]);
 				}
 				
 				for (int i = 0; i < tim.getItemCount(); ++i){
 					BehaviourDetails bd = timed.get(tim.getItemAt(i));
-					t.addTimedBehaviour(new TimedBehaviour(bd.name, bd.color, t, bd.associateLocations));
+					trial.addTimedBehaviour(new TimedBehaviour(bd.name, bd.color, trial, bd.associateLocations));
 					timKeys.add(bd.keys[0]);
 				}
 
@@ -219,7 +225,7 @@ public class TrialCreationFrame extends JFrame {
 				parent.setAlwaysOnTop(true);
 				parent.setAlwaysOnTop(false);
 				parent.setEnabled(true);
-				main.onTrialCreate(t, insIncKeys, insDecKeys, timKeys);
+				main.onTrialCreate(trial, insIncKeys, insDecKeys, timKeys);
 			}
 		});
 		panel.add(add, cons);
