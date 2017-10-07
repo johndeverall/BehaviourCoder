@@ -31,11 +31,12 @@ public class LocationPanel extends JPanel implements TrialListener, VideoListene
 		buttons = new ArrayList<LocationButton>();
 		
 		//Set the layout
-		setLayout(new GridLayout(0, 1));
+		setLayout(null);
 		
 		//Create the buttons
-		for (Location a : trial.getLocations()){
-			LocationButton button = new LocationButton(trial, a);
+		for (Location location : trial.getLocations()){
+			LocationButton button = new LocationButton(trial, location);
+			button.setSize(400, 200);
 			button.setEnabled(false);
 			buttons.add(button);
 			add(button);
