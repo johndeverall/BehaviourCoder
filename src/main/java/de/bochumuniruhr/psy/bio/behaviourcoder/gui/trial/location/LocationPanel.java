@@ -21,93 +21,112 @@ public class LocationPanel extends JPanel implements TrialListener, VideoListene
 	 * The list of buttons.
 	 */
 	private List<LocationButton> buttons;
-	
+
+	/**
+	 * The Trial
+	 */
+	private Trial trial;
+
 	/**
 	 * Creates a panel for choosing the current location of a trial.
 	 * 
-	 * @param trial - the trial to choose locations for
+	 * @param trial
+	 *            - the trial to choose locations for
 	 */
-	public LocationPanel(Trial trial) { 
+	public LocationPanel(Trial trial) {
 		buttons = new ArrayList<LocationButton>();
-		
-		//Set the layout
+		this.trial = trial;
+
+		// Set the layout
 		setLayout(null);
-		
-		//Create the buttons
-		for (Location location : trial.getLocations()){
+
+		// Create the buttons
+		for (Location location : trial.getLocations()) {
 			LocationButton button = new LocationButton(trial, location);
-			button.setSize(400, 200);
+			button.setSize(100, 33);
 			button.setEnabled(false);
 			buttons.add(button);
 			add(button);
 		}
-		
-		//Setup the clock for keeping the text up to date
+
+		// Setup the clock for keeping the text up to date
 		setupClockRedrawRate();
 	}
-	
+
 	/**
 	 * Setup the clock for keeping the text up to date.
 	 */
-	private void setupClockRedrawRate() { 
-		//Create the task to update the text
+	private void setupClockRedrawRate() {
+		// Create the task to update the text
 		TimerTask clockRedrawer = new TimerTask() {
 			@Override
 			public void run() {
-				
-				//Update all the buttons
-				for (LocationButton button : buttons){
+
+				// Update all the buttons
+				for (LocationButton button : buttons) {
 					button.updateText();
 				}
-			} 
+				
+				// check for the end of the trial
+				if (trial.isTrialEnded()) {
+					trial.endTrial();
+				}
+			}
 		};
 		// Create the timer with the buttons updated every 10 milliseconds.
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(clockRedrawer, 0, 10);
 	}
-	
+
 	@Override
 	public void onTrialStop() {
 		// Disable the buttons when the trial has finished
-		for (LocationButton button : buttons){
+		for (LocationButton button : buttons) {
 			button.setEnabled(false);
 		}
 	}
-	
+
 	@Override
 	public void onTrialReset() {
 		// Re-enable the buttons on reset to allow the trial to begin
-		for (LocationButton button : buttons) { 
+		for (LocationButton button : buttons) {
 			button.setEnabled(false);
 		}
 	}
 
 	@Override
 	public void onVideoLoaded(double videoLength) {
-		for (LocationButton button : buttons) { 
+		for (LocationButton button : buttons) {
 			button.setEnabled(true);
 		}
 	}
 
 	@Override
-	public void onTrialLocationChange(Location newLocation) {}
+	public void onTrialLocationChange(Location newLocation) {
+	}
 
 	@Override
-	public void onTrialPause() {}
+	public void onTrialPause() {
+	}
 
 	@Override
-	public void onTrialResume() {}
+	public void onTrialResume() {
+	}
 
 	@Override
-	public void onTrialStart() {}
+	public void onTrialStart() {
+	}
 
 	@Override
-	public void onVideoPositionChange(long videoPosition) {}
+	public void onVideoPositionChange(long videoPosition) {
+	}
 
 	@Override
-	public void onVideoPercentThroughChange(int videoTime) {}
+	public void onVideoPercentThroughChange(int videoTime) {
+	}
 
 	@Override
-	public void onVideoFinished() {}
+	public void onVideoFinished() {
+	}
 
 }

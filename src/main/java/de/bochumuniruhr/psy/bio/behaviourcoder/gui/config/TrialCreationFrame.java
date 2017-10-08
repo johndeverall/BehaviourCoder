@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.Main;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.CountableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
 
@@ -210,14 +210,14 @@ public class TrialCreationFrame extends JFrame {
 				List<Character> timKeys = new ArrayList<Character>();
 				for (int i = 0; i < ins.getItemCount(); ++i){
 					BehaviourDetails bd = instant.get(ins.getItemAt(i));
-					trial.addInstantBehaviour(new InstantBehaviour(bd.name, bd.color, trial, bd.associateLocations));
+					trial.addCountableBehaviour(new CountableBehaviour(bd.name, bd.color, trial, bd.associateLocations));
 					insIncKeys.add(bd.keys[0]);
 					insDecKeys.add(bd.keys[1]);
 				}
 				
 				for (int i = 0; i < tim.getItemCount(); ++i){
 					BehaviourDetails bd = timed.get(tim.getItemAt(i));
-					trial.addTimedBehaviour(new TimedBehaviour(bd.name, bd.color, trial, bd.associateLocations));
+					trial.addTimableBehaviour(new TimableBehaviour(bd.name, bd.color, trial, bd.associateLocations));
 					timKeys.add(bd.keys[0]);
 				}
 

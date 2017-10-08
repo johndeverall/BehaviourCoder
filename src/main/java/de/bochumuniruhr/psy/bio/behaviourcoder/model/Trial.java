@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.apache.commons.lang3.time.StopWatch;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VideoListener;
@@ -24,12 +22,12 @@ public class Trial implements VideoListener {
 	/**
 	 * The list of timed behaviours.
 	 */
-	private List<TimedBehaviour> timed;
+	private List<TimableBehaviour> timableBehaviours;
 	
 	/**
 	 * The list of instant behaviours.
 	 */
-	private List<InstantBehaviour> instant;
+	private List<CountableBehaviour> countableBehaviours;
 	
 	/**
 	 * The details of this trial.
@@ -87,8 +85,8 @@ public class Trial implements VideoListener {
 	public Trial(long duration, List<Location> locations, List<String> detailNames, List<Constraint> detailConstraints){
 		details = new TrialDetails(duration, detailNames, detailConstraints);
 		this.locations = locations;
-		timed = new ArrayList<TimedBehaviour>();
-		instant = new ArrayList<InstantBehaviour>();
+		timableBehaviours = new ArrayList<TimableBehaviour>();
+		countableBehaviours = new ArrayList<CountableBehaviour>();
 		locationChanges = 0;
 		time = new StopWatch();
 		locationTimes = new HashMap<Location, StopWatch>();
@@ -182,8 +180,8 @@ public class Trial implements VideoListener {
 	 * 
 	 * @param t - the behaviour to add
 	 */
-	public void addTimedBehaviour(TimedBehaviour t){
-		timed.add(t);
+	public void addTimableBehaviour(TimableBehaviour t){
+		timableBehaviours.add(t);
 		listeners.add(t);
 	}
 	
@@ -192,8 +190,8 @@ public class Trial implements VideoListener {
 	 * 
 	 * @param i - the behaviour to add
 	 */
-	public void addInstantBehaviour(InstantBehaviour i){
-		instant.add(i);
+	public void addCountableBehaviour(CountableBehaviour i){
+		countableBehaviours.add(i);
 	}
 	
 	/**
@@ -322,8 +320,8 @@ public class Trial implements VideoListener {
 	 * 
 	 * @return The list of timed behaviours.
 	 */
-	public List<TimedBehaviour> getTimedBehaviours(){
-		return timed;
+	public List<TimableBehaviour> getTimableBehaviours(){
+		return timableBehaviours;
 	}
 	
 	/**
@@ -331,8 +329,8 @@ public class Trial implements VideoListener {
 	 * 
 	 * @return The list of instant behaviours.
 	 */
-	public List<InstantBehaviour> getInstantBehaviours(){
-		return instant;
+	public List<CountableBehaviour> getCountableBehaviours(){
+		return countableBehaviours;
 	}
 	
 	/**
@@ -368,7 +366,7 @@ public class Trial implements VideoListener {
 		}
 		
 		// Reset instant behaviours
-		for (InstantBehaviour behaviour : instant){
+		for (CountableBehaviour behaviour : countableBehaviours){
 			behaviour.reset();
 		}
 		// Inform listeners of the reset
@@ -395,37 +393,26 @@ public class Trial implements VideoListener {
 		}
 	}
 	
-	/**
-	 * Setup the clock to check for when the trial ends.
-	 */
-	private void setupTimeLimitCheck() { 
-		// Create the task to check whether the trial has ended
-		TimerTask clockCheck = new TimerTask() {
-			@Override
-			public void run() {
-				// If time has ran out when the trial was ready
-				if (time.getTime() > details.getDuration() * 1000 && ready){
-					// Stop the trial
-					ready = false;
-					
-					// Suspend the current timers (note not stop so getTime etc still work)
-					time.suspend();
-					if (currentLocation != null){
-						locationTimes.get(currentLocation).suspend();
-					}
-					
-					// Inform listeners of the end
-					for (TrialListener trialListener : listeners){
-						trialListener.onTrialStop();
-					}
-					SoundMaker.playTimesUp();
-				}
-			} 
-		};
-		//Create the timer show it checks every 10 milliseconds
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(clockCheck, 0, 10);
+	public boolean isTrialEnded() {
+		return time.getTime() > details.getDuration() * 1000 && ready;
 	}
+
+	public void endTrial() {
+		// Stop the trial
+		ready = false;
+		
+		// Suspend the current timers (note not stop so getTime etc still work)
+		time.suspend();
+		if (currentLocation != null){
+			locationTimes.get(currentLocation).suspend();
+		}
+		
+		// Inform listeners of the end
+		for (TrialListener trialListener : listeners){
+			trialListener.onTrialStop();
+		}
+		SoundMaker.playTimesUp();
+	} 
 
 	@Override
 	public void onVideoLoaded(double videoLength) {

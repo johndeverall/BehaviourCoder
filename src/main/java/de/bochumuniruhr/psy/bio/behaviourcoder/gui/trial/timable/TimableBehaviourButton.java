@@ -1,4 +1,4 @@
-package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed;
+package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timable;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 import javax.swing.JButton;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 
 /**
@@ -15,12 +15,12 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
  * Displays the total time for the behaviour in seconds.
  */
 @SuppressWarnings("serial")
-public class TimedBehaviourButton extends JButton implements GlobalKeyListener {
+public class TimableBehaviourButton extends JButton implements GlobalKeyListener {
 
 	/**
 	 * The timed behaviour this button is for.
 	 */
-	private TimedBehaviour behaviour;
+	private TimableBehaviour behaviour;
 	
 	/**
 	 * The trial this button is for.
@@ -44,7 +44,7 @@ public class TimedBehaviourButton extends JButton implements GlobalKeyListener {
 	 * @param behaviour - the behaviour the button toggles
 	 * @param activationKey - the key that toggles the button
 	 */
-	public TimedBehaviourButton(Trial trial, TimedBehaviour behaviour, char activationKey) {
+	public TimableBehaviourButton(Trial trial, TimableBehaviour behaviour, char activationKey) {
 		this.activationKey = activationKey;
 		this.behaviour = behaviour;
 		this.trial = trial;

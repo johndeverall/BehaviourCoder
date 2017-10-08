@@ -38,9 +38,9 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.StatusPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.config.TrialCreationFrame;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.InfoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.details.DetailsPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.instant.InstantBehaviourPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.instant.CountableBehaviourPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.location.LocationPanel;
-import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed.TimedBehaviourPanel;
+import de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timable.TimableBehaviourPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.MediaControlPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.video.VLCVideoPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.io.ExcelWriter;
@@ -65,12 +65,12 @@ public class Main {
 	/**
 	 * The panel that allows timed behaviours to be toggled.
 	 */
-	private TimedBehaviourPanel timedBehaviourPanel;
+	private TimableBehaviourPanel timedBehaviourPanel;
 	
 	/**
 	 * The panel that allows instant behaviours to be triggered.
 	 */
-	private InstantBehaviourPanel instantBehaviourPanel;
+	private CountableBehaviourPanel instantBehaviourPanel;
 	
 	/**
 	 * The panel that provides the details of the trial.
@@ -225,9 +225,9 @@ public class Main {
 
 		if (trial != null){
 			//Create each internal panel
-			timedBehaviourPanel = new TimedBehaviourPanel(trial, timedTriggerKeys);
+			timedBehaviourPanel = new TimableBehaviourPanel(trial, timedTriggerKeys);
 			locationPanel = new LocationPanel(trial);
-			instantBehaviourPanel = new InstantBehaviourPanel(trial,
+			instantBehaviourPanel = new CountableBehaviourPanel(trial,
 					instantIncrementKeys, instantDecrementKeys);
 			detailsPanel = new DetailsPanel(trial);
 			infoPanel = new InfoPanel(trial, statusBar);

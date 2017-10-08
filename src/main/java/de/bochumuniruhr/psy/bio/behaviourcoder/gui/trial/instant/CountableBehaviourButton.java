@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.advisory.SoundMaker;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.CountableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 
 /**
@@ -14,12 +14,12 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
  * Displays the count of occurrences for the behaviour.
  */
 @SuppressWarnings("serial")
-public class InstantBehaviourButton extends JButton implements GlobalKeyListener {
+public class CountableBehaviourButton extends JButton implements GlobalKeyListener {
 
 	/**
 	 * The behaviour that this button interacts with.
 	 */
-	private InstantBehaviour behaviour;
+	private CountableBehaviour behaviour;
 	
 	/**
 	 * The trial the button is for.
@@ -44,7 +44,7 @@ public class InstantBehaviourButton extends JButton implements GlobalKeyListener
 	 * @param incrementKey - the key that specifies that the behaviour occurred
 	 * @param decrementKey - the key that specified that the last occurrence of the behaviour should be dropped
 	 */
-	public InstantBehaviourButton(Trial trial, InstantBehaviour behaviour, final char incrementKey, final char decrementKey) { 
+	public CountableBehaviourButton(Trial trial, CountableBehaviour behaviour, final char incrementKey, final char decrementKey) { 
 		this.incrementKey = incrementKey;
 		this.decrementKey = decrementKey;
 		this.behaviour = behaviour;

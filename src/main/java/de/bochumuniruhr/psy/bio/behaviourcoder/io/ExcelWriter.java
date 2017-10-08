@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.InstantBehaviour;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.CountableBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialDetails.Constraint;
@@ -113,7 +113,7 @@ public class ExcelWriter {
 				++column;
 			}
 			//Number of occurrences of each behaviour in each location
-			for (InstantBehaviour instant : trial.getInstantBehaviours()){
+			for (CountableBehaviour instant : trial.getCountableBehaviours()){
 				if (instant.isAssociatedWithLocation()) {
 					for (Location location : trial.getLocations()){
 						Number num = new Number(column, nextEmptyRow, instant.getNumberOfOccurrences(location));
@@ -127,7 +127,7 @@ public class ExcelWriter {
 				}
 			}
 			//Time that each behaviour occurred in each location
-			for (TimedBehaviour timed : trial.getTimedBehaviours()){
+			for (TimableBehaviour timed : trial.getTimableBehaviours()){
 				if (timed.isAssociatedWithLocation()){
 					for (Location location : trial.getLocations()){
 						Number num = new Number(column, nextEmptyRow, timed.getDuration(location));
@@ -203,7 +203,7 @@ public class ExcelWriter {
 					color = new Color(Integer.parseInt(config.getCell(col, 2).getContents()));
 				}
 				
-				trial.addTimedBehaviour(new TimedBehaviour(config.getCell(col, 1).getContents(), 
+				trial.addTimableBehaviour(new TimableBehaviour(config.getCell(col, 1).getContents(), 
 						color, trial, Boolean.parseBoolean(config.getCell(col, 3).getContents())));
 				
 				timKeys.add(config.getCell(col, 4).getContents().charAt(0));
@@ -218,7 +218,7 @@ public class ExcelWriter {
 					color = new Color(Integer.parseInt(config.getCell(col, 6).getContents()));
 				}
 				
-				trial.addInstantBehaviour(new InstantBehaviour(config.getCell(col, 5).getContents(), 
+				trial.addCountableBehaviour(new CountableBehaviour(config.getCell(col, 5).getContents(), 
 						color, trial, Boolean.parseBoolean(config.getCell(col, 7).getContents())));
 				
 				incKeys.add(config.getCell(col, 8).getContents().charAt(0));
@@ -266,8 +266,8 @@ public class ExcelWriter {
 			sheet.addCell(timedLab);
 			
 			col = 1;
-			for (int i = 0; i < trial.getTimedBehaviours().size(); ++i) {
-				TimedBehaviour behaviour = trial.getTimedBehaviours().get(i);
+			for (int i = 0; i < trial.getTimableBehaviours().size(); ++i) {
+				TimableBehaviour behaviour = trial.getTimableBehaviours().get(i);
 				Label name = new Label(col, 1, behaviour.getName());
 				sheet.addCell(name);
 				Label color = new Label(col, 2, (behaviour.getColor() != null) ? "" + behaviour.getColor().getRGB() : "");
@@ -285,8 +285,8 @@ public class ExcelWriter {
 			sheet.addCell(countLab);
 			
 			col = 1;
-			for (int i = 0; i < trial.getInstantBehaviours().size(); ++i) {
-				InstantBehaviour behaviour = trial.getInstantBehaviours().get(i);
+			for (int i = 0; i < trial.getCountableBehaviours().size(); ++i) {
+				CountableBehaviour behaviour = trial.getCountableBehaviours().get(i);
 				Label name = new Label(col, 5, behaviour.getName());
 				sheet.addCell(name);
 				Label color = new Label(col, 6, (behaviour.getColor() != null) ? "" + behaviour.getColor().getRGB() : "");
@@ -330,7 +330,7 @@ public class ExcelWriter {
 				header.add(detail.replaceAll("\\s+", "_"));
 			}
 			//Add the instant behaviours with each location to the header
-			for (InstantBehaviour instant : trial.getInstantBehaviours()){
+			for (CountableBehaviour instant : trial.getCountableBehaviours()){
 				if (instant.isAssociatedWithLocation()){
 					for (Location location : trial.getLocations()){
 						header.add((instant.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
@@ -340,7 +340,7 @@ public class ExcelWriter {
 				}
 			}
 			//Add the timed behaviours with each location to the header
-			for (TimedBehaviour timed : trial.getTimedBehaviours()){
+			for (TimableBehaviour timed : trial.getTimableBehaviours()){
 				if (timed.isAssociatedWithLocation()){
 					for (Location location : trial.getLocations()){
 						header.add((timed.getName() + "_" + location.getName()).replaceAll("\\s+", "_"));
