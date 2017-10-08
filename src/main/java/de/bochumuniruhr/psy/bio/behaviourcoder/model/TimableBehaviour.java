@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Represents and keeps track of a behaviour that occurs over time.
  */
-public class TimedBehaviour extends Behaviour implements TrialListener {
+public class TimableBehaviour extends Behaviour implements TrialListener {
 
 	/**
 	 * The list of every occurrence of this behaviour.
@@ -32,7 +32,7 @@ public class TimedBehaviour extends Behaviour implements TrialListener {
 	 * @param trial - the trial of the behaviour
 	 * @param associateWithLocation - whether the behaviour should associate occurrences
 	 */
-	public TimedBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
+	public TimableBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
 		super(name, color, trial, associateWithLocation);
 		occurrences = new ArrayList<Occurrence>();
 		timesStarted = 0;

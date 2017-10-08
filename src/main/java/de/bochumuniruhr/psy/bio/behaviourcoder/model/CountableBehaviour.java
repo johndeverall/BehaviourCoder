@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Represents and keeps track of a behaviour that occurs instantaneously.
  */
-public class InstantBehaviour extends Behaviour {
+public class CountableBehaviour extends Behaviour {
 
 	/**
 	 * The list of every occurrence of this behaviour.
@@ -22,7 +22,7 @@ public class InstantBehaviour extends Behaviour {
 	 * @param trial - the trial of the behaviour
 	 * @param associateWithLocation - whether the behaviour should associate occurrences
 	 */
-	public InstantBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
+	public CountableBehaviour(String name, Color color, Trial trial, boolean associateWithLocation) {
 		super(name, color, trial, associateWithLocation);
 		occurrences = new ArrayList<Occurrence>();
 	}

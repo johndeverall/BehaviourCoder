@@ -1,4 +1,4 @@
-package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timed;
+package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.timable;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.TimerTask;
 import javax.swing.JPanel;
 import de.bochumuniruhr.psy.bio.behaviourcoder.gui.GlobalKeyListener;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Location;
-import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimedBehaviour;
+import de.bochumuniruhr.psy.bio.behaviourcoder.model.TimableBehaviour;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.Trial;
 import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
 
@@ -16,12 +16,12 @@ import de.bochumuniruhr.psy.bio.behaviourcoder.model.TrialListener;
  * Panel for holding the buttons that interact with timed behaviours.
  */
 @SuppressWarnings("serial")
-public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, TrialListener {
+public class TimableBehaviourPanel extends JPanel implements GlobalKeyListener, TrialListener {
 	
 	/**
 	 * List of buttons.
 	 */
-	private List<TimedBehaviourButton> buttons;
+	private List<TimableBehaviourButton> buttons;
 	
 	/**
 	 * Creates a panel with the buttons for interacting with the trial's timed behaviours.
@@ -29,16 +29,16 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, Tr
 	 * @param trial - the trial the panel is for
 	 * @param activationKeys - the keys for toggling the buttons. Each key is matched to a behaviour that has the same index.
 	 */
-	public TimedBehaviourPanel(Trial trial, List<Character> activationKeys) { 
-		List<TimedBehaviour> behaviours = trial.getTimedBehaviours();
+	public TimableBehaviourPanel(Trial trial, List<Character> activationKeys) { 
+		List<TimableBehaviour> behaviours = trial.getTimableBehaviours();
 		
 		//Set the layout
 		setLayout(new GridLayout(behaviours.size(), 1));
 
 		//Create the buttons
-		buttons = new ArrayList<TimedBehaviourButton>();
+		buttons = new ArrayList<TimableBehaviourButton>();
 		for (int i = 0; i < behaviours.size(); ++i){
-			TimedBehaviourButton button = new TimedBehaviourButton(trial, behaviours.get(i),
+			TimableBehaviourButton button = new TimableBehaviourButton(trial, behaviours.get(i),
 					activationKeys.get(i));
 			button.setEnabled(false);
 			buttons.add(button);
@@ -56,7 +56,7 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, Tr
 		TimerTask clockRedrawer = new TimerTask() {
 			@Override
 			public void run() {
-				for (TimedBehaviourButton button : buttons){
+				for (TimableBehaviourButton button : buttons){
 					button.updateText();
 				}
 			} 
@@ -69,28 +69,28 @@ public class TimedBehaviourPanel extends JPanel implements GlobalKeyListener, Tr
 	@Override
 	public void keyPressed(char key) {
 		//Forward key presses to the buttons
-		for (TimedBehaviourButton button : buttons){
+		for (TimableBehaviourButton button : buttons){
 			button.keyPressed(key);
 		}
 	}
 	
 	@Override
 	public void onTrialReset() {
-		for (TimedBehaviourButton button : buttons){
+		for (TimableBehaviourButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
 
 	@Override
 	public void onTrialStart() {
-		for (TimedBehaviourButton button : buttons){
+		for (TimableBehaviourButton button : buttons){
 			button.setEnabled(true);
 		}
 	}
 
 	@Override
 	public void onTrialStop() {
-		for (TimedBehaviourButton button : buttons){
+		for (TimableBehaviourButton button : buttons){
 			button.setEnabled(false);
 		}
 	}
