@@ -1,7 +1,6 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.location;
 
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;

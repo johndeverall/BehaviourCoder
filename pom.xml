@@ -64,6 +64,12 @@
 			<version>1.16.18</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -90,7 +96,7 @@
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<injectAllReactorProjects>true</injectAllReactorProjects>
 					<dateFormat>yyyy-MM-dd_HHmmss</dateFormat>
-                    <dateFormatTimeZone>UTC</dateFormatTimeZone>
+					<dateFormatTimeZone>UTC</dateFormatTimeZone>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.co.caprica.vlcj.discovery.StandardNativeDiscoveryStrategy;
@@ -115,11 +119,18 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 		}
 		directoryNames.add(basePath);
 		try {
-			walk("/lib/win64");
-		} catch (URISyntaxException | IOException e) {
-			// TODO Auto-generated catch block
+			// walk("/lib/win64");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		/*
+		 * try { createLocalFile("/lib/win64", System.getProperty("user.dir") +
+		 * "/lib/win64"); } catch (IOException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
+		/*
+		 * } catch (URISyntaxException | IOException e) { block e.printStackTrace(); }
+		 */
 
 	}
 
@@ -144,17 +155,35 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 				String fileName = startFolder + "/" + p.getFileName().toString();
 				log.info(fileName);
 				// NativeUtils.createTempLibraryFromJar(fileName);
-				createLocalFile(fileName, System.getProperty("user.dir") + fileName);
+				createLocalFileUsingCommonsIO(fileName, System.getProperty("user.dir") + fileName);
 			}
 		}
+
 		walk.close();
 	}
 
-	public void createLocalFile(String inputFile, String outputFile) throws FileNotFoundException, IOException {
-		// InputStream ddlStream =
-		// BundledVLCLibsDiscoveryStrategy.class.getResourceAsStream(inputFile);
+	public void anotherWriteAttempt(String inputDirectory, String outputDirectory) {
+		URL resource = BundledVLCLibsDiscoveryStrategy.class.getResource(inputDirectory);
+		File inputDirectoryFile = null;
+		try {
+			inputDirectoryFile = new File(resource.toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
-		File file;
+		File outputDirectoryFile = new File(outputDirectory);
+		try {
+			FileUtils.copyDirectory(inputDirectoryFile, outputDirectoryFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void createLocalFileUsingCommonsIO2(String inputFile, String outputFile) {
+
+		File file = null;
+
 		try {
 
 			File outputFileHandle = new File(outputFile);
@@ -182,40 +211,76 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 				fco.write(buffer);
 				buffer.clear();
 			}
-
 			fis.close();
 			fos.close();
 
 		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		/*
-		 * try { URL resource =
-		 * BundledVLCLibsDiscoveryStrategy.class.getResource(inputFile); File file = new
-		 * File(resource.toURI()); FileInputStream fileInputStream = new
-		 * FileInputStream(file); FileChannel srcChannel = fileInputStream.getChannel();
-		 * 
-		 * File outputFileHandle = new File(outputFile);
-		 * outputFileHandle.getParentFile().mkdirs(); outputFileHandle.createNewFile();
-		 * FileOutputStream fileOutputStream = new FileOutputStream(outputFileHandle);
-		 * FileChannel dstChannel = fileOutputStream.getChannel();
-		 * 
-		 * dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-		 * 
-		 * srcChannel.close(); fileInputStream.close(); dstChannel.close();
-		 * fileOutputStream.close(); } catch (IOException e) { } catch
-		 * (URISyntaxException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
-
-		/*
-		 * File file = new File(outputFile); file.getParentFile().mkdirs();
-		 * file.createNewFile(); try (FileOutputStream fos = new
-		 * FileOutputStream(outputFile);) { byte[] buf = new byte[2048]; int r; while
-		 * (-1 != (r = ddlStream.read(buf))) { fos.write(buf, 0, r); } }
-		 */
 	}
 
+	public void createLocalFileUsingCommonsIO(String inputFile, String outputFile)
+			throws FileNotFoundException, IOException {
+		// InputStream ddlStream =
+		// BundledVLCLibsDiscoveryStrategy.class.getResourceAsStream(inputFile);
+
+		try {
+			// have to use a stream
+			InputStream in = BundledVLCLibsDiscoveryStrategy.class.getResourceAsStream(inputFile);
+			// always write to different location
+			File fileOut = new File(outputFile);
+			log.info("Writing dll to: " + fileOut.getAbsolutePath());
+			OutputStream out = FileUtils.openOutputStream(fileOut);
+			IOUtils.copy(in, out);
+			in.close();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/*public void someCopyThing() {
+		String inputFile = null;
+		String outputFile = null;
+		try {
+			URL resource = BundledVLCLibsDiscoveryStrategy.class.getResource(inputFile);
+			File file = new File(resource.toURI());
+			FileInputStream fileInputStream = new FileInputStream(file);
+			FileChannel srcChannel = fileInputStream.getChannel();
+
+			File outputFileHandle = new File(outputFile);
+			outputFileHandle.getParentFile().mkdirs();
+			outputFileHandle.createNewFile();
+			FileOutputStream fileOutputStream = new FileOutputStream(outputFileHandle);
+			FileChannel dstChannel = fileOutputStream.getChannel();
+
+			dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+
+			srcChannel.close();
+			fileInputStream.close();
+			dstChannel.close();
+			fileOutputStream.close();
+		} catch (IOException e) {
+		} catch (URISyntaxException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		File file = new File(outputFile);
+		file.getParentFile().mkdirs();
+		file.createNewFile();
+		try (FileOutputStream fos = new FileOutputStream(outputFile);) {
+			byte[] buf = new byte[2048];
+			int r;
+			while (-1 != (r = ddlStream.read(buf))) {
+				fos.write(buf, 0, r);
+			}
+		}
+
+	}
+*/
 }
