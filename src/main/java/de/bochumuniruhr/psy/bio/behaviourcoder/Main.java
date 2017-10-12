@@ -157,7 +157,7 @@ public class Main {
 	 */
 	public Main(boolean found) {
 		this.foundVlc = true;
-		unsaved = false;
+ 		unsaved = false;
 		KeyboardFocusManager currentKeyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 		globalKeyHandler = new GlobalKeyPressHandler(currentKeyboardFocusManager, this);
 		

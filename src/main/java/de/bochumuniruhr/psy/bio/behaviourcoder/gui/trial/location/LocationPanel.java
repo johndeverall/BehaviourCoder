@@ -1,6 +1,5 @@
 package de.bochumuniruhr.psy.bio.behaviourcoder.gui.trial.location;
 
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
