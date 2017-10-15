@@ -126,7 +126,7 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 			destFile.getParentFile().mkdirs();
 			
 			if (entry.isDirectory()) { 
-				log.info("This is a directory: " + entry.getName());
+				// do nothing
 			} else { 
 				BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));
 				int currentByte;

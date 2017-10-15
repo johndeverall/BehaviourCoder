@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <timestamp key="TIMESTAMP" datepattern="HHmmss"></timestamp>
+    <timestamp key="timestamp" datePattern="yyyy-MM-dd'_'HH-mm-ss.SSS"/>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${user.home}/vlcj-${TIMESTAMP}.log</file>
+        <file>./log/behaviour-coder-${timestamp}.log</file>
         <append>false</append>
         <encoder>
             <pattern>%-36(%d{HH:mm:ss.SSS} [%thread]) %-5level %72logger{72} - %msg%n</pattern>
