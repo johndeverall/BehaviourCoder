@@ -4,9 +4,11 @@ This software is a visual behaviour coder that allows researchers, consultants o
 
 [Here is an example](https://www.nytimes.com/2014/11/18/science/more-evidence-birds-can-count.html) of one type of project where this software could be useful. 
 
-Other potential use cases could be observing students in the classroom and recording their behaviour.
+Other potential use cases could be observing students in the classroom and recording their behaviour, or analysing videos of football matches to collect handover and possession statistics for coaching purposes.
 
-This software is licensed under the LGPL. 
+This software was created by John Deverall and Dr Alexis Garland with the support of Ruhr University Bochum.
+
+This software is licensed under the GPL. 
 
 ## Supported platforms
 
