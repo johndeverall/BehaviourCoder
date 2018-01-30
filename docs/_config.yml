@@ -28,6 +28,8 @@ theme: minima
 plugins:
   - jekyll-feed
 
+list_title: News
+
 header_pages:
   - about.md
   - download.md
