@@ -19,14 +19,20 @@ email: johndeverall@gmail.com
 description:
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: johndeverall
 github_username:  johndeverall
+linkedin_username: johndeverall
 
 # Build settings
 markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+
+header_pages:
+  - about.md
+  - download.md
+  - manual.md
+  - contact.md
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
