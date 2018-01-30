@@ -4,7 +4,6 @@
 # See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 layout: home
 ---
-## Welcome
 
 Welcome to the simple behaviour coder. This software is a visual behaviour coder, a type of video analyzer that allows researchers, consultants or educators to observe and analyze behaviour from
 pre-recorded videos.
