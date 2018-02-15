@@ -17,7 +17,7 @@ It features:
 <li>Clickable behaviour event counters (with selectable colours with configurable key assignment</li>
 </ul>
 
-<a href="https://github.com/johndeverall/BehaviourCoder/releases/tag/v2017-10-15_020113_c62cea4">>> DOWNLOAD</a>
+<a href="https://github.com/johndeverall/BehaviourCoder/releases/tag/v2017-10-15_020113_c62cea4">>> DOWNLOAD NOW</a>
 
 <a href="/download/">or click here</a> for instructions on how to download and use the new release.
 
