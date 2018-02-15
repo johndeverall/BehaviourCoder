@@ -4,15 +4,9 @@ title: Download
 permalink: /download/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Please download the behaviour coder from the following link.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+<a href="https://github.com/johndeverall/BehaviourCoder/releases/tag/v2017-10-15_020113_c62cea4">https://github.com/johndeverall/BehaviourCoder/releases/tag/v2017-10-15_020113_c62cea4</a>
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+Should you have any issues using the software, they can be logged at <a href="https://github.com/johndeverall/BehaviourCoder/issues">https://github.com/johndeverall/BehaviourCoder/issues</a>.
 
-
-[jekyll-organization]: https://github.com/jekyll

@@ -5,7 +5,7 @@
 layout: home
 ---
 
-Welcome to the simple behaviour coder. This software is a visual behaviour coder, a type of video analyzer that allows researchers, consultants or educators to observe and analyze behaviour from
+Welcome to the Simple Behaviour Coder. This software is a visual behaviour coder, a type of video analyzer that allows researchers, consultants or educators to observe and analyze behaviour from
 pre-recorded videos.
 
 [Here is an example](https://www.nytimes.com/2014/11/18/science/more-evidence-birds-can-count.html) of the type of project where this software has been useful.
