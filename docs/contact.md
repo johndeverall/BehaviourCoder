@@ -24,6 +24,8 @@ To learn more about this software you can contact one of the authors.
 <td><a href="mailto: james@greenwood.net.nz">james@greenwood.net</a></td>
 </tr>
 </table>
+<br/>
+
 
 If you are interested in any of the studies that used the Simple Behaviour Coder software, you can find out about them in our <a href="/">posts</a>.
 
