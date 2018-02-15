@@ -8,8 +8,8 @@ To learn more about this software you can contact one of the authors.
 
 <table>
 <tr>
-<td>Author</td>
-<td>Contact</td>
+<td><b>Author</b></td>
+<td><b>Contact</b></td>
 </tr>
 <tr>
 <td>Dr. Alexis Garland</td>
