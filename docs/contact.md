@@ -22,6 +22,7 @@ To learn more about this software you can contact one of the authors.
 <td><a href="mailto: james@greenwood.net.nz">james@greenwood.net</a></td>
 </tr>
 </table>
+<br/>
 # Other contributors
 
 Thank you to the researchers who have contributed feedback and the testers who have provided test support.
