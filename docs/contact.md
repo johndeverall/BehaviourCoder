@@ -6,11 +6,24 @@ permalink: /contact/
 
 To learn more about this software you can contact one of the authors.
 
-| Author             | Contact                                                               |
-| ------------------ | --------------------------------------------------------------------- |
-| Dr. Alexis Garland | [dralexisgarland@gmail.com](mailto: dralexisgarland@gmail.com) |
-| John Deverall      | [johndeverall@gmail.com](mailto: johndeverall@gmail.com)        |
-| James Greenwood-Thessman | [james@greenwood.net.nz](mailto: james@greenwood.net)    |
+<table>
+<tr>
+<td>Author</td>
+<td>Contact</td>
+</tr>
+<tr>
+<td>Dr. Alexis Garland</td>
+<td><a href="mailto: dralexisgarland@gmail.com">dralexisgarland@gmail.com</a></td>
+</tr>
+<tr>
+<td>John Deverall</td>
+<td><a href="mailto: johndeverall@gmail.com">johndeverall@gmail.com</a></td>
+</tr>
+<tr>
+<td>James Greenwood-Thessman</td>
+<td><a href="mailto: james@greenwood.net.nz">james@greenwood.net</a></td>
+</tr>
+</table>
 
 If you are interested in any of the studies that used the Simple Behaviour Coder software, you can find out about them in our <a href="/">posts</a>.
 
