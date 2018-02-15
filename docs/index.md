@@ -8,14 +8,17 @@ layout: home
 Welcome to the Simple Behaviour Coder. This software is a visual behaviour coder, a type of video analyzer that allows researchers, consultants or educators to observe and analyze behaviour from
 pre-recorded videos.
 
-[Here is an example](https://www.nytimes.com/2014/11/18/science/more-evidence-birds-can-count.html) of the type of project where this software has been useful.
+Below is an example of the type of project where this software has been useful.
+<br/><br/>
+
+<iframe title="New York Times Video - Embed Player" width="480" height="321" frameborder="0" scrolling="no" allowfullscreen="true" marginheight="0" marginwidth="0" id="nyt_video_player" src="https://static01.nyt.com/video/players/offsite/index.html?videoId=100000003235873"></iframe>
 
 Other potential use cases could be observing students in the classroom and recording their behaviour for learning assessments, or analysing videos of football
 matches to collect handover and possession statistics for coaching purposes.
 
-This software was created by John Deverall and Dr Alexis Garland with the support of Ruhr University Bochum.
+This software was created through a collaboration between Dr Alexis Garland and John Deverall with the support of Ruhr University Bochum.
 
-This software is licensed under the GPL.
+This software is licensed under the [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 The source code is available [here](https://www.github.com/johndeverall/behaviourcoder).
 

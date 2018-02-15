@@ -14,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="index.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+            <state relative-caret-position="420">
+              <caret line="20" column="43" lean-forward="false" selection-start-line="20" selection-start-column="43" selection-end-line="20" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -54,11 +54,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="contact.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="contact.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/contact.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="24" column="5" lean-forward="false" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -145,10 +145,10 @@
         <option value="$PROJECT_DIR$/_posts/2018-01-30-welcome-to-jekyll.markdown" />
         <option value="$PROJECT_DIR$/_posts/2018-01-30-general-purpose-release.markdown" />
         <option value="$PROJECT_DIR$/manual.md" />
-        <option value="$PROJECT_DIR$/index.md" />
         <option value="$PROJECT_DIR$/about.md" />
         <option value="$PROJECT_DIR$/download.md" />
         <option value="$PROJECT_DIR$/contact.md" />
+        <option value="$PROJECT_DIR$/index.md" />
       </list>
     </option>
   </component>
@@ -267,12 +267,12 @@
       <workItem from="1518024974047" duration="598000" />
       <workItem from="1518055155760" duration="3000" />
       <workItem from="1518094596498" duration="1131000" />
-      <workItem from="1518693938254" duration="9460000" />
+      <workItem from="1518693938254" duration="10054000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35633000" />
+    <option name="totallyTimeSpent" value="36227000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -318,9 +318,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518715803691" expanded="true" signature="4256:4335" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4572:4657" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4637:4657" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4492:4571" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4808:4893" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4873:4893" ph="..." />
           </folding>
         </state>
       </provider>
@@ -402,9 +402,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518715803691" expanded="true" signature="4256:4335" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4572:4657" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4637:4657" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4492:4571" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4808:4893" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4873:4893" ph="..." />
           </folding>
         </state>
       </provider>
@@ -477,9 +477,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518715803691" expanded="true" signature="4256:4335" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4572:4657" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4637:4657" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4492:4571" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4808:4893" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4873:4893" ph="..." />
           </folding>
         </state>
       </provider>
@@ -571,9 +571,9 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1518715803691" expanded="true" signature="4256:4335" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4572:4657" ph="..." />
-            <marker date="1518715803691" expanded="true" signature="4637:4657" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4492:4571" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4808:4893" ph="..." />
+            <marker date="1518716428227" expanded="true" signature="4873:4893" ph="..." />
           </folding>
         </state>
       </provider>
@@ -643,14 +643,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="33" lean-forward="false" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manual.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -677,8 +669,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/contact.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="24" column="5" lean-forward="false" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="20" column="43" lean-forward="false" selection-start-line="20" selection-start-column="43" selection-end-line="20" selection-end-column="43" />
           <folding />
         </state>
       </provider>
