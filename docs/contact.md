@@ -19,7 +19,7 @@ To learn more about this software you can contact one of the authors.
 </tr>
 <tr>
 <td>James Greenwood-Thessman</td>
-<td><a href="mailto: james@greenwood.net.nz">james@greenwood.net</a></td>
+<td><a href="mailto: james@greenwood.net.nz">james@greenwood.net.nz</a></td>
 </tr>
 </table>
 <br/>

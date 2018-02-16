@@ -16,3 +16,7 @@ It features:
 * Embedded VLC video player, installation of VLC is not longer required
 * Clickable behaviour timers (with selectable colours) with configurable key assignment
 * Clickable behaviour event counters (with selectable colours with configurable key assignment
+
+
+
+
