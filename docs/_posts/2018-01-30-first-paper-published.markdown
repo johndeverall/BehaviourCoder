@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "First paper published using Behaviour Coder"
+title:  "First behaviour coder use - Adjusting foraging strategies: A comparison of rural and urban common mynas"
 date:   2016-10-24 13:06:58 +1300
 categories:
 ---
