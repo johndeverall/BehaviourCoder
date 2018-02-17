@@ -31,6 +31,7 @@ Thank you to the researchers who have contributed feedback and the testers who h
 
 * Neslihan Edeş
 * Meng Gao
+* Mehmet Özer
 
 #### Software Testers
 
