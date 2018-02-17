@@ -73,7 +73,7 @@ public class BundledVLCLibsDiscoveryStrategy extends StandardNativeDiscoveryStra
 
 		if (osName.startsWith("win")) {
 			if (osArch.equalsIgnoreCase("x86")) {
-				basePath = basePath + "win64";
+				basePath = basePath + "win32";
 			} else if (osArch.equalsIgnoreCase("amd64")) {
 				basePath = basePath + "win64";
 			} else {
